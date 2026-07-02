@@ -166,14 +166,27 @@
   height: 88px;
   line-height: 1;
   filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.18));
-  animation: reelsFeedSpin 1.6s linear infinite;
+  animation: reelsMetamorphBob 4s ease-in-out infinite;
 }
 .reel-loader-sun::before {
   content: '';
   display: block;
   width: 100%;
   height: 100%;
-  background: url('/images/logo.png') center / contain no-repeat;
+  background: center / contain no-repeat;
+  /* Metamorphosis loader: cycle egg → caterpillar → chrysalis → butterfly */
+  background-image: url('/images/journey-egg.png');
+  animation: reelsMetamorph 4s steps(1, end) infinite;
+}
+@keyframes reelsMetamorph {
+  0%,  100% { background-image: url('/images/journey-egg.png'); }
+  25%       { background-image: url('/images/journey-caterpillar.png'); }
+  50%       { background-image: url('/images/journey-chrysalis.png'); }
+  75%       { background-image: url('/images/journey-emerged.png'); }
+}
+@keyframes reelsMetamorphBob {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-3px) scale(1.04); }
 }
 
 /* ── Side action rail ───────────────────────────────────────────────────── */
@@ -3126,7 +3139,10 @@
   height: 16px;
   font-size: 14px;
   line-height: 1;
-  animation: reelsFeedSpin 0.8s linear infinite;
+  /* Butterfly-transition loader: wings flutter (open/close beat) instead of a
+     rigid spin, echoing the intro/hero butterfly motion. */
+  animation: reelsFeedFlutter 1.25s ease-in-out infinite;
+  transform-origin: center center;
 }
 
 .reels-feed-status__spinner::before {
@@ -3137,8 +3153,11 @@
   background: url('/images/logo.png') center / contain no-repeat;
 }
 
-@keyframes reelsFeedSpin {
-  to { transform: rotate(360deg); }
+@keyframes reelsFeedFlutter {
+  0%, 100% { transform: scaleX(1)    rotate(0deg); }
+  25%      { transform: scaleX(0.5)  rotate(-5deg); }
+  50%      { transform: scaleX(0.9)  rotate(0deg); }
+  75%      { transform: scaleX(0.5)  rotate(5deg); }
 }
 
 .reels-feed-end {
@@ -3187,4 +3206,8 @@
 @media (prefers-reduced-motion: reduce) {
   .reels-feed-status__spinner { animation: none; }
   .reel-loader-sun { animation: none; }
+  .reel-loader-sun::before {
+    animation: none;
+    background-image: url('/images/journey-emerged.png');
+  }
 }
