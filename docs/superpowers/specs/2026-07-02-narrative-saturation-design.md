@@ -68,9 +68,21 @@ Mirrors the existing Step 5 crisis-window pattern:
 
 - Track `narrative_window_history: List[bool]` — was each served item
   appearance-theme? — capped at `NARRATIVE_WINDOW` (default **6**).
-- `narrative_saturated = sum(window) >= NARRATIVE_THRESHOLD` (default **4** of 6).
+- `narrative_saturated = sum(window) >= effective_threshold`.
 
 Count-based (not a rolling mean) so it reads and tests like `CRISIS_THRESHOLD`.
+
+**Age lowers the trigger, not just the remedy.** The youngest users should break
+a harmful narrative *sooner*, not merely harder:
+
+```
+effective_threshold = NARRATIVE_THRESHOLD - 1 if age_group == "13-15"
+                      else NARRATIVE_THRESHOLD          # default 4 → 3 for 13-15
+```
+
+So 13–15 saturates at 3-of-6 (earlier first break) *and* gets a 1.5× stronger
+remedy (below); 16–17 and adults saturate at 4-of-6. This is what makes the age
+test's "reaches an off-theme item in fewer positions" assertion hold.
 
 ### Remedy (applied per-candidate while saturated) — mirrors Step 6
 
@@ -94,8 +106,11 @@ _is_appearance_theme = (
 narrative_window_history.append(_is_appearance_theme)
 if len(narrative_window_history) > NARRATIVE_WINDOW:
     narrative_window_history.pop(0)
-narrative_saturated = sum(narrative_window_history) >= NARRATIVE_THRESHOLD
+narrative_saturated = sum(narrative_window_history) >= narrative_threshold
 ```
+
+where `narrative_threshold` is computed once from `age_group`
+(`NARRATIVE_THRESHOLD - 1` for `"13-15"`, else `NARRATIVE_THRESHOLD`).
 
 ### New constants (`core/constants.py`)
 
