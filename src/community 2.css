@@ -1,0 +1,422 @@
+/* ===========================================================================
+   Chrysalis Community — make-friends / wellness-challenge / good-things page.
+
+   Layered on top of reels.css + home.css: it lives inside the same
+   [data-algorithm] token scope (rendered through <HomeShell>), so every var()
+   below (--bg, --card, --accent, --tone-*, --border, --text…) resolves to the
+   active theme. Class names are Community-specific (cmty-*)
+   so nothing leaks into the feed, Home, or the marketing site. It reuses the
+   shared .home-btn and .cx-avatar primitives for buttons and avatars.
+   =========================================================================== */
+
+.cmty-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Header + stat cards ──────────────────────────────────────────────────── */
+.cmty-header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.cmty-header__title {
+  font-family: var(--font-reels-heading);
+  margin: 0;
+  font-size: clamp(1.7rem, 5vw, 2.3rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.cmty-header__subtitle {
+  margin: 4px 0 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.45;
+  max-width: 46ch;
+}
+.cmty-stats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+@media (min-width: 760px) {
+  .cmty-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+.cmty-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent-soft) 18%, transparent), transparent 70%),
+    var(--card);
+}
+.cmty-stat__emoji { font-size: 1.25rem; line-height: 1; }
+.cmty-stat__value {
+  font-family: var(--font-reels-heading);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.1;
+}
+.cmty-stat__label { font-size: 0.74rem; color: var(--text-muted); line-height: 1.3; }
+
+/* ── Responsive content grid ──────────────────────────────────────────────── */
+.cmty-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.cmty-col { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+
+@media (min-width: 1040px) {
+  .cmty-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 24px;
+  }
+  .cmty-col--side { position: sticky; top: 18px; }
+}
+
+/* ── Shared section shell ─────────────────────────────────────────────────── */
+.cmty-section {
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 18px clamp(16px, 3vw, 22px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.cmty-section__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.cmty-section__title {
+  font-family: var(--font-reels-heading);
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.cmty-section__count {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.cmty-section__subtitle {
+  margin: 4px 0 0;
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.cmty-note {
+  margin: 12px 0 0;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-style: italic;
+  line-height: 1.4;
+}
+.cmty-note--inline {
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--accent-soft) 14%, transparent);
+  font-style: normal;
+}
+.cmty-success {
+  margin: 12px 0 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text);
+  background: color-mix(in srgb, var(--tone-healthy) 26%, var(--card));
+  border: 1px solid color-mix(in srgb, var(--tone-healthy) 40%, var(--border));
+}
+
+/* ── Tag pills (interests, earn-list, safety) ─────────────────────────────── */
+.cmty-tags {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cmty-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+}
+.cmty-tag--shared {
+  background: color-mix(in srgb, var(--tone-healthy) 24%, var(--card));
+  border-color: transparent;
+}
+
+/* ── Friend swipe deck ────────────────────────────────────────────────────── */
+.cmty-deck__stage { margin-top: 14px; }
+.cmty-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background:
+    radial-gradient(circle at 18% 0%, color-mix(in srgb, var(--accent-soft) 22%, transparent), transparent 55%),
+    var(--card);
+  box-shadow: var(--reel-shadow);
+}
+.cmty-card__head { display: flex; align-items: center; gap: 14px; }
+.cmty-avatar {
+  width: clamp(56px, 16vw, 68px);
+  height: clamp(56px, 16vw, 68px);
+  background: color-mix(in srgb, var(--accent-soft) 30%, var(--card));
+}
+.cmty-avatar .cx-avatar__fallback { font-size: 2rem; }
+.cmty-card__id { display: flex; flex-direction: column; gap: 2px; }
+.cmty-card__name {
+  font-family: var(--font-reels-heading);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text);
+}
+.cmty-card__age { font-size: 0.8rem; color: var(--text-muted); }
+
+.cmty-card__facts { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.cmty-card__fact { display: flex; flex-direction: column; gap: 4px; }
+.cmty-card__fact dt {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+.cmty-card__fact dd { margin: 0; font-size: 0.9rem; color: var(--text); line-height: 1.4; }
+
+.cmty-card__why {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--accent-soft) 16%, transparent);
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--text);
+}
+.cmty-card__why-label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.cmty-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.cmty-action {
+  flex: 1 1 auto;
+  justify-content: center;
+  min-width: 120px;
+}
+.cmty-action--connect { flex: 1 1 100%; }
+@media (min-width: 480px) {
+  .cmty-action--connect { flex: 1 1 auto; order: 3; }
+  .cmty-action--later { order: 2; }
+  .cmty-action--decline { order: 1; }
+}
+
+.cmty-card--empty {
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  padding: 36px 18px;
+}
+.cmty-card__empty-emoji { font-size: 2.4rem; }
+.cmty-card__empty-title { margin: 0; font-weight: 800; color: var(--text); }
+.cmty-card__empty-copy { margin: 0; font-size: 0.86rem; color: var(--text-muted); max-width: 32ch; }
+
+/* ── Good Things leaderboard ──────────────────────────────────────────────── */
+.cmty-board {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cmty-board__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+.cmty-board__row.is-self {
+  background: color-mix(in srgb, var(--accent) 16%, var(--card));
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+}
+.cmty-board__rank {
+  flex: 0 0 auto;
+  width: 22px;
+  text-align: center;
+  font-family: var(--font-reels-heading);
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+.cmty-board__row.is-self .cmty-board__rank { color: var(--accent); }
+.cmty-board__avatar { background: color-mix(in srgb, var(--accent-soft) 28%, var(--card)); }
+.cmty-board__emoji { font-size: 1.05rem; }
+.cmty-board__id { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+.cmty-board__name { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+.cmty-board__action {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cmty-board__score {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.1;
+}
+.cmty-board__score strong {
+  font-family: var(--font-reels-heading);
+  font-size: 1.05rem;
+  color: var(--text);
+}
+.cmty-board__unit { font-size: 0.62rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+
+.cmty-earn { margin-top: 14px; }
+.cmty-earn__lead { margin: 0 0 8px; font-size: 0.78rem; font-weight: 700; color: var(--text); }
+.cmty-earn__tags { margin-bottom: 2px; }
+
+/* ── Touch Grass challenges ───────────────────────────────────────────────── */
+.cmty-challenges {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+.cmty-challenge {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--tone, var(--accent-soft)) 20%, transparent), transparent 72%),
+    var(--card);
+  transition: opacity 0.2s ease;
+}
+.cmty-challenge[data-tone="healthy"]    { --tone: var(--tone-healthy); }
+.cmty-challenge[data-tone="reset"]      { --tone: var(--tone-reset); }
+.cmty-challenge[data-tone="positive"]   { --tone: var(--tone-positive); }
+.cmty-challenge[data-tone="perspective"]{ --tone: var(--tone-perspective); }
+.cmty-challenge[data-tone="creative"]   { --tone: var(--tone-creative); }
+.cmty-challenge.is-done { opacity: 0.72; }
+.cmty-challenge__head { display: flex; align-items: center; justify-content: space-between; }
+.cmty-challenge__emoji { font-size: 1.5rem; line-height: 1; }
+.cmty-challenge__cat {
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 9px;
+  border-radius: 999px;
+  color: var(--text);
+  background: color-mix(in srgb, var(--tone, var(--accent-soft)) 32%, var(--card));
+}
+.cmty-challenge__title {
+  font-family: var(--font-reels-heading);
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text);
+}
+.cmty-challenge__copy { margin: 0; font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; flex: 1 1 auto; }
+.cmty-challenge__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 4px;
+}
+.cmty-reward { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); }
+.cmty-reward.is-earned { color: color-mix(in srgb, var(--tone-healthy) 70%, var(--text)); }
+.cmty-challenge__btn { flex: 0 0 auto; }
+.cmty-challenge__btn.is-done {
+  background: color-mix(in srgb, var(--tone-healthy) 26%, var(--card));
+  border-color: transparent;
+  color: var(--text);
+  opacity: 1;
+}
+
+/* ── Your Circle ──────────────────────────────────────────────────────────── */
+.cmty-circle {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.cmty-buddy {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+.cmty-buddy__head { display: flex; align-items: center; gap: 12px; }
+.cmty-buddy__avatar { background: color-mix(in srgb, var(--accent-soft) 28%, var(--card)); }
+.cmty-buddy__id { display: flex; flex-direction: column; min-width: 0; }
+.cmty-buddy__name { font-weight: 700; font-size: 0.92rem; color: var(--text); }
+.cmty-buddy__goal { font-size: 0.76rem; color: var(--accent); font-weight: 600; }
+.cmty-buddy__activity { margin: 0; font-size: 0.84rem; color: var(--text-muted); line-height: 1.4; }
+.cmty-buddy__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ── Safety / intentional-design footer ───────────────────────────────────── */
+.cmty-safety {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--tone-reset) 16%, transparent), transparent 70%),
+    color-mix(in srgb, var(--card) 88%, transparent);
+}
+.cmty-safety__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--accent);
+}
+.cmty-safety__head .cmty-section__title { color: var(--text); }
+.cmty-safety__copy { margin: 10px 0 14px; font-size: 0.9rem; color: var(--text); line-height: 1.5; max-width: 62ch; }
+.cmty-safety__tags { margin-top: 2px; }
