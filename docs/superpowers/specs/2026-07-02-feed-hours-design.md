@@ -36,14 +36,15 @@ clamping. It opens at sunrise and closes at sunset. Winter's early sunset is a
 feature, not a bug: the app closing early *is* the prompt to go see the (early)
 sunset.
 
-- **Sun times** are computed client-side from latitude/longitude with a standard
-  NOAA sunrise/sunset formula (no network, no library needed — ~30 lines of
-  astronomy math).
-- **Location source (open question — see below):** we store a *coarse region*
-  today (`preferences.py`: `region_code`, `location_city`, `location_country`),
-  but not lat/long. Phase-1 plan: derive approximate lat/long from that region
-  via a small centroid lookup, with an optional one-time browser geolocation
-  (coarse) to sharpen it. Never store precise GPS.
+- **No location, no permission prompt.** We do not ask for or store the user's
+  location. Instead we read the device's **time zone** (free/ambient — no prompt)
+  for correct local clock time, and compute an *approximate, seasonally drifting*
+  sunrise/sunset with the standard NOAA formula (~30 lines, no network/library)
+  using an **assumed temperate latitude** (~40°) and a longitude taken from the
+  time-zone's central meridian (`offsetHours × 15°`). The close therefore still
+  moves earlier in winter and later in summer — the seasonal feel is preserved —
+  it is just not pinned to the user's exact horizon. (Exact, location-based sun
+  times remain a possible future opt-in, not built here.)
 
 ### The 5-minute warning
 
@@ -62,10 +63,8 @@ Outside hours, the entry route (`/`) renders a calm **`ClosedGateway`** screen
     *"The sunset gallery opens soon."* (phase 2)
   - Deep night / pre-dawn: *"Resting until sunrise."* + the exact next-open time.
 - **Reopen** at sunrise with a soft *"Good morning ☀️"* the first time in.
-- **Override (open question — see below):** default is closed. Option A: truly
-  hard-closed (no entry until sunrise). Option B: one high-friction *"open for 5
-  minutes"* with a visible countdown that then re-closes. Recommendation: B — keep
-  agency, but the default is closed.
+- **Hard close.** No override — once closed, the feed stays closed until sunrise.
+  The commitment is the point.
 
 ### Modes retire
 
@@ -73,16 +72,17 @@ Outside hours, the entry route (`/`) renders a calm **`ClosedGateway`** screen
   (`OnboardingStartScreen`). There is one feed.
 - Under the hood, ranking keeps running a sensible default preset (the current
   `flutter-feed` / "Cruisin'" weights) — we simply stop surfacing the choice.
-- **Survey interaction (open question — see below):** the first-run diagnostic
-  currently ends by *recommending a mode*. With modes gone, keep the survey (still
-  valuable for interests/personalization) but drop the recommended-mode output.
-  This touches in-progress diagnostic work, so confirm before changing it.
+- **Survey stays intact; the mode UI is hidden.** The first-run diagnostic keeps
+  running (it still gathers interests/personalization); we simply stop *surfacing*
+  anything mode-related — no mode picker, no "recommended mode" screen. The
+  diagnostic's internals are left untouched so the in-progress work is not broken;
+  its mode output just goes unused.
 
 ## Components (Phase 1)
 
 | Unit | Responsibility |
 |---|---|
-| `useSunTimes(lat, lng, date)` | Pure function/hook: returns `{ sunrise, sunset }` Date objects for a location + day (NOAA formula). Testable in isolation. |
+| `useSunTimes(lat, lng, date)` | Pure function: returns `{ sunrise, sunset }` Date objects for a lat/lng + day (NOAA formula). Callers pass the assumed latitude and the time-zone-derived longitude. Testable in isolation. |
 | `useFeedHours()` | Resolves location → sun times → `{ isOpen, opensAt, closesAt, minutesUntilClose }`, re-evaluating on an interval and at the boundary. |
 | `ClosedGateway` | The resting/gateway screen (copy varies by time-of-day; teases phase 2). |
 | `CloseWarning` | The 5-minute countdown banner shown over the open feed. |
@@ -92,10 +92,9 @@ Outside hours, the entry route (`/`) renders a calm **`ClosedGateway`** screen
 ## Data flow
 
 ```
-coarse region (preferences) ─┐
-optional coarse geolocation ─┴─► lat/lng ─► useSunTimes ─► sunrise/sunset
-                                              │
-now (local time) ────────────────────────────┴─► useFeedHours
+device time zone ─► assumed latitude (~40°) + longitude (offsetHours×15°) ─► useSunTimes ─► sunrise/sunset
+                                                                                 │
+now (local clock time) ──────────────────────────────────────────────────────────┴─► useFeedHours
                                                     │  isOpen? minutesUntilClose?
                           ┌─────────────────────────┴───────────────────────┐
                       isOpen=false                                       isOpen=true
@@ -106,8 +105,8 @@ now (local time) ─────────────────────
 
 - **Polar latitudes / no sunrise or sunset that day** → fall back to fixed hours
   (open 07:00, close 19:00 local) so the app is never permanently dark or open.
-- **Unknown/withheld location** → fall back to the device timezone with the same
-  fixed 07:00–19:00 default, and invite the user to set a region.
+- **Time zone unavailable (rare)** → fall back to the fixed 07:00–19:00 local
+  default.
 - **DST / timezones** → always compute against the device's local time; sun times
   are in local time.
 - **Clock/day rollover** → `useFeedHours` recomputes at the next boundary
@@ -129,12 +128,13 @@ now (local time) ─────────────────────
 - Any change to feed ranking beyond dropping the user-facing mode choice.
 - Precise GPS storage.
 
-## Open questions to confirm on review
+## Resolved decisions
 
-1. **Location source:** region-centroid lookup vs. optional coarse browser
-   geolocation (or both, geo sharpening the region).
-2. **Override:** hard-closed vs. one high-friction "open 5 minutes" (recommend the
-   latter).
-3. **Survey:** OK to drop the recommended-mode output now (keeping the rest of the
-   diagnostic), or keep modes alive under the hood for the survey's sake?
-4. **Fixed-fallback hours:** 07:00–19:00 acceptable when the sun can't be computed?
+1. **No location** — device time zone + assumed temperate latitude (~40°) and a
+   time-zone-derived longitude for an approximate, seasonally drifting sunrise/
+   sunset. No permission prompt, nothing stored; not pinned to the exact horizon.
+2. **Hard close** — no override; closed until sunrise.
+3. **Hide the mode UI** — keep the diagnostic survey running; stop surfacing the
+   mode picker / recommended-mode; leave the diagnostic's internals untouched.
+4. **Fallback hours 07:00–19:00** — used at polar/degenerate latitudes or if the
+   time zone can't be read.
