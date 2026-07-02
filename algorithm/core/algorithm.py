@@ -331,6 +331,14 @@ def build_prototype_feed(
     emotional_amplification_streak = 0
     EMOTIONAL_STREAK_INTERRUPT = 2
 
+    # --- Step 7: Narrative-saturation state (appearance/body theme) ---
+    narrative_enabled = not bool(user_profile.get("disable_narrative_saturation", False))
+    narrative_window_history: List[bool] = []
+    narrative_threshold = (
+        NARRATIVE_THRESHOLD - 1 if age_group == "13-15" else NARRATIVE_THRESHOLD
+    )
+    narrative_saturated = False
+
     def _score_row(row, topic, d, passive_streak_eff):
         """Helper that reads optional new columns safely (default 0.0 for legacy data)."""
         creator_trait = getattr(row, "creator_trait", "")
@@ -434,6 +442,13 @@ def build_prototype_feed(
                 if row_eng > 0.6 and row_risk > 0.5:
                     s -= 0.30 * age_protection_factor
 
+            # Step 7: Narrative saturation — break sustained appearance-theme runs
+            if narrative_enabled and narrative_saturated:
+                if is_appearance_theme(getattr(row, "appearance_comparison", 0.0), topic):
+                    s -= NARRATIVE_DAMP * age_protection_factor
+                elif row_risk < 0.3:
+                    s += NARRATIVE_DIVERSIFY * age_protection_factor
+
             diversity_list.append(d)
             score_list.append(s)
 
@@ -506,6 +521,15 @@ def build_prototype_feed(
         emotional_amplification_streak = (
             emotional_amplification_streak + 1 if _is_amplification else 0
         )
+
+        # Step 7: Update narrative-saturation window for next iteration
+        _is_appearance = is_appearance_theme(
+            best_row.get("appearance_comparison", 0.0), best_row.get("topic", "")
+        )
+        narrative_window_history.append(_is_appearance)
+        if len(narrative_window_history) > NARRATIVE_WINDOW:
+            narrative_window_history.pop(0)
+        narrative_saturated = sum(narrative_window_history) >= narrative_threshold
 
         remaining = remaining.drop(index=best_idx).reset_index(drop=True)
 
