@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Play, Moon, Users, BarChart2, RefreshCw } from 'lucide-react';
 import { FeedCard } from './FeedCard';
+import { PhaseIconCarousel } from './PhaseIconCarousel';
 
 const API_URL = import.meta.env.VITE_API_URL ?? '';
 
@@ -178,7 +179,7 @@ export function FlutterFeed() {
           className="liquid-glass-strong rounded-full py-3 font-body font-medium text-sm text-foreground flex items-center justify-center gap-2 hover:scale-105 transition-transform duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {loading
-            ? <><div className="butterfly-spinner scale-75" /> Running…</>
+            ? <><PhaseIconCarousel className="butterfly-spinner scale-75" /> Running…</>
             : <><Play className="w-4 h-4" /> Run the Algorithm</>}
         </button>
       </div>
@@ -193,7 +194,7 @@ export function FlutterFeed() {
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="flex-1 flex flex-col items-center justify-center gap-4 liquid-glass rounded-2xl p-12 text-center"
             >
-              <div className="butterfly-spinner" />
+              <PhaseIconCarousel className="butterfly-spinner" />
               <p className="font-body font-light text-sm text-foreground/40">
                 Configure and run the algorithm to see live results
               </p>

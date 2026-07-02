@@ -64,7 +64,9 @@ export function AuthPage({ mode = 'login' }) {
         setNotice('Almost there — check your email to confirm your account, then log in.');
         return;
       }
-      navigate('/profile');
+      // Login is the last first-run step: head to the feed. FirstRunGate saves any
+      // pending diagnostic answers there and opens the recommended mode.
+      navigate('/');
     } catch (err) {
       setError(err?.message || 'Something went wrong. Please try again.');
     } finally {

@@ -15,6 +15,7 @@ import { SKIP_ALGORITHM_ONBOARDING, LOCK_HOME_FROM_ALGORITHM } from '../../brand
 import { MODES, reelsByMode, DEFAULT_MODE, LEGACY_INTENTION_MODES } from './reelsData';
 import { getFeedDebugSnapshot } from './feedTaxonomy';
 import { BreakScreen } from './BreakScreen';
+import { PhaseIconCarousel } from '../PhaseIconCarousel';
 import { useSessionTimer } from './useSessionTimer';
 import { DEFAULT_TIME_SCALE_MS, DEMO_TIME_SCALE_MS } from './sessionBreaks';
 import { useChallenges } from './useChallenges';
@@ -644,7 +645,7 @@ export function ReelsPage() {
 
                   {loadingMore && (
                     <div className="reels-feed-status" role="status" aria-live="polite">
-                      <span className="reels-feed-status__spinner" aria-hidden="true" />
+                      <PhaseIconCarousel className="reels-feed-status__spinner" />
                       Loading more videos…
                     </div>
                   )}
