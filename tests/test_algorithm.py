@@ -23,7 +23,8 @@ from core.algorithm import (
     score_parts,
     would_break_streak,
     rank_baseline,
-    build_prototype_feed
+    build_prototype_feed,
+    is_appearance_theme
 )
 
 from core.metrics import (
@@ -865,6 +866,31 @@ class TestUCRS(unittest.TestCase):
         div_high = diversity_at_k(feed_high, k=20)
         self.assertGreaterEqual(div_high, div_low,
                                 "higher novelty tolerance should not reduce topic diversity")
+
+
+class TestAppearanceThemeMembership(unittest.TestCase):
+    """Membership rule for the narrative-saturation detector (spec: ignores risk)."""
+
+    def test_high_appearance_comparison_is_theme(self):
+        self.assertTrue(is_appearance_theme(0.5, "cooking"))
+        self.assertTrue(is_appearance_theme(0.9, "science"))
+
+    def test_low_appearance_comparison_not_theme(self):
+        self.assertFalse(is_appearance_theme(0.49, "science"))
+        self.assertFalse(is_appearance_theme(0.0, "history"))
+
+    def test_appearance_topic_is_theme_regardless_of_comparison(self):
+        for topic in ("body_image", "eating_disorder", "weight_loss", "appearance"):
+            self.assertTrue(is_appearance_theme(0.0, topic))
+
+    def test_crisis_topics_not_owned_here(self):
+        # Owned by Step 5; must not be appearance-theme by topic alone.
+        for topic in ("self_harm", "suicide", "depression"):
+            self.assertFalse(is_appearance_theme(0.0, topic))
+
+    def test_membership_ignores_risk(self):
+        # No risk argument exists — a low-risk appearance clip is still theme.
+        self.assertTrue(is_appearance_theme(0.7, "fitness"))
 
 
 # =============================================================================
