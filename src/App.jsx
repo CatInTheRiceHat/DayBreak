@@ -9,6 +9,8 @@ import { RebootPage } from './components/RebootPage';
 import { ReelsPage } from './components/reels/ReelsPage';
 import { AuthProvider } from './lib/AuthProvider';
 import { AuthPage } from './components/profile/AuthPage';
+import { ForgotPasswordPage } from './components/profile/ForgotPasswordPage';
+import { ResetPasswordPage } from './components/profile/ResetPasswordPage';
 import { ProfilePage } from './components/profile/ProfilePage';
 import { EditProfileForm } from './components/profile/EditProfileForm';
 import { HomePage } from './components/home/HomePage';
@@ -38,6 +40,8 @@ function isAppPath(pathname) {
     || pathname === '/inbox'
     || pathname === '/login'
     || pathname === '/signup'
+    || pathname === '/forgot-password'
+    || pathname === '/reset-password'
     || pathname === '/profile'
     || pathname === '/profile/edit'
     || pathname.startsWith('/u/')
@@ -94,6 +98,8 @@ function AppShell({ showIntro, setShowIntro }) {
           <Route path="/inbox" element={<InboxPage />} />
           <Route path="/login" element={<AuthPage mode="login" />} />
           <Route path="/signup" element={<AuthPage mode="signup" />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/profile" element={<ProfilePage mode="me" />} />
           <Route path="/profile/edit" element={<EditProfileForm />} />
           <Route path="/u/:username" element={<ProfilePage mode="public" />} />

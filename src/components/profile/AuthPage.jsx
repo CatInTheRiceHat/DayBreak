@@ -19,6 +19,7 @@ export function AuthPage({ mode = 'login' }) {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
   const [notice, setNotice] = useState(null);
@@ -45,6 +46,10 @@ export function AuthPage({ mode = 'login' }) {
     event.preventDefault();
     setError(null);
     setNotice(null);
+    if (isSignup && password !== confirm) {
+      setError("Passwords don't match.");
+      return;
+    }
     setBusy(true);
     try {
       const { data, error: authError } = isSignup
@@ -138,6 +143,28 @@ export function AuthPage({ mode = 'login' }) {
               disabled={!configured || busy}
             />
           </label>
+
+          {isSignup && (
+            <label className="cx-field">
+              <span className="cx-field__label">Confirm password</span>
+              <input
+                type="password"
+                autoComplete="new-password"
+                required
+                minLength={6}
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                placeholder="Re-enter your password"
+                disabled={!configured || busy}
+              />
+            </label>
+          )}
+
+          {!isSignup && (
+            <p className="cx-form__forgot">
+              <Link to="/forgot-password">Forgot password?</Link>
+            </p>
+          )}
 
           {error && <p className="cx-form__error" role="alert">{error}</p>}
           {notice && <p className="cx-form__notice" role="status">{notice}</p>}

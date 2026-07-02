@@ -222,6 +222,10 @@
 .cx-btn--google:disabled { opacity: 0.6; cursor: default; }
 .cx-google-icon { flex: 0 0 auto; }
 
+/* "Forgot password?" link — right-aligned under the password field. */
+.cx-form__forgot { margin: -4px 0 0; text-align: right; font-size: 0.83rem; }
+.cx-form__forgot a { color: var(--accent); font-weight: 600; }
+
 /* "or" divider between the Google button and the email form. */
 .cx-divider {
   display: flex;
