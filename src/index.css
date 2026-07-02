@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=League+Spartan:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Sanchez:ital@0;1&family=Story+Script&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 45 29% 97%;
+  --foreground: 269 13% 17%;
+  --card: 45 29% 97%;
+  --card-foreground: 269 13% 17%;
+  --primary: 271 14% 49%;
+  --primary-foreground: 45 29% 97%;
+  --secondary: 270 9% 81%;
+  --secondary-foreground: 269 13% 17%;
+  --muted: 270 7% 57%;
+  --muted-foreground: 270 7% 57%;
+  --accent: 272 15% 67%;
+  --accent-foreground: 269 13% 17%;
+  --destructive: 0 84.2% 60.2%;
+  --border: 270 6% 69%;
+  --input: 270 9% 81%;
+  --ring: 271 14% 49%;
+  --radius: 9999px;
+  --font-title: "Abril Fatface", serif;
+  --font-heading: "Story Script", sans-serif;
+  --font-body: "Montserrat", sans-serif;
+  --glass-bg: rgba(250, 249, 246, 0.78);
+  --glass-border: rgba(147, 142, 151, 0.34);
+  --glass-shadow: 0 18px 48px rgba(43, 38, 49, 0.08);
+  --glass-blur: 16px;
+  --step-6: clamp(2.986rem, calc(0.7966rem + 7.6154vw), 19.0735rem);
+  --step-5: clamp(2.4883rem, calc(0.7503rem + 6.0452vw), 15.2588rem);
+  --step-4: clamp(2.0736rem, calc(0.6945rem + 4.7969vw), 12.207rem);
+  --step-3: clamp(1.728rem, calc(0.6341rem + 3.8048vw), 9.7656rem);
+  --step-2: clamp(1.44rem, calc(0.5727rem + 3.0166vw), 7.8125rem);
+  --step-1: clamp(1.2rem, calc(0.5127rem + 2.3905vw), 6.25rem);
+  --step-0: clamp(1rem, calc(0.4556rem + 1.8935vw), 5rem);
+  --step--1: clamp(0.8333rem, calc(0.4024rem + 1.499vw), 4rem);
+  --step--2: clamp(0.6944rem, calc(0.3535rem + 1.1861vw), 3.2rem);
+  --step--3: clamp(0.5787rem, calc(0.3091rem + 0.9379vw), 2.56rem);
+  --space-3xl: clamp(6rem, calc(2.7337rem + 11.3609vw), 30rem);
+  --space-2xl: clamp(4rem, calc(1.8225rem + 7.574vw), 20rem);
+  --space-xl: clamp(3rem, calc(1.3669rem + 5.6805vw), 15rem);
+  --space-l: clamp(2rem, calc(0.9112rem + 3.787vw), 10rem);
+  --space-m: clamp(1.5rem, calc(0.6834rem + 2.8402vw), 7.5rem);
+  --space-s: clamp(1rem, calc(0.4556rem + 1.8935vw), 5rem);
+  --space-xs: clamp(0.75rem, calc(0.3417rem + 1.4201vw), 3.75rem);
+  --space-2xs: clamp(0.5rem, calc(0.2278rem + 0.9467vw), 2.5rem);
+  --space-3xs: clamp(0.25rem, calc(0.1139rem + 0.4734vw), 1.25rem);
+  --border-radius-top: 40px;
+  --section-padding: var(--space-l);
+}
+
+body {
+  background: #faf9f6;
+  color: hsl(var(--foreground));
+  font-family: var(--font-body);
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* Brand wordmark butterfly — the logo image renders inside each mark span,
+   sized to that mark's font-size so the existing type scale drives it. */
+.home-topbar__brandmark img,
+.app-sidebar__logo img,
+.app-topbar__logo img,
+.app-sidebar__intention-logo img,
+.app-topbar__intention-logo img,
+.mode-card__logo img,
+.home-signin__mark img,
+.inbox-empty__mark img,
+.cx-brand__logo img,
+.intro-logo img,
+.ct-nav__mark img,
+.ct-overlay-brand__mark img,
+.custom-cursor__logo img {
+  height: 1em;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+@layer components {
+  .liquid-glass {
+    background: rgba(250, 249, 246, 0.76);
+    background-blend-mode: luminosity;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid rgba(147, 142, 151, 0.22);
+    box-shadow: 0 18px 48px rgba(43, 38, 49, 0.08);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .liquid-glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.4px;
+    background: linear-gradient(
+      180deg,
+      rgba(250, 249, 246, 0.5) 0%,
+      rgba(207, 203, 211, 0.24) 20%,
+      rgba(250, 249, 246, 0) 40%,
+      rgba(250, 249, 246, 0) 60%,
+      rgba(207, 203, 211, 0.24) 80%,
+      rgba(250, 249, 246, 0.5) 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .liquid-glass-strong {
+    background: rgba(250, 249, 246, 0.9);
+    background-blend-mode: luminosity;
+    backdrop-filter: blur(50px);
+    -webkit-backdrop-filter: blur(50px);
+    border: 1px solid rgba(147, 142, 151, 0.3);
+    box-shadow: 0 18px 48px rgba(43, 38, 49, 0.09);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .liquid-glass-strong::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.4px;
+    background: linear-gradient(
+      180deg,
+      rgba(250, 249, 246, 0.55) 0%,
+      rgba(207, 203, 211, 0.28) 20%,
+      rgba(250, 249, 246, 0) 40%,
+      rgba(250, 249, 246, 0) 60%,
+      rgba(207, 203, 211, 0.28) 80%,
+      rgba(250, 249, 246, 0.55) 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
