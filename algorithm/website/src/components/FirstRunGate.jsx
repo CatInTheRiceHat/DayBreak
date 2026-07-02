@@ -12,6 +12,12 @@ import { saveDiagnostic, getLatestDiagnostic } from '../lib/diagnostics';
 const INTRO_DONE_KEY = 'chrysalis-intro-done';
 const DIAG_DONE_KEY = 'chrysalis-diagnostic-done';
 const PENDING_KEY = 'chrysalis-diagnostic-pending';
+const ONBOARDED_KEY = 'chrysalis-algorithm-onboarded';
+
+// Local-dev only: set VITE_SKIP_AUTH=true in website/.env.local to skip the whole
+// intro → survey → login funnel and land straight on the feed. Compiled out of
+// production builds (import.meta.env.DEV is false there), so it can never ship.
+const DEV_SKIP_AUTH = import.meta.env.DEV && import.meta.env.VITE_SKIP_AUTH === 'true';
 
 /**
  * Orchestrates the first-run ribbon from the entry route ('/'):
@@ -29,6 +35,16 @@ export function FirstRunGate() {
   useEffect(() => {
     if (loading || typeof window === 'undefined') return;
     if (pathname !== '/') return; // only orchestrate from the entry screen
+
+    // Local-dev shortcut: mark the funnel complete and stay on the feed. No
+    // intro, no survey, no login. (Never runs in production — see DEV_SKIP_AUTH.)
+    if (DEV_SKIP_AUTH) {
+      window.localStorage.setItem(INTRO_DONE_KEY, '1');
+      window.localStorage.setItem(DIAG_DONE_KEY, '1');
+      window.localStorage.setItem(ONBOARDED_KEY, '1');
+      setShowIntro(false);
+      return;
+    }
 
     const introDone = window.localStorage.getItem(INTRO_DONE_KEY) === '1';
     const diagDone = window.localStorage.getItem(DIAG_DONE_KEY) === '1';
