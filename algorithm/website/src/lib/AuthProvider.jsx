@@ -53,6 +53,17 @@ export function AuthProvider({ children }) {
             options: { redirectTo: `${window.location.origin}/profile` },
           })
         : notConfigured()),
+    // Email the user a password-reset link. The link returns them to
+    // /reset-password with a temporary recovery session, where they set a new one.
+    resetPassword: (email) =>
+      (supabase
+        ? supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: `${window.location.origin}/reset-password`,
+          })
+        : notConfigured()),
+    // Set a new password for the currently-authenticated (or recovery) session.
+    updatePassword: (password) =>
+      (supabase ? supabase.auth.updateUser({ password }) : notConfigured()),
     signOut: () => (supabase ? supabase.auth.signOut() : notConfigured()),
   }), [session, loading]);
 
