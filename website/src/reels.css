@@ -139,6 +139,42 @@
   box-shadow: 0 30px 72px rgba(43, 38, 49, 0.22);
 }
 
+/* ── Landscape videos: contain the full 16:9 embed and fill the empty top/
+   bottom with a blurred backdrop (TikTok-style) instead of cropping. ───────── */
+.cropped-yt__frame {
+  transition:
+    width 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reel-frame--landscape .cropped-yt__frame {
+  /* Fit the frame width as true 16:9, centred, no cover overshoot. */
+  width: 100cqw;
+  height: calc(100cqw * 9 / 16);
+  transform: translate(-50%, -50%) scale(1);
+}
+.reel-frame--landscape .cropped-yt {
+  z-index: 1; /* keep the player above the blurred backdrop */
+}
+.reel-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(34px) brightness(0.5) saturate(1.15);
+  transform: scale(1.25); /* overscan so the blur has no hard edges */
+  animation: reelBackdropFade 0.5s ease both;
+}
+@keyframes reelBackdropFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cropped-yt__frame { transition: none; }
+  .reel-backdrop { animation: none; }
+}
+
 .reel-media {
   position: absolute;
   inset: 0;
