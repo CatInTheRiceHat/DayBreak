@@ -30,10 +30,11 @@
   --reel-shadow:  0 24px 60px rgba(43, 38, 49, 0.16);
   --reel-radius:  28px;
 
-  /* Typography — matched to the About-Me site: Story Script for
-     headings/labels, Montserrat for body. Scoped here so only the
-     algorithm feed + Home use them. */
-  --font-reels-heading: "Story Script", sans-serif;
+  /* Typography — style-guide roles. Headings/titles use the display
+     face Abril Fatface; tags/labels/chips use Story Script; body copy
+     uses Montserrat. Scoped here so only the algorithm feed + Home use them. */
+  --font-reels-heading: "Abril Fatface", serif;
+  --font-reels-tag:     "Story Script", sans-serif;
   --font-reels-body:    "Montserrat", sans-serif;
 }
 
@@ -325,6 +326,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
+  font-family: var(--font-reels-tag);
   max-width: min(100%, 38ch);
   min-width: 0;
   overflow: hidden;
@@ -585,7 +587,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--accent);
-  font-family: var(--font-reels-heading);
+  font-family: var(--font-reels-tag);
 }
 [data-algorithm] .feed-compass h2 {
   margin: 0;
@@ -783,7 +785,7 @@
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  font-family: var(--font-reels-heading);
+  font-family: var(--font-reels-tag);
 }
 [data-algorithm] .feed-compass__category--healthy,
 .reel-why__badge--healthy { background: color-mix(in srgb, var(--tone-healthy) 24%, var(--card)); border-color: color-mix(in srgb, var(--tone-healthy) 48%, transparent); }
@@ -1054,7 +1056,7 @@
 
 /* ── Current mode pill (informational, not a switcher) ─────────────────── */
 .algorithm-mode-pill {
-  font-family: var(--font-reels-heading);
+  font-family: var(--font-reels-tag);
   justify-self: center;
   display: inline-flex;
   align-items: center;
