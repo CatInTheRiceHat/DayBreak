@@ -3,8 +3,9 @@
 **Date:** 2026-07-02
 **Status:** Approved for planning
 **Goal:** Capture landscape vs. portrait orientation for every YouTube video in the
-Chrysalis feed pipeline, store it as first-class metadata, and expose it through the
-feed API so the feed can filter/sort by orientation.
+Chrysalis feed pipeline, store it as first-class metadata, expose it through the feed
+API, and **split the feed by orientation** — the main vertical reel feed serves portrait
+only, landscape videos are filed into their own feed.
 
 ## Problem
 
@@ -12,6 +13,13 @@ The pipeline stores `duration_seconds` and `thumbnail_url` but **no dimensional 
 there is no way to tell a landscape upload from a vertical (Shorts-style) one. As a
 result the feed cannot filter or rank by orientation, and today essentially all feed
 videos are landscape with no way to confirm that from the data.
+
+**Current frontend workaround (to be replaced):** `ReelCard` calls a client-side hook,
+`useVideoOrientation.js`, which loads each video's `maxresdefault.jpg` off-screen and
+compares pixel dimensions. Landscape-detected videos get a contained + blurred-backdrop
+layout *inline in the same feed*. This is the unreliable thumbnail method — Shorts
+thumbnails are padded to 16:9, and missing-maxres falls back to a guess — and it mixes
+orientations in one feed. The DB-derived orientation replaces it.
 
 ## The reliable signal
 
@@ -80,24 +88,46 @@ from an assumption into confirmed data.
   `"aspect_ratio": row.get("aspect_ratio")`. Older rows surface as `"unknown"` / `null`.
 - Update the docstring field list (~line 88) to mention the new fields.
 
-### 4. Filter capability — feed query
+### 4. Orientation filter + feed split — feed query & API
 
 Add an optional `orientation` filter parameter threaded from the API layer
-(`algorithm/api/index.py`) into the feed load. When set (e.g. `orientation=portrait`),
-the feed serves only rows matching that orientation; when unset (default), no filtering
-occurs and behavior is unchanged.
+(`algorithm/api/index.py`) into the feed load. When set (`orientation=portrait` or
+`orientation=landscape`), the feed serves only rows matching that orientation; when
+unset, no filtering occurs.
 
-**Deferred:** the default ranking *policy* (prefer-portrait weighting vs. hard
-portrait-only vs. tag-only). Ship the plumbing + capability with filtering **off by
-default**, then choose the policy after inspecting the real portrait/landscape split in
-the backfilled data.
+**Feed split (the product change):**
+
+- The **main vertical reel feed** requests `orientation=portrait` — it becomes
+  portrait-only. Vertical Shorts-style content only.
+- **Landscape videos** are served as their own feed via `orientation=landscape`. This
+  makes a distinct landscape feed *available from the API*.
+- Rows with `orientation='unknown'` (older/un-backfilled) are treated as **portrait** by
+  default so nothing silently disappears from the main feed before the backfill runs.
+  Revisit once backfill is complete.
+
+**Deferred (nav surface):** where the landscape feed *appears* in the UI — a dedicated
+tab/route/section — is a fast follow-up, not part of this slice. This spec makes the
+split real at the data + API level and leaves the navigation entry to green-light next.
+
+### 5. Retire the client-side probe — `ReelCard.jsx`
+
+Because orientation now arrives on the feed payload (Component 3) and the main feed is
+portrait-only (Component 4):
+
+- Delete `useVideoOrientation.js` and its import/usage in `ReelCard.jsx`.
+- Drive `isLandscape` from the backend field:
+  `const isLandscape = (reel.orientation ?? 'portrait') === 'landscape';`
+- Keep the existing `reel-frame--landscape` contained/blurred-backdrop layout — it is
+  the correct renderer for landscape videos, now used by the **landscape feed** rather
+  than by inline detection in the main feed.
 
 ## Out of scope
 
-- **Frontend crop behavior** (`CroppedYouTubePlayer` hard-crops everything to 9:16).
-  That is a *display* concern; this spec is about *data* (filter/sort). Tracked as a
-  separate follow-up once orientation data exists.
-- Any ranking-weight tuning (see Component 4 deferral).
+- **`CroppedYouTubePlayer` crop tuning** for portrait videos (the 9:16 cover math is
+  fine as-is for genuine portrait content). No change needed once the main feed is
+  portrait-only.
+- **Landscape-feed navigation UI** (tab/route) — deferred fast follow-up (Component 4).
+- Any additional ranking-weight tuning beyond the orientation split.
 
 ## Testing
 
@@ -107,7 +137,11 @@ the backfilled data.
   `orientation`/`aspect_ratio`; with `player` absent yields `unknown`/`None`.
 - **Feed** — `build_feed_payload` emits `orientation`/`aspect_ratio`; old rows without
   the columns surface as `unknown`/`null`; the `orientation` filter includes/excludes
-  correctly and is a no-op when unset.
+  correctly, is a no-op when unset, and treats `unknown` as portrait.
+- **Feed split** — `orientation=portrait` request excludes landscape rows;
+  `orientation=landscape` request returns only landscape rows.
+- **Frontend** — `ReelCard` reads `reel.orientation` (no thumbnail probe); a landscape
+  reel renders the `reel-frame--landscape` layout, a portrait reel does not.
 - Existing 87-test suite stays green.
 
 ## Rollout order
@@ -116,5 +150,6 @@ the backfilled data.
 2. Ingest capture (part + maxWidth + candidate fields).
 3. Schema columns + INSERT/UPSERT.
 4. Feed SELECT + payload exposure.
-5. Optional `orientation` filter param.
-6. Backfill script.
+5. `orientation` filter param + feed split (main = portrait, landscape feed available).
+6. Retire `useVideoOrientation.js`; drive `ReelCard` from `reel.orientation`.
+7. Backfill script.
