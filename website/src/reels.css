@@ -30,11 +30,11 @@
   --reel-shadow:  0 24px 60px rgba(43, 38, 49, 0.16);
   --reel-radius:  28px;
 
-  /* Typography — League Spartan for headings/labels, Sanchez for body.
-     Scoped here (not the global --font-heading/--font-body) so only the
+  /* Typography — matched to the About-Me site: Story Script for
+     headings/labels, Montserrat for body. Scoped here so only the
      algorithm feed + Home use them. */
-  --font-reels-heading: "League Spartan", sans-serif;
-  --font-reels-body:    "Sanchez", serif;
+  --font-reels-heading: "Story Script", sans-serif;
+  --font-reels-body:    "Montserrat", sans-serif;
 }
 
 [data-algorithm][data-theme="dark"] {
