@@ -996,9 +996,14 @@ class TestNarrativeSaturation(unittest.TestCase):
             feed_off["view_count"].tolist(), feed_on["view_count"].tolist())
 
     def test_does_not_override_crisis_step5(self):
-        # An eating_disorder-heavy pool must still route through Step 5 (wellness injection),
-        # not be silently governed only by Step 7. We assert Step 5's suppression still bites:
-        # high-risk crisis items are pushed down relative to a detector that ignored them.
+        # These crisis items are eating_disorder AND high appearance_comparison (0.8), so
+        # Step 7 (narrative-saturation / appearance-theme detection) also has a claim on
+        # them. This test asserts Step 5's crisis routing still wins: high-risk
+        # (risk >= 0.8) crisis items must be down-ranked and wellness resources surfaced,
+        # even though those same crisis items are also appearance-theme content that
+        # Step 7 could otherwise dominate. Without Step 5, nothing suppresses the
+        # high-risk items relative to wellness, and crisis_served < wellness_served
+        # would flip (or fail to hold).
         rows = []
         for i in range(8):
             rows.append({
@@ -1023,7 +1028,12 @@ class TestNarrativeSaturation(unittest.TestCase):
         feed = build_prototype_feed(df, weights, {}, k=12)
         # Step 5 crisis routing should surface wellness resources, not an all-crisis feed.
         wellness_served = int((feed["is_wellness_resource"] == 1).sum())
+        crisis_served = int((feed["risk"] >= 0.8).sum())  # the high-risk crisis items
         self.assertGreater(wellness_served, 0)
+        # Step 5 suppresses high-risk crisis items and boosts wellness, so wellness must
+        # be served MORE than the suppressed crisis items. This inversion (and the
+        # assertion) fails if Step 5 is removed.
+        self.assertLess(crisis_served, wellness_served)
 
 
 # =============================================================================
