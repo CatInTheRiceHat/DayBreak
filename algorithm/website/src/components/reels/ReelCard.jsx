@@ -7,6 +7,7 @@ import { getRecommendationInsight } from './feedTaxonomy';
 import { buildYouTubeEmbedUrl } from './youtubeEmbed';
 import { CroppedYouTubePlayer } from './CroppedYouTubePlayer';
 import { PhaseIconCarousel } from '../PhaseIconCarousel';
+import { useVideoOrientation } from './useVideoOrientation';
 import { useSavedVideos } from './useSavedVideos';
 import { useLikedVideos } from './useLikedVideos';
 import { useReflections } from './useReflections';
@@ -97,6 +98,12 @@ export function ReelCard({
   });
   const shouldRenderEmbed = hasVideo && embedSrc && isActive;
 
+  // Landscape (16:9) videos get contained + a blurred backdrop instead of the
+  // vertical cover-crop that would slice off their sides.
+  const ytId = reel.youtube_id || reel.youtubeId || null;
+  const orientation = useVideoOrientation(hasVideo ? ytId : null);
+  const isLandscape = orientation === 'landscape';
+
   useLayoutEffect(() => {
     if (!shouldRenderEmbed) return undefined;
     const iframe = iframeRef.current;
@@ -153,9 +160,17 @@ export function ReelCard({
         />
 
         <div className="reel-media-cell">
-          <div className="reel-frame">
+          <div className={`reel-frame${isLandscape ? ' reel-frame--landscape' : ''}`}>
             {/* Brand wash always sits behind the media so any image reads on-palette */}
             <div className="reel-media-wash" aria-hidden="true" />
+
+            {isLandscape && ytId && (
+              <div
+                className="reel-backdrop"
+                style={{ backgroundImage: `url(https://i.ytimg.com/vi/${ytId}/maxresdefault.jpg)` }}
+                aria-hidden="true"
+              />
+            )}
 
             {hasVideo ? (
               shouldRenderEmbed ? (
