@@ -1753,6 +1753,31 @@ def _safe_int(value) -> int:
         return 0
 
 
+def _derive_orientation(
+    embed_width: int | None,
+    embed_height: int | None,
+) -> tuple[float | None, str]:
+    """Classify a video's orientation from its YouTube embed dimensions.
+
+    `videos.list?part=player&maxWidth=...` returns embedWidth/embedHeight that
+    reflect the video's true aspect ratio (thumbnails are unreliable for Shorts).
+    Returns (aspect_ratio, orientation). Missing/zero dims -> (None, "unknown");
+    we never guess from duration or thumbnails.
+    """
+    w = _safe_int(embed_width)
+    h = _safe_int(embed_height)
+    if w <= 0 or h <= 0:
+        return None, "unknown"
+    ratio = w / h
+    if ratio >= 1.05:
+        orientation = "landscape"
+    elif ratio <= 0.95:
+        orientation = "portrait"
+    else:
+        orientation = "square"
+    return ratio, orientation
+
+
 def _chunks(items: list[str], size: int) -> Iterable[list[str]]:
     for index in range(0, len(items), size):
         yield items[index:index + size]

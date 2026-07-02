@@ -3,6 +3,8 @@ from __future__ import annotations
 from datetime import datetime, timezone
 import sqlite3
 
+import pytest
+
 from core.language_filter import verdict
 from core.ranking.feed import build_feed, build_feed_payload
 from integrations.youtube_ingest import (
@@ -14,6 +16,7 @@ from integrations.youtube_ingest import (
     ingest_youtube_videos_sqlite,
     load_active_feed_video_rows_sqlite,
 )
+from integrations.youtube_ingest import _derive_orientation
 
 
 NOW = datetime(2026, 6, 14, 12, 0, tzinfo=timezone.utc)
@@ -281,3 +284,23 @@ def test_feed_stays_balanced_and_not_all_wellness():
     assert "regular" in categories
     # Healthy ratio holds inside the Chrysalis target band despite the heavy pool.
     assert 0.4 <= payload["healthy_content_ratio"] <= 0.6
+
+
+def test_derive_orientation_landscape():
+    assert _derive_orientation(1280, 720) == (pytest.approx(1280 / 720), "landscape")
+
+
+def test_derive_orientation_portrait():
+    assert _derive_orientation(720, 1280) == (pytest.approx(720 / 1280), "portrait")
+
+
+def test_derive_orientation_square():
+    ratio, label = _derive_orientation(300, 300)
+    assert label == "square"
+    assert ratio == pytest.approx(1.0)
+
+
+def test_derive_orientation_missing_or_zero():
+    assert _derive_orientation(None, None) == (None, "unknown")
+    assert _derive_orientation(0, 720) == (None, "unknown")
+    assert _derive_orientation(1280, 0) == (None, "unknown")
