@@ -1263,7 +1263,7 @@ function ContactSection() {
       </div>
       <div className="ct-footer__grid">
         {[
-          ['Try the algorithm', '/algorithm', <Route size={22} aria-hidden="true" />],
+          ['Try the algorithm', 'https://thechrysalisproject.vercel.app/algorithm', <Route size={22} aria-hidden="true" />],
           ['Email Elaine', 'mailto:elaineyouyuanche@gmail.com', <Mail size={22} aria-hidden="true" />],
         ].map(([label, href, icon], index) => (
           <DroopyElement
