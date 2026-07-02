@@ -46,6 +46,13 @@ export function AuthProvider({ children }) {
       (supabase ? supabase.auth.signUp({ email, password }) : notConfigured()),
     signIn: (email, password) =>
       (supabase ? supabase.auth.signInWithPassword({ email, password }) : notConfigured()),
+    signInWithGoogle: () =>
+      (supabase
+        ? supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: { redirectTo: `${window.location.origin}/profile` },
+          })
+        : notConfigured()),
     signOut: () => (supabase ? supabase.auth.signOut() : notConfigured()),
   }), [session, loading]);
 
