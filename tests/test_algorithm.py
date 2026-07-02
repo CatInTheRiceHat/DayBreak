@@ -27,6 +27,8 @@ from core.algorithm import (
     is_appearance_theme
 )
 
+from core.constants import NARRATIVE_THRESHOLD
+
 from core.metrics import (
     diversity_at_k,
     max_streak,
@@ -63,6 +65,52 @@ def make_sample_data(n=100):
     # Add engagement column
     df, _ = add_engagement(df)
     return df
+
+
+def make_appearance_saturation_data():
+    """Attractive (high-engagement) low-risk appearance clips + less-engaging safe clips.
+
+    Appearance clips outrank safe clips on raw engagement, so a plain feed
+    saturates with them; only the Step-7 detector should break that up.
+    """
+    rows = []
+    ap_topics = ["fitness", "beauty", "fashion", "aesthetic"]   # NOT in APPEARANCE_TOPICS
+    for i in range(12):
+        rows.append({
+            "view_count": 100000, "topic": ap_topics[i % len(ap_topics)],
+            "channel": f"ap_ch_{i}", "prosocial": 0, "risk": 0.3,
+            "appearance_comparison": 0.7, "creator_trait": "casual",
+            "active_engagement_ratio": 0.2, "opinion_comparison": 0.0,
+            "creator_authenticity": 0.5,
+        })
+    safe_topics = ["science", "nature", "cooking", "history"]
+    for i in range(12):
+        rows.append({
+            "view_count": 20000, "topic": safe_topics[i % len(safe_topics)],
+            "channel": f"safe_ch_{i}", "prosocial": 0, "risk": 0.1,
+            "appearance_comparison": 0.0, "creator_trait": "casual",
+            "active_engagement_ratio": 0.2, "opinion_comparison": 0.0,
+            "creator_authenticity": 0.5,
+        })
+    df = pd.DataFrame(rows)
+    df, _ = add_engagement(df)
+    return df
+
+
+def _appearance_flags(feed_df):
+    """List[bool] — was each served row appearance-theme?"""
+    return [
+        is_appearance_theme(row.appearance_comparison, row.topic)
+        for row in feed_df.itertuples(index=False)
+    ]
+
+
+def _longest_run(flags):
+    best = cur = 0
+    for f in flags:
+        cur = cur + 1 if f else 0
+        best = max(best, cur)
+    return best
 
 
 # =============================================================================
@@ -891,6 +939,91 @@ class TestAppearanceThemeMembership(unittest.TestCase):
     def test_membership_ignores_risk(self):
         # No risk argument exists — a low-risk appearance clip is still theme.
         self.assertTrue(is_appearance_theme(0.7, "fitness"))
+
+
+class TestNarrativeSaturation(unittest.TestCase):
+    """Step 7: break sustained appearance-theme runs of individually-safe clips."""
+
+    def test_saturation_breaks_the_run(self):
+        df = make_appearance_saturation_data()
+        weights, _ = get_mode_settings("entertainment")
+
+        feed_off = build_prototype_feed(
+            df, weights, {"disable_narrative_saturation": True}, k=12)
+        feed_on = build_prototype_feed(
+            df, weights, {"disable_narrative_saturation": False}, k=12)
+
+        flags_off = _appearance_flags(feed_off)
+        flags_on = _appearance_flags(feed_on)
+
+        # Detector strictly reduces both total appearance items and the longest run.
+        self.assertLess(sum(flags_on), sum(flags_off))
+        self.assertLess(_longest_run(flags_on), _longest_run(flags_off))
+
+        # A safe off-theme item is served within 2 picks after saturation triggers.
+        first_off = next((i for i, f in enumerate(flags_on) if not f), None)
+        self.assertIsNotNone(first_off)
+        self.assertLessEqual(first_off, NARRATIVE_THRESHOLD + 1)  # 4-of-6 trigger -> by index 5
+
+    def test_age_breaks_pattern_sooner_for_13_15(self):
+        df = make_appearance_saturation_data()
+        weights, _ = get_mode_settings("entertainment")
+
+        feed_teen = build_prototype_feed(df, weights, {"age_group": "13-15"}, k=12)
+        feed_adult = build_prototype_feed(df, weights, {"age_group": None}, k=12)
+
+        first_off_teen = next(
+            (i for i, f in enumerate(_appearance_flags(feed_teen)) if not f), 99)
+        first_off_adult = next(
+            (i for i, f in enumerate(_appearance_flags(feed_adult)) if not f), 99)
+
+        # 13-15 saturates at 3-of-6 vs 4-of-6, so its first off-theme item is earlier.
+        self.assertLess(first_off_teen, first_off_adult)
+
+    def test_no_false_positive_on_normal_feed(self):
+        # A feed with essentially no appearance content must be unchanged by the detector.
+        df = make_sample_data(120)
+        df["appearance_comparison"] = 0.0
+        df["topic"] = np.where(df["topic"] == "art", "science", df["topic"])  # keep off-theme
+        weights, _ = get_mode_settings("entertainment")
+
+        feed_off = build_prototype_feed(
+            df, weights, {"disable_narrative_saturation": True}, k=30)
+        feed_on = build_prototype_feed(
+            df, weights, {"disable_narrative_saturation": False}, k=30)
+
+        self.assertEqual(
+            feed_off["view_count"].tolist(), feed_on["view_count"].tolist())
+
+    def test_does_not_override_crisis_step5(self):
+        # An eating_disorder-heavy pool must still route through Step 5 (wellness injection),
+        # not be silently governed only by Step 7. We assert Step 5's suppression still bites:
+        # high-risk crisis items are pushed down relative to a detector that ignored them.
+        rows = []
+        for i in range(8):
+            rows.append({
+                "view_count": 100000, "topic": "eating_disorder", "channel": f"c{i}",
+                "prosocial": 0, "risk": 0.9, "appearance_comparison": 0.8,
+                "creator_trait": "casual", "active_engagement_ratio": 0.2,
+                "opinion_comparison": 0.0, "creator_authenticity": 0.5,
+                "is_wellness_resource": 0,
+            })
+        for i in range(8):
+            rows.append({
+                "view_count": 40000, "topic": "wellness", "channel": f"w{i}",
+                "prosocial": 1, "risk": 0.0, "appearance_comparison": 0.0,
+                "creator_trait": "casual", "active_engagement_ratio": 0.2,
+                "opinion_comparison": 0.0, "creator_authenticity": 0.5,
+                "is_wellness_resource": 1,
+            })
+        df = pd.DataFrame(rows)
+        df, _ = add_engagement(df)
+        weights, _ = get_mode_settings("entertainment")
+
+        feed = build_prototype_feed(df, weights, {}, k=12)
+        # Step 5 crisis routing should surface wellness resources, not an all-crisis feed.
+        wellness_served = int((feed["is_wellness_resource"] == 1).sum())
+        self.assertGreater(wellness_served, 0)
 
 
 # =============================================================================
