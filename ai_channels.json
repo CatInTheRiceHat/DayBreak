@@ -1,0 +1,352 @@
+[
+  {
+    "platform": "youtube",
+    "channel_id": "UCsXVk37bltHxD1rDPwtNM8Q",
+    "channel_title": "Kurzgesagt – In a Nutshell",
+    "channel_url": "https://www.youtube.com/channel/UCsXVk37bltHxD1rDPwtNM8Q",
+    "trust_status": "trusted",
+    "source_type": "science",
+    "confidence_score": 0.95,
+    "reason": "Animated, well-sourced science explainers; calm tone and teen-safe educational framing."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCHnyfMqiRRG1u-2MsSQLbXA",
+    "channel_title": "Veritasium",
+    "channel_url": "https://www.youtube.com/channel/UCHnyfMqiRRG1u-2MsSQLbXA",
+    "trust_status": "trusted",
+    "source_type": "science",
+    "confidence_score": 0.93,
+    "reason": "Curiosity-driven science explainers; accurate, calm, low-conflict educational content."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UC7DdEm33SyaTDtWYGO2CwdA",
+    "channel_title": "Physics Girl",
+    "channel_url": "https://www.youtube.com/channel/UC7DdEm33SyaTDtWYGO2CwdA",
+    "trust_status": "trusted",
+    "source_type": "science",
+    "confidence_score": 0.88,
+    "reason": "Approachable physics demonstrations; positive, curious, teen-safe."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UC6107grRI4m0o2-emgoDnAA",
+    "channel_title": "SmarterEveryDay",
+    "channel_url": "https://www.youtube.com/channel/UC6107grRI4m0o2-emgoDnAA",
+    "trust_status": "trusted",
+    "source_type": "science",
+    "confidence_score": 0.88,
+    "reason": "Curiosity-driven science exploration; positive, teen-safe."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCsooa4yRKGN_zEE8iknghZA",
+    "channel_title": "TED-Ed",
+    "channel_url": "https://www.youtube.com/channel/UCsooa4yRKGN_zEE8iknghZA",
+    "trust_status": "trusted",
+    "source_type": "education",
+    "confidence_score": 0.95,
+    "reason": "Short animated lessons across subjects; teen-safe, educational, positive."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCX6b17PVsYBQ0ip5gyeme-Q",
+    "channel_title": "CrashCourse",
+    "channel_url": "https://www.youtube.com/channel/UCX6b17PVsYBQ0ip5gyeme-Q",
+    "trust_status": "trusted",
+    "source_type": "education",
+    "confidence_score": 0.92,
+    "reason": "Structured educational courses for students; teen-safe and useful for learning."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UC4a-Gbdw7vOaccHmFo40b9g",
+    "channel_title": "Khan Academy",
+    "channel_url": "https://www.youtube.com/channel/UC4a-Gbdw7vOaccHmFo40b9g",
+    "trust_status": "trusted",
+    "source_type": "education",
+    "confidence_score": 0.96,
+    "reason": "Free structured lessons; highly useful, teen-safe, zero-conflict educational content."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCYO_jab_esuFRV4b17AJtAw",
+    "channel_title": "3Blue1Brown",
+    "channel_url": "https://www.youtube.com/channel/UCYO_jab_esuFRV4b17AJtAw",
+    "trust_status": "trusted",
+    "source_type": "education",
+    "confidence_score": 0.92,
+    "reason": "Calm, visual math explainers; useful and teen-safe educational content."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UC2C_jShtL725hvbm1arSV9w",
+    "channel_title": "CGP Grey",
+    "channel_url": "https://www.youtube.com/channel/UC2C_jShtL725hvbm1arSV9w",
+    "trust_status": "trusted",
+    "source_type": "education",
+    "confidence_score": 0.9,
+    "reason": "Clear explainer content on how-things-work topics; calm and teen-safe."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCpVm7bg6pXKo1Pr6k5kxG9A",
+    "channel_title": "National Geographic",
+    "channel_url": "https://www.youtube.com/channel/UCpVm7bg6pXKo1Pr6k5kxG9A",
+    "trust_status": "trusted",
+    "source_type": "education",
+    "confidence_score": 0.92,
+    "reason": "Nature, science, and exploration documentaries; teen-safe and educational."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCY1kMZp36IQSyNx_9h4mpCg",
+    "channel_title": "Mark Rober",
+    "channel_url": "https://www.youtube.com/channel/UCY1kMZp36IQSyNx_9h4mpCg",
+    "trust_status": "trusted",
+    "source_type": "creativity",
+    "confidence_score": 0.92,
+    "reason": "Upbeat engineering/science builds; positive, creative, teen-safe maker content."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCxcnsr1R5Ge_fbTu5ajt8DQ",
+    "channel_title": "Bob Ross",
+    "channel_url": "https://www.youtube.com/channel/UCxcnsr1R5Ge_fbTu5ajt8DQ",
+    "trust_status": "trusted",
+    "source_type": "creativity",
+    "confidence_score": 0.9,
+    "reason": "Calming painting tutorials; soothing, positive, deeply teen-safe."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCJHA_jMfCvEnv-3kRjTCQXw",
+    "channel_title": "Binging with Babish",
+    "channel_url": "https://www.youtube.com/channel/UCJHA_jMfCvEnv-3kRjTCQXw",
+    "trust_status": "trusted",
+    "source_type": "food",
+    "confidence_score": 0.87,
+    "reason": "Approachable cooking tutorials; creative, calm, teen-safe."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCwmZiChSryoWQCZMIQezgTg",
+    "channel_title": "BBC Earth",
+    "channel_url": "https://www.youtube.com/channel/UCwmZiChSryoWQCZMIQezgTg",
+    "trust_status": "trusted",
+    "source_type": "animals",
+    "confidence_score": 0.92,
+    "reason": "Calming wildlife and nature documentary clips; positive, teen-safe."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCINb0wqPz-A0dV9nARjJlOQ",
+    "channel_title": "The Dodo",
+    "channel_url": "https://www.youtube.com/channel/UCINb0wqPz-A0dV9nARjJlOQ",
+    "trust_status": "trusted",
+    "source_type": "animals",
+    "confidence_score": 0.86,
+    "reason": "Uplifting animal-rescue stories; warm, positive, teen-safe content."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCFKE7WVJfvaHW5q283SxchA",
+    "channel_title": "Yoga With Adriene",
+    "channel_url": "https://www.youtube.com/channel/UCFKE7WVJfvaHW5q283SxchA",
+    "trust_status": "trusted",
+    "source_type": "wellness",
+    "confidence_score": 0.92,
+    "reason": "Calm guided yoga and self-care; teen-safe, no body-shaming, wellbeing-positive."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCq2E1mIwUKMWzCA4liA_XGQ",
+    "channel_title": "Pick Up Limes",
+    "channel_url": "https://www.youtube.com/channel/UCq2E1mIwUKMWzCA4liA_XGQ",
+    "trust_status": "trusted",
+    "source_type": "wellness",
+    "confidence_score": 0.9,
+    "reason": "Calm wellness, mindful eating, and self-care; positive and teen-safe."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UC4jWo5kiyOCt4PnvF4jbaLg",
+    "channel_title": "The Honest Guys - Meditations - Relaxation",
+    "channel_url": "https://www.youtube.com/channel/UC4jWo5kiyOCt4PnvF4jbaLg",
+    "trust_status": "trusted",
+    "source_type": "wellness",
+    "confidence_score": 0.85,
+    "reason": "Guided meditation and relaxation; calming, low-conflict wellbeing content."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCJ24N4O0bP7LGLBDvye7oCA",
+    "channel_title": "Matt D'Avella",
+    "channel_url": "https://www.youtube.com/channel/UCJ24N4O0bP7LGLBDvye7oCA",
+    "trust_status": "trusted",
+    "source_type": "productivity",
+    "confidence_score": 0.88,
+    "reason": "Calm minimalism and healthy-habits content; positive, teen-safe self-improvement."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCoOae5nYA7VqaXzerajD0lg",
+    "channel_title": "Ali Abdaal",
+    "channel_url": "https://www.youtube.com/channel/UCoOae5nYA7VqaXzerajD0lg",
+    "trust_status": "trusted",
+    "source_type": "productivity",
+    "confidence_score": 0.87,
+    "reason": "Evidence-based productivity and study advice; positive and teen-useful."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCq-Fj5jknLsUf-MWSy4_brA",
+    "channel_title": "T-Series",
+    "channel_url": "https://www.youtube.com/channel/UCq-Fj5jknLsUf-MWSy4_brA",
+    "trust_status": "blocked",
+    "source_type": "non_english",
+    "confidence_score": 0.9,
+    "reason": "Primarily Hindi-language music; out of scope for a US/English teen demo."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCpEhnqL0y41EpW2TvWAHD7Q",
+    "channel_title": "SET India",
+    "channel_url": "https://www.youtube.com/channel/UCpEhnqL0y41EpW2TvWAHD7Q",
+    "trust_status": "blocked",
+    "source_type": "non_english",
+    "confidence_score": 0.9,
+    "reason": "Hindi-language TV serials; out of scope for a US/English teen demo."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UC6-F5tO8uklgE9Zy8IvbdFw",
+    "channel_title": "Sony SAB",
+    "channel_url": "https://www.youtube.com/channel/UC6-F5tO8uklgE9Zy8IvbdFw",
+    "trust_status": "blocked",
+    "source_type": "non_english",
+    "confidence_score": 0.85,
+    "reason": "Hindi-language TV content; out of scope for a US/English teen demo."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCffDXn7ycAzwL2LDlbyWOTw",
+    "channel_title": "Canal KondZilla",
+    "channel_url": "https://www.youtube.com/channel/UCffDXn7ycAzwL2LDlbyWOTw",
+    "trust_status": "blocked",
+    "source_type": "non_english",
+    "confidence_score": 0.88,
+    "reason": "Portuguese-language music; out of scope for a US/English teen demo."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCV306eHqgo0LvBf3Mh36AHg",
+    "channel_title": "Felipe Neto",
+    "channel_url": "https://www.youtube.com/channel/UCV306eHqgo0LvBf3Mh36AHg",
+    "trust_status": "blocked",
+    "source_type": "non_english",
+    "confidence_score": 0.85,
+    "reason": "Portuguese-language entertainment; out of scope for a US/English teen demo."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCYWOjHweP2V-8kGKmmAmQJQ",
+    "channel_title": "Badabun",
+    "channel_url": "https://www.youtube.com/channel/UCYWOjHweP2V-8kGKmmAmQJQ",
+    "trust_status": "blocked",
+    "source_type": "non_english",
+    "confidence_score": 0.85,
+    "reason": "Spanish-language entertainment; out of scope for a US/English teen demo."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCECJDeK0MNapZbpaOzxrUPA",
+    "channel_title": "Luisito Comunica",
+    "channel_url": "https://www.youtube.com/channel/UCECJDeK0MNapZbpaOzxrUPA",
+    "trust_status": "blocked",
+    "source_type": "non_english",
+    "confidence_score": 0.85,
+    "reason": "Spanish-language vlogs; out of scope for a US/English teen demo."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UC11PvrGPzo6Y7Zc6-e9cAKg",
+    "channel_title": "DramaAlert",
+    "channel_url": "https://www.youtube.com/channel/UC11PvrGPzo6Y7Zc6-e9cAKg",
+    "trust_status": "blocked",
+    "source_type": "drama",
+    "confidence_score": 0.82,
+    "reason": "Genre is influencer drama/conflict commentary; antithetical to a calm, low-conflict teen feed."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCbCmjCuTUZos6Inko4u57UQ",
+    "channel_title": "Cocomelon - Nursery Rhymes",
+    "channel_url": "https://www.youtube.com/channel/UCbCmjCuTUZos6Inko4u57UQ",
+    "trust_status": "blocked",
+    "source_type": "low_quality",
+    "confidence_score": 0.78,
+    "reason": "Preschool nursery-rhyme content; age-inappropriate and irrelevant for a teen feed."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCJ5v_MCY6GNUBTO8-D3XoAg",
+    "channel_title": "WWE",
+    "channel_url": "https://www.youtube.com/channel/UCJ5v_MCY6GNUBTO8-D3XoAg",
+    "trust_status": "blocked",
+    "source_type": "drama",
+    "confidence_score": 0.75,
+    "reason": "Staged combat/conflict entertainment; high-conflict and off-theme for a calm wellbeing feed."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCLXo7UDZvByw2ixzpQCufnA",
+    "channel_title": "Vox",
+    "channel_url": "https://www.youtube.com/channel/UCLXo7UDZvByw2ixzpQCufnA",
+    "trust_status": "pending",
+    "source_type": "perspective",
+    "confidence_score": 0.7,
+    "reason": "Explanatory journalism; generally calm but some political conflict — uncertain fit for a low-conflict feed."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCmGSJVG3mCRXVOP4yZrU1Dw",
+    "channel_title": "Johnny Harris",
+    "channel_url": "https://www.youtube.com/channel/UCmGSJVG3mCRXVOP4yZrU1Dw",
+    "trust_status": "pending",
+    "source_type": "perspective",
+    "confidence_score": 0.7,
+    "reason": "Geopolitics/explainer storytelling; engaging but opinionated — needs human review for teen feed."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UClHVl2N3jPEbkNJVx-ItQIQ",
+    "channel_title": "HealthyGamerGG",
+    "channel_url": "https://www.youtube.com/channel/UClHVl2N3jPEbkNJVx-ItQIQ",
+    "trust_status": "pending",
+    "source_type": "wellness",
+    "confidence_score": 0.72,
+    "reason": "Mental-health framing for young/gamer audiences; promising but non-clinical advice — review before trusting."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCBIt1VN5j37PVM8LLSuTTlw",
+    "channel_title": "Improvement Pill",
+    "channel_url": "https://www.youtube.com/channel/UCBIt1VN5j37PVM8LLSuTTlw",
+    "trust_status": "pending",
+    "source_type": "perspective",
+    "confidence_score": 0.68,
+    "reason": "Self-improvement animation; useful but can oversimplify psychology — review before trusting."
+  },
+  {
+    "platform": "youtube",
+    "channel_id": "UCybBViio_TH_uiFFDJuz5tg",
+    "channel_title": "Einzelgänger",
+    "channel_url": "https://www.youtube.com/channel/UCybBViio_TH_uiFFDJuz5tg",
+    "trust_status": "pending",
+    "source_type": "perspective",
+    "confidence_score": 0.68,
+    "reason": "Calm philosophy/stoicism essays; reflective but heavy themes — review for teen suitability."
+  }
+]

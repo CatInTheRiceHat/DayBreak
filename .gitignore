@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Frontend source dir — override the Python `lib/` rule above so the
+# Vite app's src/lib (AuthProvider, supabaseClient, etc.) is tracked.
+!website/src/lib/
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+*.env.local
+
+# Results (keep the directory, ignore generated files)
+results/data/*.csv
+results/figures/*.png
+
+# Logs
+*.log
+
+# VK-LSVD
+VK-LSVD/
+
+# Morphomedia Data & DB
+datasets/*
+!datasets/seed_videos.json
+morphomedia.db
+reports/

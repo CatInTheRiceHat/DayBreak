@@ -1,0 +1,30 @@
+name: YouTube Feed Ingest
+
+on:
+  schedule:
+    # 4x/day, evenly spaced every 6h, offset 7 min past the hour to dodge
+    # top-of-hour traffic spikes. GitHub Actions cron is always UTC.
+    # Runs at 00:07, 06:07, 12:07, 18:07 UTC.
+    - cron: "7 0,6,12,18 * * *"
+  workflow_dispatch:
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+
+    env:
+      CHRYSALIS_API_BASE_URL: ${{ secrets.CHRYSALIS_API_BASE_URL }}
+      FEED_INGEST_SECRET: ${{ secrets.FEED_INGEST_SECRET }}
+
+    steps:
+      - name: Validate required secrets
+        run: |
+          test -n "$CHRYSALIS_API_BASE_URL"
+          test -n "$FEED_INGEST_SECRET"
+
+      - name: Call YouTube ingest endpoint
+        run: |
+          curl -X POST "$CHRYSALIS_API_BASE_URL/api/admin/ingest/youtube" \
+            -H "X-Feed-Ingest-Secret: $FEED_INGEST_SECRET" \
+            --fail \
+            --show-error
