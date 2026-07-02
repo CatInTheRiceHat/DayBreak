@@ -210,6 +210,35 @@
 .cx-btn--primary:disabled { opacity: 0.6; cursor: default; }
 .cx-btn--soft { background: var(--button-bg); border-color: var(--border); color: var(--text); }
 
+/* Google OAuth button — full-width outline pill above the email form. */
+.cx-btn--google {
+  width: 100%;
+  gap: 10px;
+  background: #fff;
+  border-color: var(--border);
+  color: #1f1f1f;
+}
+.cx-btn--google:hover:not(:disabled) { background: #f7f7f8; }
+.cx-btn--google:disabled { opacity: 0.6; cursor: default; }
+.cx-google-icon { flex: 0 0 auto; }
+
+/* "or" divider between the Google button and the email form. */
+.cx-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+.cx-divider::before,
+.cx-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
 /* Avatar */
 .cx-avatar {
   display: grid;
