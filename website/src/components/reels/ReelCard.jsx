@@ -6,6 +6,7 @@ import { ReelCaption } from './ReelCaption';
 import { getRecommendationInsight } from './feedTaxonomy';
 import { buildYouTubeEmbedUrl } from './youtubeEmbed';
 import { CroppedYouTubePlayer } from './CroppedYouTubePlayer';
+import { PhaseIconCarousel } from '../PhaseIconCarousel';
 import { useSavedVideos } from './useSavedVideos';
 import { useLikedVideos } from './useLikedVideos';
 import { useReflections } from './useReflections';
@@ -191,7 +192,7 @@ export function ReelCard({
               )
             ) : (
               <div className="reel-media reel-media-loader" aria-label="Loading feed" role="img">
-                <span className="reel-loader-sun" aria-hidden="true" />
+                <PhaseIconCarousel className="reel-loader-sun" />
               </div>
             )}
 
