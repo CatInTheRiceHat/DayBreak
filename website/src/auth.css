@@ -226,6 +226,120 @@
 .cx-form__forgot { margin: -4px 0 0; text-align: right; font-size: 0.83rem; }
 .cx-form__forgot a { color: var(--accent); font-weight: 600; }
 
+/* ── Social media diagnostic ─────────────────────────────────────────────── */
+/* First-run diagnostic: a large, screen-filling survey (wider + taller than the
+   compact auth cards, which keep their own size). */
+.cx-shell__inner:has(.diag-quiz) { width: min(820px, 94vw); }
+.diag-quiz {
+  gap: 22px;
+  min-height: min(78dvh, 620px);
+  padding: clamp(1.8rem, 5vw, 3.2rem);
+  justify-content: center;
+}
+.diag-quiz .diag-quiz__prompt { font-size: clamp(1.9rem, 5.5vw, 2.9rem); }
+.diag-quiz .diag-options { gap: 14px; margin: 22px 0; }
+.diag-quiz .diag-option { padding: 18px 22px; font-size: 1.05rem; }
+.diag-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--bg-soft);
+  overflow: hidden;
+}
+.diag-progress__bar {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: width 0.35s ease;
+}
+.diag-quiz__count {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.diag-quiz__prompt { font-size: clamp(1.3rem, 4.5vw, 1.7rem); }
+
+.diag-options { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; }
+.diag-option {
+  width: 100%;
+  text-align: left;
+  padding: 13px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.12s ease;
+}
+.diag-option:hover { border-color: var(--accent-soft); }
+.diag-option:active { transform: scale(0.99); }
+.diag-option.is-selected {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, var(--bg-soft));
+  font-weight: 600;
+}
+
+.diag-back {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 2px;
+  padding: 4px 6px;
+  border: 0;
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.diag-back:hover { color: var(--text); }
+
+/* Result — "here's what we unlocked for you" */
+.diag-result { gap: 12px; }
+.diag-result__eyebrow {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.diag-unlocks { list-style: none; margin: 8px 0 4px; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.diag-unlock, .diag-mode {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+}
+.diag-unlock__emoji, .diag-mode__logo { font-size: 1.25rem; line-height: 1.4; flex: 0 0 auto; }
+.diag-mode__logo img { width: 1.4em; height: 1.4em; object-fit: contain; }
+.diag-unlock__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.diag-unlock__name { font-weight: 700; font-size: 0.95rem; }
+.diag-unlock__desc { color: var(--text-muted); font-size: 0.83rem; line-height: 1.4; }
+.diag-mode {
+  margin-top: 4px;
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  background: color-mix(in srgb, var(--accent) 10%, var(--bg-soft));
+}
+.diag-mode__eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
 /* "or" divider between the Google button and the email form. */
 .cx-divider {
   display: flex;

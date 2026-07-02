@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { BRAND } from './brand.js';
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Lenis from 'lenis';
-import { AnimatePresence } from 'motion/react';
 import { Navbar } from './components/Navbar';
-import { IntroScreen } from './components/IntroScreen';
+import { FirstRunGate } from './components/FirstRunGate';
 import { RebootPage } from './components/RebootPage';
 import { ReelsPage } from './components/reels/ReelsPage';
 import { AuthProvider } from './lib/AuthProvider';
 import { AuthPage } from './components/profile/AuthPage';
 import { ForgotPasswordPage } from './components/profile/ForgotPasswordPage';
 import { ResetPasswordPage } from './components/profile/ResetPasswordPage';
+import { DiagnosticPage } from './components/diagnostic/DiagnosticPage';
 import { ProfilePage } from './components/profile/ProfilePage';
 import { EditProfileForm } from './components/profile/EditProfileForm';
 import { HomePage } from './components/home/HomePage';
@@ -43,13 +43,14 @@ function isAppPath(pathname) {
     || pathname === '/signup'
     || pathname === '/forgot-password'
     || pathname === '/reset-password'
+    || pathname === '/diagnostic'
     || pathname === '/profile'
     || pathname === '/profile/edit'
     || pathname.startsWith('/u/')
   );
 }
 
-function AppShell({ showIntro, setShowIntro }) {
+function AppShell() {
   const { pathname } = useLocation();
   const isAlgorithmExperience = isAppPath(pathname);
 
@@ -80,11 +81,7 @@ function AppShell({ showIntro, setShowIntro }) {
 
   return (
     <>
-      <AnimatePresence>
-        {showIntro && !isAlgorithmExperience && (
-          <IntroScreen key="intro" onDone={() => setShowIntro(false)} />
-        )}
-      </AnimatePresence>
+      <FirstRunGate />
       <div className="min-h-screen overflow-x-hidden">
         {!isAlgorithmExperience && <Navbar />}
         <Routes>
@@ -101,6 +98,7 @@ function AppShell({ showIntro, setShowIntro }) {
           <Route path="/signup" element={<AuthPage mode="signup" />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/diagnostic" element={<DiagnosticPage />} />
           <Route path="/profile" element={<ProfilePage mode="me" />} />
           <Route path="/profile/edit" element={<EditProfileForm />} />
           <Route path="/u/:username" element={<ProfilePage mode="public" />} />
@@ -111,25 +109,6 @@ function AppShell({ showIntro, setShowIntro }) {
 }
 
 function App() {
-  const [showIntro, setShowIntro] = useState(() => {
-    if (
-      typeof window !== 'undefined'
-      && ['/', '/algorithm', '/reels'].includes(window.location.pathname)
-    ) {
-      return false;
-    }
-    if (typeof window !== 'undefined' && window.location.hash) {
-      return false;
-    }
-    if (typeof window !== 'undefined' && sessionStorage.getItem('chrysalis-intro-seen')) {
-      return false;
-    }
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem('chrysalis-intro-seen', '1');
-    }
-    return true;
-  });
-
   useEffect(() => {
     document.title = `${BRAND} — by Elaine Che`;
   }, []);
@@ -137,7 +116,7 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <AppShell showIntro={showIntro} setShowIntro={setShowIntro} />
+        <AppShell />
       </AuthProvider>
     </BrowserRouter>
   );

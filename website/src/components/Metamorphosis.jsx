@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion as MOTION, AnimatePresence } from 'motion/react';
 import { Clock, ArrowRight, CheckCircle2, RefreshCw, ChevronRight } from 'lucide-react';
+import { PhaseIconCarousel } from './PhaseIconCarousel';
 
 const API_URL = import.meta.env.VITE_API_URL ?? '';
 const GRADUATION_THRESHOLD = 45;
@@ -233,7 +234,7 @@ export function Metamorphosis() {
             className="liquid-glass-strong rounded-full py-3 font-body font-medium text-sm text-foreground flex items-center justify-center gap-2 hover:scale-105 transition-transform duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {loading
-              ? <><div className="butterfly-spinner scale-75" /> Enrolling…</>
+              ? <><PhaseIconCarousel className="butterfly-spinner scale-75" /> Enrolling…</>
               : <><ArrowRight className="w-4 h-4" /> Start Metamorphosis</>}
           </button>
         ) : (
@@ -244,7 +245,7 @@ export function Metamorphosis() {
               className="liquid-glass-strong rounded-full py-2.5 font-body font-medium text-sm text-foreground flex items-center justify-center gap-2 hover:scale-105 transition-transform duration-200 disabled:opacity-60"
             >
               {loading
-                ? <div className="butterfly-spinner scale-75" />
+                ? <PhaseIconCarousel className="butterfly-spinner scale-75" />
                 : <RefreshCw className="w-3.5 h-3.5" />}
               Refresh Status
             </button>
@@ -256,7 +257,7 @@ export function Metamorphosis() {
               style={{ border: '1px solid rgba(147,142,151,0.3)' }}
             >
               {advLoading
-                ? <div className="butterfly-spinner scale-75" />
+                ? <PhaseIconCarousel className="butterfly-spinner scale-75" />
                 : <ChevronRight className="w-3.5 h-3.5" />}
               Advance Week
             </button>

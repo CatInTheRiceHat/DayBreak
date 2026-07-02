@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion as MOTION, AnimatePresence } from 'motion/react';
 import { Sun, Moon, RefreshCw, Calendar, Sparkles } from 'lucide-react';
 import { FeedCard } from './FeedCard';
+import { PhaseIconCarousel } from './PhaseIconCarousel';
 
 const API_URL = import.meta.env.VITE_API_URL ?? '';
 
@@ -162,7 +163,7 @@ export function DailyDew() {
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="flex flex-col items-center justify-center gap-4 liquid-glass rounded-2xl p-16"
           >
-            <div className="butterfly-spinner" />
+            <PhaseIconCarousel className="butterfly-spinner" />
             <p className="font-body font-light text-sm text-foreground/40">Fetching today's drops…</p>
           </MOTION.div>
         )}

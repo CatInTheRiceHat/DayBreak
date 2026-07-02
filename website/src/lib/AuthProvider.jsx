@@ -50,7 +50,7 @@ export function AuthProvider({ children }) {
       (supabase
         ? supabase.auth.signInWithOAuth({
             provider: 'google',
-            options: { redirectTo: `${window.location.origin}/profile` },
+            options: { redirectTo: `${window.location.origin}/` },
           })
         : notConfigured()),
     // Email the user a password-reset link. The link returns them to
