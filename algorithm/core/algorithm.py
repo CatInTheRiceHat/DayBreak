@@ -25,6 +25,12 @@ from .constants import (
     OPINION_COMPARISON_BONUS,
     FATIGUE_ONSET,
     HIGH_RISK_THRESHOLD,
+    NARRATIVE_WINDOW,
+    NARRATIVE_THRESHOLD,
+    APPEARANCE_COMP_THRESHOLD,
+    NARRATIVE_DAMP,
+    NARRATIVE_DIVERSIFY,
+    APPEARANCE_TOPICS,
 )
 
 
@@ -52,6 +58,19 @@ CRISIS_TOPICS = frozenset({
     "self_harm", "suicide", "eating_disorder", "depression",
     "crisis", "mental_health_crisis",
 })
+
+
+def is_appearance_theme(appearance_comparison: float, topic: str) -> bool:
+    """Appearance/body theme membership for the narrative-saturation detector.
+
+    Deliberately does NOT read `risk` — the #skinnytok point is that each clip
+    is individually low-risk. Crisis topics (self_harm/suicide/depression) are
+    excluded here; Step 5 owns those.
+    """
+    return (
+        float(appearance_comparison) >= APPEARANCE_COMP_THRESHOLD
+        or topic in APPEARANCE_TOPICS
+    )
 
 
 def night_mode_settings(w, risk_boost=NIGHT_RISK_BOOST, prosocial_boost=NIGHT_PROSOCIAL_BOOST):
