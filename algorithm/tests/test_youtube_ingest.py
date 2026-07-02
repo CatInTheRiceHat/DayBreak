@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import datetime as _dt
 import sqlite3
 
 import pytest
@@ -11,6 +12,7 @@ from integrations.youtube_ingest import (
     DEFAULT_SOURCE_BUCKETS,
     RELEVANCE_TERMS,
     SourceQuerySpec,
+    _candidate_from_video_item,
     _relevance_score,
     configured_source_queries,
     ingest_youtube_videos_sqlite,
@@ -28,8 +30,9 @@ def _video(
     duration: str = "PT1M20S",
     views: str = "12000",
     description: str | None = None,
+    player: dict | None = None,
 ) -> dict:
-    return {
+    item = {
         "id": video_id,
         "snippet": {
             "title": title,
@@ -52,6 +55,9 @@ def _video(
             "uploadStatus": "processed",
         },
     }
+    if player is not None:
+        item["player"] = player
+    return item
 
 
 def _fake_youtube(endpoint: str, params: dict) -> dict:
@@ -304,3 +310,33 @@ def test_derive_orientation_missing_or_zero():
     assert _derive_orientation(None, None) == (None, "unknown")
     assert _derive_orientation(0, 720) == (None, "unknown")
     assert _derive_orientation(1280, 0) == (None, "unknown")
+
+
+def test_candidate_captures_orientation_from_player():
+    item = _video(
+        "vid_landscape",
+        "Student focus tips for a calm study reset",
+        player={"embedWidth": 1280, "embedHeight": 720},
+    )
+    candidate = _candidate_from_video_item(
+        item,
+        source_spec=SourceQuerySpec("study/productivity", "student focus tips"),
+        now=_dt.datetime(2026, 7, 2, tzinfo=_dt.timezone.utc),
+        days_back=365,
+    )
+    assert candidate is not None
+    assert candidate.orientation == "landscape"
+    assert candidate.aspect_ratio == pytest.approx(1280 / 720)
+
+
+def test_candidate_orientation_unknown_without_player():
+    item = _video("vid_noplayer", "Student focus tips for a calm study reset")
+    candidate = _candidate_from_video_item(
+        item,
+        source_spec=SourceQuerySpec("study/productivity", "student focus tips"),
+        now=_dt.datetime(2026, 7, 2, tzinfo=_dt.timezone.utc),
+        days_back=365,
+    )
+    assert candidate is not None
+    assert candidate.orientation == "unknown"
+    assert candidate.aspect_ratio is None

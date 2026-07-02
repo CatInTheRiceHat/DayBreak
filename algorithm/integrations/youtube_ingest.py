@@ -248,6 +248,11 @@ class FeedVideoCandidate:
     # ingest, where like/comment counts are available. Used for a small capped
     # ranking boost so the feed feels current without becoming pure virality.
     popularity_score: float = 0.0
+    # Orientation derived from the YouTube player embed dimensions at ingest.
+    # Defaulted so older call sites / deserializers keep working; "unknown" when
+    # the player block is absent.
+    orientation: str = "unknown"
+    aspect_ratio: float | None = None
 
 
 @dataclass
@@ -678,7 +683,8 @@ def fetch_youtube_candidates(
 
     for batch in _chunks([video_id for video_id, _ in search_hits], 50):
         data = request("videos", {
-            "part": "snippet,contentDetails,statistics,status",
+            "part": "snippet,contentDetails,statistics,status,player",
+            "maxWidth": 320,
             "id": ",".join(batch),
             "hl": relevance_language,
             "regionCode": region_code,
@@ -772,7 +778,8 @@ def fetch_most_popular_candidates(
     seen: set[str] = set(exclude_ids or ())
     for source_label, category_id in cats:
         data = request("videos", {
-            "part": "snippet,contentDetails,statistics,status",
+            "part": "snippet,contentDetails,statistics,status,player",
+            "maxWidth": 320,
             "chart": "mostPopular",
             "regionCode": region_code,
             "hl": relevance_language,
@@ -876,7 +883,8 @@ def fetch_trusted_channel_candidates(
 
         for batch in _chunks(hit_ids, 50):
             meta = request("videos", {
-                "part": "snippet,contentDetails,statistics,status",
+                "part": "snippet,contentDetails,statistics,status,player",
+                "maxWidth": 320,
                 "id": ",".join(batch),
                 "hl": relevance_language,
                 "regionCode": region_code,
@@ -1383,6 +1391,10 @@ def _candidate_from_video_item(
     source_query = source_spec.source_query
     topic = source_category
     thumbnail_url = _best_thumbnail(snippet)
+    player = item.get("player") or {}
+    aspect_ratio, orientation = _derive_orientation(
+        player.get("embedWidth"), player.get("embedHeight")
+    )
     short_description = build_short_description(description)
     channel_title = str(snippet.get("channelTitle") or "")
     display_title = build_display_title(title)
@@ -1471,6 +1483,8 @@ def _candidate_from_video_item(
         scoring_version=SCORING_VERSION,
         source_type=source_type,
         popularity_score=popularity_score,
+        orientation=orientation,
+        aspect_ratio=aspect_ratio,
     )
 
 
