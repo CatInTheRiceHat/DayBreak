@@ -4,27 +4,9 @@ import { motion as MOTION, useInView, AnimatePresence, useReducedMotion } from '
 import { FlutterFeed } from './FlutterFeed';
 import { Metamorphosis } from './Metamorphosis';
 import { DailyDew } from './DailyDew';
+import { PhaseIconCarousel } from './PhaseIconCarousel';
 
 const ALGORITHM_UNDER_CONSTRUCTION = true;
-
-const PHASE_ICONS = [
-  {
-    src: '/images/journey-egg.png',
-    alt: 'Egg phase',
-  },
-  {
-    src: '/images/journey-caterpillar.png',
-    alt: 'Caterpillar phase',
-  },
-  {
-    src: '/images/journey-chrysalis.png',
-    alt: `${BRAND} phase`,
-  },
-  {
-    src: '/images/journey-emerged.png',
-    alt: 'Emerged phase',
-  },
-];
 
 const TABS = [
   {
@@ -47,57 +29,6 @@ const TABS = [
   },
 ];
 
-function PhaseIconCarousel({ reduceMotion }) {
-  const [activePhase, setActivePhase] = useState(0);
-  const phase = PHASE_ICONS[activePhase];
-
-  useEffect(() => {
-    if (reduceMotion) {
-      return undefined;
-    }
-
-    const id = window.setInterval(() => {
-      setActivePhase((current) => (current + 1) % PHASE_ICONS.length);
-    }, 1350);
-
-    return () => window.clearInterval(id);
-  }, [reduceMotion]);
-
-  return (
-    <div
-      className="relative h-28 w-32 sm:h-32 sm:w-36 flex items-center justify-center"
-      role="img"
-      aria-label={`${phase.alt} icon`}
-    >
-      <AnimatePresence mode="wait">
-        <MOTION.img
-          key={phase.src}
-          src={phase.src}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 m-auto h-full w-full object-contain drop-shadow-[0_24px_52px_rgba(124,109,140,0.22)]"
-          initial={{
-            opacity: 0,
-            x: reduceMotion ? 0 : 20,
-            scale: reduceMotion ? 1 : 0.9,
-            rotate: reduceMotion ? 0 : -5,
-            filter: reduceMotion ? 'none' : 'blur(8px)',
-          }}
-          animate={{ opacity: 1, x: 0, scale: 1, rotate: 0, filter: 'blur(0px)' }}
-          exit={{
-            opacity: 0,
-            x: reduceMotion ? 0 : -20,
-            scale: reduceMotion ? 1 : 0.9,
-            rotate: reduceMotion ? 0 : 5,
-            filter: reduceMotion ? 'none' : 'blur(8px)',
-          }}
-          transition={{ duration: reduceMotion ? 0.01 : 0.48, ease: [0.22, 1, 0.36, 1] }}
-        />
-      </AnimatePresence>
-    </div>
-  );
-}
-
 function AlgorithmUnderConstruction({ reduceMotion }) {
   return (
     <section
@@ -110,7 +41,7 @@ function AlgorithmUnderConstruction({ reduceMotion }) {
         animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
         transition={{ duration: reduceMotion ? 0.2 : 0.7, ease: [0.22, 1, 0.36, 1] }}
       >
-        <PhaseIconCarousel reduceMotion={reduceMotion} />
+        <PhaseIconCarousel className="h-28 w-32 sm:h-32 sm:w-36" />
         <span className="section-badge liquid-glass">Algorithm</span>
         <div className="flex flex-col gap-4 items-center">
           <h1 className="font-title text-5xl sm:text-6xl md:text-7xl text-foreground leading-[0.95] tracking-normal">
