@@ -289,6 +289,8 @@ CREATE TABLE IF NOT EXISTS feed_videos (
     watch_url           TEXT,
     published_at        TEXT,
     duration_seconds    INTEGER,
+    orientation         TEXT DEFAULT 'unknown',
+    aspect_ratio        REAL,
     view_count          INTEGER,
     tags                TEXT,
     category_id         TEXT,
@@ -333,6 +335,8 @@ CREATE TABLE IF NOT EXISTS feed_videos (
     watch_url           TEXT,
     published_at        TEXT,
     duration_seconds    INTEGER,
+    orientation         TEXT DEFAULT 'unknown',
+    aspect_ratio        REAL,
     view_count          BIGINT,
     tags                JSONB,
     category_id         TEXT,
@@ -454,6 +458,8 @@ def _ensure_sqlite_feed_video_columns(conn: sqlite3.Connection) -> None:
         "integrity_flags": "TEXT",
         "production_style": "TEXT",
         "creator_scale": "TEXT",
+        "orientation": "TEXT DEFAULT 'unknown'",
+        "aspect_ratio": "REAL",
     }.items():
         if column not in existing:
             conn.execute(f"ALTER TABLE feed_videos ADD COLUMN {column} {column_type}")
@@ -474,6 +480,8 @@ def ensure_postgres_feed_videos_table(conn) -> None:
     cur.execute("ALTER TABLE feed_videos ADD COLUMN IF NOT EXISTS integrity_flags JSONB")
     cur.execute("ALTER TABLE feed_videos ADD COLUMN IF NOT EXISTS production_style TEXT")
     cur.execute("ALTER TABLE feed_videos ADD COLUMN IF NOT EXISTS creator_scale TEXT")
+    cur.execute("ALTER TABLE feed_videos ADD COLUMN IF NOT EXISTS orientation TEXT DEFAULT 'unknown'")
+    cur.execute("ALTER TABLE feed_videos ADD COLUMN IF NOT EXISTS aspect_ratio REAL")
     cur.execute(
         "CREATE INDEX IF NOT EXISTS idx_feed_videos_status_score "
         "ON feed_videos (status, score DESC, published_at DESC)"
@@ -1489,7 +1497,7 @@ def _candidate_from_video_item(
 
 
 def _upsert_sqlite_candidate(conn: sqlite3.Connection, candidate: FeedVideoCandidate) -> None:
-    placeholders = ",".join(["?"] * 39)
+    placeholders = ",".join(["?"] * 41)
     conn.execute(
         f"""
         INSERT INTO feed_videos (
@@ -1501,13 +1509,16 @@ def _upsert_sqlite_candidate(conn: sqlite3.Connection, candidate: FeedVideoCandi
             production_style, creator_scale, score, created_at, updated_at, status,
             chrysalis_scores, ranking_reason, safety_reason, concern_reason,
             label_confidence, scored_at, scoring_version,
-            source_type, popularity_score
+            source_type, popularity_score,
+            orientation, aspect_ratio
         ) VALUES (
             {placeholders}
         )
         ON CONFLICT(youtube_video_id) DO UPDATE SET
             source_type = excluded.source_type,
             popularity_score = excluded.popularity_score,
+            orientation = excluded.orientation,
+            aspect_ratio = excluded.aspect_ratio,
             title = excluded.title,
             channel_title = excluded.channel_title,
             channel_id = excluded.channel_id,
@@ -1548,7 +1559,7 @@ def _upsert_sqlite_candidate(conn: sqlite3.Connection, candidate: FeedVideoCandi
 
 def _upsert_postgres_candidate(cur, candidate: FeedVideoCandidate) -> None:
     values = _candidate_postgres_values(candidate)
-    placeholders = ["%s"] * 39
+    placeholders = ["%s"] * 41
     for index in (10, 17, 23, 30):
         placeholders[index] = "%s::jsonb"
     cur.execute(
@@ -1562,13 +1573,16 @@ def _upsert_postgres_candidate(cur, candidate: FeedVideoCandidate) -> None:
             production_style, creator_scale, score, created_at, updated_at, status,
             chrysalis_scores, ranking_reason, safety_reason, concern_reason,
             label_confidence, scored_at, scoring_version,
-            source_type, popularity_score
+            source_type, popularity_score,
+            orientation, aspect_ratio
         ) VALUES (
             {",".join(placeholders)}
         )
         ON CONFLICT(youtube_video_id) DO UPDATE SET
             source_type = excluded.source_type,
             popularity_score = excluded.popularity_score,
+            orientation = excluded.orientation,
+            aspect_ratio = excluded.aspect_ratio,
             title = excluded.title,
             channel_title = excluded.channel_title,
             channel_id = excluded.channel_id,
@@ -1648,6 +1662,8 @@ def _candidate_sqlite_values(candidate: FeedVideoCandidate) -> tuple:
         candidate.scoring_version,
         candidate.source_type,
         candidate.popularity_score,
+        candidate.orientation,
+        candidate.aspect_ratio,
     )
 
 

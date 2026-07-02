@@ -14,7 +14,9 @@ from integrations.youtube_ingest import (
     SourceQuerySpec,
     _candidate_from_video_item,
     _relevance_score,
+    _upsert_sqlite_candidate,
     configured_source_queries,
+    ensure_sqlite_feed_videos_table,
     ingest_youtube_videos_sqlite,
     load_active_feed_video_rows_sqlite,
 )
@@ -340,3 +342,27 @@ def test_candidate_orientation_unknown_without_player():
     assert candidate is not None
     assert candidate.orientation == "unknown"
     assert candidate.aspect_ratio is None
+
+
+def test_orientation_persists_to_sqlite(tmp_path):
+    conn = sqlite3.connect(tmp_path / "feed.db")
+    ensure_sqlite_feed_videos_table(conn)
+    item = _video(
+        "vid_persist",
+        "Student focus tips for a calm study reset",
+        player={"embedWidth": 720, "embedHeight": 1280},
+    )
+    candidate = _candidate_from_video_item(
+        item,
+        source_spec=SourceQuerySpec("study/productivity", "student focus tips"),
+        now=_dt.datetime(2026, 7, 2, tzinfo=_dt.timezone.utc),
+        days_back=365,
+    )
+    assert candidate is not None
+    _upsert_sqlite_candidate(conn, candidate)
+    row = conn.execute(
+        "SELECT orientation, aspect_ratio FROM feed_videos WHERE youtube_video_id = ?",
+        ("vid_persist",),
+    ).fetchone()
+    assert row[0] == "portrait"
+    assert row[1] == pytest.approx(720 / 1280)
