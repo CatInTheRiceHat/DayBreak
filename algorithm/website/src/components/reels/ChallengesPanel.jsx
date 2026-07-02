@@ -32,7 +32,7 @@ export function ChallengesPanel({
   };
 
   const inviteFriend = async () => {
-    const link = `${typeof window !== 'undefined' ? window.location.origin : ''}/algorithm?invite=chrysalis`;
+    const link = `${typeof window !== 'undefined' ? window.location.origin : ''}/?invite=chrysalis`;
     try {
       await navigator.clipboard?.writeText(link);
       onStatus?.('Invite link copied — share it with a friend! 🌊');

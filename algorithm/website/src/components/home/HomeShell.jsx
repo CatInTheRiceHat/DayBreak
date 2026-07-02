@@ -75,7 +75,7 @@ export function HomeShell({ active = 'home', children }) {
         intentionLabel={intention?.label ?? "Cruisin'"}
         intentionLogo={intention?.logo}
         onNavigate={go}
-        onOpenDetails={() => navigate('/algorithm')}
+        onOpenDetails={() => navigate('/')}
         onInbox={onInbox}
         streak={stats?.streak ?? 0}
         theme={theme}

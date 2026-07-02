@@ -820,7 +820,7 @@ function HeroSection() {
               <ArrowUpRight size={17} />
             </a>
             <a
-              href="https://thechrysalisproject.vercel.app/algorithm"
+              href="https://thechrysalisproject.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
               className="ct-button ct-button--ghost"
@@ -1263,7 +1263,7 @@ function ContactSection() {
       </div>
       <div className="ct-footer__grid">
         {[
-          ['Try the algorithm', 'https://thechrysalisproject.vercel.app/algorithm', <Route size={22} aria-hidden="true" />],
+          ['Try the algorithm', 'https://thechrysalisproject.vercel.app/', <Route size={22} aria-hidden="true" />],
           ['Email Elaine', 'mailto:elaineyouyuanche@gmail.com', <Mail size={22} aria-hidden="true" />],
         ].map(([label, href, icon], index) => (
           <DroopyElement

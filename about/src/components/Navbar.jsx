@@ -89,7 +89,7 @@ export function Navbar() {
             ))}
 
             <a
-              href="https://thechrysalisproject.vercel.app/algorithm"
+              href="https://thechrysalisproject.vercel.app/"
               data-cursor="wide"
               className={onAlgorithm ? 'is-active' : ''}
             >
@@ -168,7 +168,7 @@ export function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.45, delay: 0.48 }}
                 >
-                  <a href="https://thechrysalisproject.vercel.app/algorithm" onClick={() => setMenuOpen(false)} className="nav-overlay__algorithm">
+                  <a href="https://thechrysalisproject.vercel.app/" onClick={() => setMenuOpen(false)} className="nav-overlay__algorithm">
                     Algorithm
                   </a>
                 </MOTION.div>
