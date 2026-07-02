@@ -1150,6 +1150,7 @@ def _active_feed_video_rows_sql(
     include_display_metadata: bool,
     include_integrity_metadata: bool,
     include_popularity_metadata: bool = True,
+    include_orientation_metadata: bool = True,
 ) -> str:
     if include_source_metadata:
         source_columns = "source_category,\n            source_query,"
@@ -1160,6 +1161,13 @@ def _active_feed_video_rows_sql(
         popularity_columns = "source_type,\n            popularity_score,"
     else:
         popularity_columns = "'search' AS source_type,\n            0 AS popularity_score,"
+
+    if include_orientation_metadata:
+        orientation_columns = "orientation,\n            aspect_ratio,"
+    else:
+        orientation_columns = (
+            "'unknown' AS orientation,\n            NULL AS aspect_ratio,"
+        )
 
     if include_short_description:
         short_description_column = "short_description,"
@@ -1206,6 +1214,7 @@ def _active_feed_video_rows_sql(
             duration_seconds,
             {source_columns}
             {popularity_columns}
+            {orientation_columns}
             {short_description_column}
             {display_columns}
             {integrity_columns}
@@ -1235,6 +1244,7 @@ def _active_feed_video_column_attempts() -> list[dict]:
             "include_display_metadata": True,
             "include_integrity_metadata": True,
             "include_popularity_metadata": True,
+            "include_orientation_metadata": True,
         },
         # Popular-lane columns may not exist yet on a freshly deployed DB (before
         # the first ingest runs the ADD COLUMN migration). Fall back gracefully
@@ -1245,6 +1255,7 @@ def _active_feed_video_column_attempts() -> list[dict]:
             "include_display_metadata": True,
             "include_integrity_metadata": True,
             "include_popularity_metadata": False,
+            "include_orientation_metadata": False,
         },
         {
             "include_source_metadata": True,
@@ -1252,6 +1263,7 @@ def _active_feed_video_column_attempts() -> list[dict]:
             "include_display_metadata": False,
             "include_integrity_metadata": True,
             "include_popularity_metadata": False,
+            "include_orientation_metadata": False,
         },
         {
             "include_source_metadata": True,
@@ -1259,6 +1271,7 @@ def _active_feed_video_column_attempts() -> list[dict]:
             "include_display_metadata": False,
             "include_integrity_metadata": False,
             "include_popularity_metadata": False,
+            "include_orientation_metadata": False,
         },
         {
             "include_source_metadata": True,
@@ -1266,6 +1279,7 @@ def _active_feed_video_column_attempts() -> list[dict]:
             "include_display_metadata": False,
             "include_integrity_metadata": False,
             "include_popularity_metadata": False,
+            "include_orientation_metadata": False,
         },
         {
             "include_source_metadata": False,
@@ -1273,6 +1287,7 @@ def _active_feed_video_column_attempts() -> list[dict]:
             "include_display_metadata": False,
             "include_integrity_metadata": False,
             "include_popularity_metadata": False,
+            "include_orientation_metadata": False,
         },
     ]
 
@@ -1291,6 +1306,8 @@ def _missing_optional_feed_video_column(message: str) -> bool:
         or "integrity_flags" in message
         or "production_style" in message
         or "creator_scale" in message
+        or "orientation" in message
+        or "aspect_ratio" in message
     )
 
 

@@ -326,6 +326,8 @@ def _build_feed_result(
                 row.get("duration_seconds") if row.get("duration_seconds") is not None
                 else row.get("duration")
             ),
+            "orientation": row.get("orientation") or "unknown",
+            "aspect_ratio": row.get("aspect_ratio"),
             "tags": tags,
             "channel_id": row.get("channel_id") or "",
             "category_id": row.get("category_id") or row.get("category") or None,
