@@ -74,7 +74,7 @@ export function AuthPage({ mode = 'login' }) {
 
   return (
     <CxShell center>
-      <Link to="/algorithm" className="cx-shell__back" aria-label="Back to your feed">
+      <Link to="/" className="cx-shell__back" aria-label="Back to your feed">
         <ArrowLeft size={18} aria-hidden="true" /> Back
       </Link>
 

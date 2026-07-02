@@ -820,7 +820,7 @@ function HeroSection() {
               Take the survey
               <ArrowUpRight size={17} />
             </a>
-            <Link to="/algorithm" className="ct-button ct-button--ghost" data-cursor="soft">
+            <Link to="/" className="ct-button ct-button--ghost" data-cursor="soft">
               Try the algorithm
               <ArrowUpRight size={17} />
             </Link>
@@ -1258,7 +1258,7 @@ function ContactSection() {
       </div>
       <div className="ct-footer__grid">
         {[
-          ['Try the algorithm', '/algorithm', <Route size={22} aria-hidden="true" />],
+          ['Try the algorithm', '/', <Route size={22} aria-hidden="true" />],
           ['Email Elaine', 'mailto:elaineyouyuanche@gmail.com', <Mail size={22} aria-hidden="true" />],
         ].map(([label, href, icon], index) => (
           <DroopyElement
