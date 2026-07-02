@@ -30,7 +30,8 @@ function MainPage() {
 // scroll / intro overlay (same treatment as the /algorithm feed).
 function isAppPath(pathname) {
   return (
-    pathname === '/algorithm'
+    pathname === '/'
+    || pathname === '/algorithm'
     || pathname === '/reels'
     || pathname === '/home'
     || pathname === '/community'
@@ -87,9 +88,9 @@ function AppShell({ showIntro, setShowIntro }) {
       <div className="min-h-screen overflow-x-hidden">
         {!isAlgorithmExperience && <Navbar />}
         <Routes>
-          <Route path="/" element={<Navigate to="/algorithm" replace />} />
-          <Route path="/algorithm" element={<ReelsPage />} />
-          <Route path="/reels" element={<Navigate to="/algorithm" replace />} />
+          <Route path="/" element={<ReelsPage />} />
+          <Route path="/algorithm" element={<Navigate to="/" replace />} />
+          <Route path="/reels" element={<Navigate to="/" replace />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/community" element={<CommunityPage />} />
           <Route path="/challenges" element={<ChallengesPage />} />
@@ -113,7 +114,7 @@ function App() {
   const [showIntro, setShowIntro] = useState(() => {
     if (
       typeof window !== 'undefined'
-      && ['/algorithm', '/reels'].includes(window.location.pathname)
+      && ['/', '/algorithm', '/reels'].includes(window.location.pathname)
     ) {
       return false;
     }

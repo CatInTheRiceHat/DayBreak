@@ -78,7 +78,7 @@ export function EditProfileForm() {
       <CxShell>
         <div className="cx-card cx-state-card">
           <h1 className="cx-card__title">Profiles are being set up.</h1>
-          <Link to="/algorithm" className="cx-btn cx-btn--primary">Back to your feed</Link>
+          <Link to="/" className="cx-btn cx-btn--primary">Back to your feed</Link>
         </div>
       </CxShell>
     );

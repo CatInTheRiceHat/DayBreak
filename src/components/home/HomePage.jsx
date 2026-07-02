@@ -14,7 +14,7 @@ import { ACTIVITY_CARDS, TODAYS_RESET } from './homeData';
  * for wellbeing: Daily Wings instead of flex stories, a "Today's reset" prompt,
  * gentle activity cards, and a clear way into the full short-form feed (Flutter).
  *
- * The vertical video experience itself stays on /algorithm; this page links to it.
+ * The vertical video experience itself stays on /; this page links to it.
  */
 export function HomePage() {
   const navigate = useNavigate();
@@ -52,7 +52,7 @@ export function HomePage() {
             ))}
           </div>
 
-          <button type="button" className="open-flutter" onClick={() => navigate('/algorithm')}>
+          <button type="button" className="open-flutter" onClick={() => navigate('/')}>
             <Film size={18} aria-hidden="true" />
             <span>Open Flutter — your short-form feed</span>
             <ArrowRight size={18} aria-hidden="true" />

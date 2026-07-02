@@ -60,7 +60,7 @@ export function ProfilePage({ mode = 'me' }) {
         <div className="cx-card cx-state-card">
           <h1 className="cx-card__title">Profiles are being set up.</h1>
           <p className="cx-card__lede">Your feed is ready — sign-in and profiles arrive soon.</p>
-          <Link to="/algorithm" className="cx-btn cx-btn--primary">Back to your feed</Link>
+          <Link to="/" className="cx-btn cx-btn--primary">Back to your feed</Link>
         </div>
       </CxShell>
     );
@@ -85,7 +85,7 @@ export function ProfilePage({ mode = 'me' }) {
   // history.state.idx; idx > 0 means there's an in-session page behind us.
   const goBack = () => {
     if ((window.history.state?.idx ?? 0) > 0) navigate(-1);
-    else navigate('/algorithm');
+    else navigate('/');
   };
 
   return (
@@ -134,7 +134,7 @@ export function ProfilePage({ mode = 'me' }) {
           {error && <p className="cx-form__error" role="alert">{error}</p>}
           {isMe
             ? <Link to="/profile/edit" className="cx-btn cx-btn--primary">Create my profile</Link>
-            : <Link to="/algorithm" className="cx-btn cx-btn--primary">Back to your feed</Link>}
+            : <Link to="/" className="cx-btn cx-btn--primary">Back to your feed</Link>}
         </div>
       )}
 
