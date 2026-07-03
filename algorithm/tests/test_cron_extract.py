@@ -150,16 +150,13 @@ def test_cron_extract_writes_feed_videos_and_avoids_legacy_videos(monkeypatch):
     assert any("feed_videos" in s for s in executed)
     assert fake_conn.committed
 
-    # 8. No reference to the legacy `videos` table except the guarded diagnostic.
+    # 8. No reference to the legacy `videos` table at all — it has been dropped.
     legacy_hits = [
         s
         for s in executed
-        if "videos" in s and "feed_videos" not in s and "to_regclass" not in s
+        if "videos" in s and "feed_videos" not in s
     ]
     assert legacy_hits == [], legacy_hits
-
-    # 7. The safe, non-fatal legacy-table guard ran.
-    assert any("to_regclass" in s for s in executed)
 
     # 6. Language/region preserved: search.list -> relevanceLanguage + regionCode;
     #    videos.list -> hl + regionCode.
