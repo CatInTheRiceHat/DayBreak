@@ -1246,6 +1246,19 @@ def _active_feed_video_column_attempts() -> list[dict]:
             "include_popularity_metadata": True,
             "include_orientation_metadata": True,
         },
+        # Orientation columns are newer than the popular-lane columns: on a
+        # feature-branch deploy they can be missing while popularity_score /
+        # source_type already exist in production. Drop ONLY orientation first so
+        # we don't silently zero out real popularity data during the
+        # deploy-before-ingest window.
+        {
+            "include_source_metadata": True,
+            "include_short_description": True,
+            "include_display_metadata": True,
+            "include_integrity_metadata": True,
+            "include_popularity_metadata": True,
+            "include_orientation_metadata": False,
+        },
         # Popular-lane columns may not exist yet on a freshly deployed DB (before
         # the first ingest runs the ADD COLUMN migration). Fall back gracefully
         # while keeping every other piece of metadata.
