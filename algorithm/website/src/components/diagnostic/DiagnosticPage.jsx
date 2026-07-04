@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion as MOTION } from 'motion/react';
 import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
 import { useAuth } from '../../lib/authContext';
 import { CxShell } from '../profile/CxShell';
 import { DiagnosticResult } from './DiagnosticResult';
+import { InterestPicker } from './InterestPicker';
 import { QUESTIONS, SCALE, scoreDiagnostic } from './diagnosticData';
 
 // Keys shared with the feed so the diagnostic can set the recommended mode and
@@ -14,6 +15,15 @@ const ONBOARDED_KEY = 'chrysalis-algorithm-onboarded';
 const DONE_KEY = 'chrysalis-diagnostic-done';
 // Answers captured before login; FirstRunGate persists them once the user signs in.
 const PENDING_KEY = 'chrysalis-diagnostic-pending';
+const PROFILE_KEY = 'chrysalis-profile';
+
+// Merge chosen interests into the locally-stored profile so the feed's interest
+// boost picks them up immediately (even before sign-in).
+function saveInterestsToProfile(interests) {
+  let profile = {};
+  try { profile = JSON.parse(window.localStorage.getItem(PROFILE_KEY)) || {}; } catch { profile = {}; }
+  window.localStorage.setItem(PROFILE_KEY, JSON.stringify({ ...profile, interests }));
+}
 
 /**
  * Social-media diagnostic. Runs before login in the first-run flow: five quick
@@ -24,14 +34,17 @@ export function DiagnosticPage() {
   const navigate = useNavigate();
   const { loading, user } = useAuth();
 
-  const [phase, setPhase] = useState('checking'); // checking | quiz | result
+  const [phase, setPhase] = useState('checking'); // checking | quiz | result | interests
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(null);
+  const gatedRef = useRef(false);
 
-  // Gate: someone who already finished doesn't retake it.
+  // Gate: decide exactly once (after auth resolves) so a late auth update can't
+  // reset a survey already in progress. Someone who already finished skips it.
   useEffect(() => {
-    if (loading || typeof window === 'undefined') return;
+    if (loading || gatedRef.current || typeof window === 'undefined') return;
+    gatedRef.current = true;
     if (window.localStorage.getItem(DONE_KEY) === '1') {
       navigate(user ? '/' : '/login', { replace: true });
       return;
@@ -73,9 +86,16 @@ export function DiagnosticPage() {
     setAnswers({ ...answers, [q.id]: next });
   };
 
-  // Login is the last step: signed-in users go straight to the feed (FirstRunGate
-  // persists the pending answers there); everyone else signs in first.
-  const start = () => navigate(user ? '/' : '/login');
+  // Persist the interest picks (locally now; FirstRunGate syncs to the profile
+  // after sign-in), then head to login — the last step of the first-run flow.
+  const finishInterests = (interests) => {
+    saveInterestsToProfile(interests);
+    try {
+      const pending = JSON.parse(window.localStorage.getItem(PENDING_KEY)) || {};
+      window.localStorage.setItem(PENDING_KEY, JSON.stringify({ ...pending, interests }));
+    } catch { /* pending is best-effort */ }
+    navigate(user ? '/' : '/login');
+  };
 
   if (phase === 'checking') {
     return (
@@ -91,7 +111,15 @@ export function DiagnosticPage() {
   if (phase === 'result' && result) {
     return (
       <CxShell center>
-        <DiagnosticResult result={result} ctaLabel={user ? 'Start My Algorithm' : 'Sign in to save & start'} onStart={start} />
+        <DiagnosticResult result={result} ctaLabel="Next: pick what you like" onStart={() => setPhase('interests')} />
+      </CxShell>
+    );
+  }
+
+  if (phase === 'interests') {
+    return (
+      <CxShell center>
+        <InterestPicker ctaLabel={user ? 'Start My Algorithm' : 'Sign in to save & start'} onDone={finishInterests} />
       </CxShell>
     );
   }

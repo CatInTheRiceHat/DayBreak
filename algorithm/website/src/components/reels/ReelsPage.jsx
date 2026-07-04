@@ -11,12 +11,14 @@ import { AppSidebar } from './AppSidebar';
 import { OnboardingStartScreen } from './OnboardingStartScreen';
 import { getSessionId } from './preferences';
 import { selectFreshCards } from './feedPagination';
+import { rankByInterests } from './interestRanking';
 import { SKIP_ALGORITHM_ONBOARDING, LOCK_HOME_FROM_ALGORITHM } from '../../brand.js';
 import { MODES, reelsByMode, DEFAULT_MODE, LEGACY_INTENTION_MODES } from './reelsData';
 import { getFeedDebugSnapshot } from './feedTaxonomy';
 import { BreakScreen } from './BreakScreen';
 import { PhaseIconCarousel } from '../PhaseIconCarousel';
 import { useSessionTimer } from './useSessionTimer';
+import { logEvent } from '../../lib/events';
 import { DEFAULT_TIME_SCALE_MS, DEMO_TIME_SCALE_MS } from './sessionBreaks';
 import { useChallenges } from './useChallenges';
 import { CommentsPanel } from './CommentsPanel';
@@ -112,6 +114,15 @@ function isDemoPlaceholderVideoId(value) {
 function isPlayableApiVideo(item, youtubeId) {
   const embedUrl = item.embed_url || item.embedUrl;
   return Boolean((youtubeId || embedUrl) && !isDemoPlaceholderVideoId(youtubeId));
+}
+
+/** The user's chosen interests (from onboarding), read fresh for feed boosting. */
+function readInterests() {
+  try {
+    return JSON.parse(window.localStorage.getItem('chrysalis-profile'))?.interests || [];
+  } catch {
+    return [];
+  }
 }
 
 /** Map a backend /api/feed item into the card shape ReelCard expects. */
@@ -322,6 +333,19 @@ export function ReelsPage() {
   // are no longer wired into the feed.)
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  // Pilot metric #1: log one `session_start` per feed mount once an authenticated
+  // user is present. A ref guard makes it fire exactly once per mount (not on every
+  // render, and not again when the user object identity changes); a fresh mount
+  // (leaving and returning to the feed) logs a new session.
+  const sessionLoggedRef = useRef(false);
+  useEffect(() => {
+    if (user && !sessionLoggedRef.current) {
+      sessionLoggedRef.current = true;
+      logEvent(user.id, 'session_start');
+    }
+  }, [user]);
+
   const goToProfile = () => navigate(user ? '/profile' : '/login');
   const goToCommunity = () => navigate('/community');
   const goToSaved = () => navigate('/saved');
@@ -377,7 +401,9 @@ export function ReelsPage() {
 
       const seen = reset ? new Set() : pg.seen;
       const mapped = (data.items ?? []).map(apiItemToCard);
-      const { fresh, returnedIds } = selectFreshCards(seen, mapped);  // dedupe by video id
+      const { fresh: deduped, returnedIds } = selectFreshCards(seen, mapped);  // dedupe by video id
+      // Gently boost cards matching the user's chosen interests (stable; no drops).
+      const fresh = rankByInterests(deduped, readInterests());
 
       if (reset && fresh.length === 0) {
         // Backend genuinely has no eligible videos → static sample fallback.

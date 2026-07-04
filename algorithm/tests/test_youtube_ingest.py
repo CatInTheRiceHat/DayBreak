@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import datetime as _dt
 import sqlite3
+
+import pytest
 
 from core.language_filter import verdict
 from core.ranking.feed import build_feed, build_feed_payload
@@ -9,11 +12,15 @@ from integrations.youtube_ingest import (
     DEFAULT_SOURCE_BUCKETS,
     RELEVANCE_TERMS,
     SourceQuerySpec,
+    _candidate_from_video_item,
     _relevance_score,
+    _upsert_sqlite_candidate,
     configured_source_queries,
+    ensure_sqlite_feed_videos_table,
     ingest_youtube_videos_sqlite,
     load_active_feed_video_rows_sqlite,
 )
+from integrations.youtube_ingest import _derive_orientation
 
 
 NOW = datetime(2026, 6, 14, 12, 0, tzinfo=timezone.utc)
@@ -25,8 +32,9 @@ def _video(
     duration: str = "PT1M20S",
     views: str = "12000",
     description: str | None = None,
+    player: dict | None = None,
 ) -> dict:
-    return {
+    item = {
         "id": video_id,
         "snippet": {
             "title": title,
@@ -49,6 +57,9 @@ def _video(
             "uploadStatus": "processed",
         },
     }
+    if player is not None:
+        item["player"] = player
+    return item
 
 
 def _fake_youtube(endpoint: str, params: dict) -> dict:
@@ -281,3 +292,77 @@ def test_feed_stays_balanced_and_not_all_wellness():
     assert "regular" in categories
     # Healthy ratio holds inside the Chrysalis target band despite the heavy pool.
     assert 0.4 <= payload["healthy_content_ratio"] <= 0.6
+
+
+def test_derive_orientation_landscape():
+    assert _derive_orientation(1280, 720) == (pytest.approx(1280 / 720), "landscape")
+
+
+def test_derive_orientation_portrait():
+    assert _derive_orientation(720, 1280) == (pytest.approx(720 / 1280), "portrait")
+
+
+def test_derive_orientation_square():
+    ratio, label = _derive_orientation(300, 300)
+    assert label == "square"
+    assert ratio == pytest.approx(1.0)
+
+
+def test_derive_orientation_missing_or_zero():
+    assert _derive_orientation(None, None) == (None, "unknown")
+    assert _derive_orientation(0, 720) == (None, "unknown")
+    assert _derive_orientation(1280, 0) == (None, "unknown")
+
+
+def test_candidate_captures_orientation_from_player():
+    item = _video(
+        "vid_landscape",
+        "Student focus tips for a calm study reset",
+        player={"embedWidth": 1280, "embedHeight": 720},
+    )
+    candidate = _candidate_from_video_item(
+        item,
+        source_spec=SourceQuerySpec("study/productivity", "student focus tips"),
+        now=_dt.datetime(2026, 7, 2, tzinfo=_dt.timezone.utc),
+        days_back=365,
+    )
+    assert candidate is not None
+    assert candidate.orientation == "landscape"
+    assert candidate.aspect_ratio == pytest.approx(1280 / 720)
+
+
+def test_candidate_orientation_unknown_without_player():
+    item = _video("vid_noplayer", "Student focus tips for a calm study reset")
+    candidate = _candidate_from_video_item(
+        item,
+        source_spec=SourceQuerySpec("study/productivity", "student focus tips"),
+        now=_dt.datetime(2026, 7, 2, tzinfo=_dt.timezone.utc),
+        days_back=365,
+    )
+    assert candidate is not None
+    assert candidate.orientation == "unknown"
+    assert candidate.aspect_ratio is None
+
+
+def test_orientation_persists_to_sqlite(tmp_path):
+    conn = sqlite3.connect(tmp_path / "feed.db")
+    ensure_sqlite_feed_videos_table(conn)
+    item = _video(
+        "vid_persist",
+        "Student focus tips for a calm study reset",
+        player={"embedWidth": 720, "embedHeight": 1280},
+    )
+    candidate = _candidate_from_video_item(
+        item,
+        source_spec=SourceQuerySpec("study/productivity", "student focus tips"),
+        now=_dt.datetime(2026, 7, 2, tzinfo=_dt.timezone.utc),
+        days_back=365,
+    )
+    assert candidate is not None
+    _upsert_sqlite_candidate(conn, candidate)
+    row = conn.execute(
+        "SELECT orientation, aspect_ratio FROM feed_videos WHERE youtube_video_id = ?",
+        ("vid_persist",),
+    ).fetchone()
+    assert row[0] == "portrait"
+    assert row[1] == pytest.approx(720 / 1280)

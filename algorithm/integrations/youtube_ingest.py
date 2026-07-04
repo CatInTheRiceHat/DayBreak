@@ -248,6 +248,11 @@ class FeedVideoCandidate:
     # ingest, where like/comment counts are available. Used for a small capped
     # ranking boost so the feed feels current without becoming pure virality.
     popularity_score: float = 0.0
+    # Orientation derived from the YouTube player embed dimensions at ingest.
+    # Defaulted so older call sites / deserializers keep working; "unknown" when
+    # the player block is absent.
+    orientation: str = "unknown"
+    aspect_ratio: float | None = None
 
 
 @dataclass
@@ -284,6 +289,8 @@ CREATE TABLE IF NOT EXISTS feed_videos (
     watch_url           TEXT,
     published_at        TEXT,
     duration_seconds    INTEGER,
+    orientation         TEXT DEFAULT 'unknown',
+    aspect_ratio        REAL,
     view_count          INTEGER,
     tags                TEXT,
     category_id         TEXT,
@@ -328,6 +335,8 @@ CREATE TABLE IF NOT EXISTS feed_videos (
     watch_url           TEXT,
     published_at        TEXT,
     duration_seconds    INTEGER,
+    orientation         TEXT DEFAULT 'unknown',
+    aspect_ratio        REAL,
     view_count          BIGINT,
     tags                JSONB,
     category_id         TEXT,
@@ -449,6 +458,8 @@ def _ensure_sqlite_feed_video_columns(conn: sqlite3.Connection) -> None:
         "integrity_flags": "TEXT",
         "production_style": "TEXT",
         "creator_scale": "TEXT",
+        "orientation": "TEXT DEFAULT 'unknown'",
+        "aspect_ratio": "REAL",
     }.items():
         if column not in existing:
             conn.execute(f"ALTER TABLE feed_videos ADD COLUMN {column} {column_type}")
@@ -469,6 +480,8 @@ def ensure_postgres_feed_videos_table(conn) -> None:
     cur.execute("ALTER TABLE feed_videos ADD COLUMN IF NOT EXISTS integrity_flags JSONB")
     cur.execute("ALTER TABLE feed_videos ADD COLUMN IF NOT EXISTS production_style TEXT")
     cur.execute("ALTER TABLE feed_videos ADD COLUMN IF NOT EXISTS creator_scale TEXT")
+    cur.execute("ALTER TABLE feed_videos ADD COLUMN IF NOT EXISTS orientation TEXT DEFAULT 'unknown'")
+    cur.execute("ALTER TABLE feed_videos ADD COLUMN IF NOT EXISTS aspect_ratio REAL")
     cur.execute(
         "CREATE INDEX IF NOT EXISTS idx_feed_videos_status_score "
         "ON feed_videos (status, score DESC, published_at DESC)"
@@ -678,7 +691,8 @@ def fetch_youtube_candidates(
 
     for batch in _chunks([video_id for video_id, _ in search_hits], 50):
         data = request("videos", {
-            "part": "snippet,contentDetails,statistics,status",
+            "part": "snippet,contentDetails,statistics,status,player",
+            "maxWidth": 320,
             "id": ",".join(batch),
             "hl": relevance_language,
             "regionCode": region_code,
@@ -772,7 +786,8 @@ def fetch_most_popular_candidates(
     seen: set[str] = set(exclude_ids or ())
     for source_label, category_id in cats:
         data = request("videos", {
-            "part": "snippet,contentDetails,statistics,status",
+            "part": "snippet,contentDetails,statistics,status,player",
+            "maxWidth": 320,
             "chart": "mostPopular",
             "regionCode": region_code,
             "hl": relevance_language,
@@ -876,7 +891,8 @@ def fetch_trusted_channel_candidates(
 
         for batch in _chunks(hit_ids, 50):
             meta = request("videos", {
-                "part": "snippet,contentDetails,statistics,status",
+                "part": "snippet,contentDetails,statistics,status,player",
+                "maxWidth": 320,
                 "id": ",".join(batch),
                 "hl": relevance_language,
                 "regionCode": region_code,
@@ -1134,6 +1150,7 @@ def _active_feed_video_rows_sql(
     include_display_metadata: bool,
     include_integrity_metadata: bool,
     include_popularity_metadata: bool = True,
+    include_orientation_metadata: bool = True,
 ) -> str:
     if include_source_metadata:
         source_columns = "source_category,\n            source_query,"
@@ -1144,6 +1161,13 @@ def _active_feed_video_rows_sql(
         popularity_columns = "source_type,\n            popularity_score,"
     else:
         popularity_columns = "'search' AS source_type,\n            0 AS popularity_score,"
+
+    if include_orientation_metadata:
+        orientation_columns = "orientation,\n            aspect_ratio,"
+    else:
+        orientation_columns = (
+            "'unknown' AS orientation,\n            NULL AS aspect_ratio,"
+        )
 
     if include_short_description:
         short_description_column = "short_description,"
@@ -1190,6 +1214,7 @@ def _active_feed_video_rows_sql(
             duration_seconds,
             {source_columns}
             {popularity_columns}
+            {orientation_columns}
             {short_description_column}
             {display_columns}
             {integrity_columns}
@@ -1219,6 +1244,20 @@ def _active_feed_video_column_attempts() -> list[dict]:
             "include_display_metadata": True,
             "include_integrity_metadata": True,
             "include_popularity_metadata": True,
+            "include_orientation_metadata": True,
+        },
+        # Orientation columns are newer than the popular-lane columns: on a
+        # feature-branch deploy they can be missing while popularity_score /
+        # source_type already exist in production. Drop ONLY orientation first so
+        # we don't silently zero out real popularity data during the
+        # deploy-before-ingest window.
+        {
+            "include_source_metadata": True,
+            "include_short_description": True,
+            "include_display_metadata": True,
+            "include_integrity_metadata": True,
+            "include_popularity_metadata": True,
+            "include_orientation_metadata": False,
         },
         # Popular-lane columns may not exist yet on a freshly deployed DB (before
         # the first ingest runs the ADD COLUMN migration). Fall back gracefully
@@ -1229,6 +1268,7 @@ def _active_feed_video_column_attempts() -> list[dict]:
             "include_display_metadata": True,
             "include_integrity_metadata": True,
             "include_popularity_metadata": False,
+            "include_orientation_metadata": False,
         },
         {
             "include_source_metadata": True,
@@ -1236,6 +1276,7 @@ def _active_feed_video_column_attempts() -> list[dict]:
             "include_display_metadata": False,
             "include_integrity_metadata": True,
             "include_popularity_metadata": False,
+            "include_orientation_metadata": False,
         },
         {
             "include_source_metadata": True,
@@ -1243,6 +1284,7 @@ def _active_feed_video_column_attempts() -> list[dict]:
             "include_display_metadata": False,
             "include_integrity_metadata": False,
             "include_popularity_metadata": False,
+            "include_orientation_metadata": False,
         },
         {
             "include_source_metadata": True,
@@ -1250,6 +1292,7 @@ def _active_feed_video_column_attempts() -> list[dict]:
             "include_display_metadata": False,
             "include_integrity_metadata": False,
             "include_popularity_metadata": False,
+            "include_orientation_metadata": False,
         },
         {
             "include_source_metadata": False,
@@ -1257,6 +1300,7 @@ def _active_feed_video_column_attempts() -> list[dict]:
             "include_display_metadata": False,
             "include_integrity_metadata": False,
             "include_popularity_metadata": False,
+            "include_orientation_metadata": False,
         },
     ]
 
@@ -1275,6 +1319,8 @@ def _missing_optional_feed_video_column(message: str) -> bool:
         or "integrity_flags" in message
         or "production_style" in message
         or "creator_scale" in message
+        or "orientation" in message
+        or "aspect_ratio" in message
     )
 
 
@@ -1383,6 +1429,10 @@ def _candidate_from_video_item(
     source_query = source_spec.source_query
     topic = source_category
     thumbnail_url = _best_thumbnail(snippet)
+    player = item.get("player") or {}
+    aspect_ratio, orientation = _derive_orientation(
+        player.get("embedWidth"), player.get("embedHeight")
+    )
     short_description = build_short_description(description)
     channel_title = str(snippet.get("channelTitle") or "")
     display_title = build_display_title(title)
@@ -1471,11 +1521,13 @@ def _candidate_from_video_item(
         scoring_version=SCORING_VERSION,
         source_type=source_type,
         popularity_score=popularity_score,
+        orientation=orientation,
+        aspect_ratio=aspect_ratio,
     )
 
 
 def _upsert_sqlite_candidate(conn: sqlite3.Connection, candidate: FeedVideoCandidate) -> None:
-    placeholders = ",".join(["?"] * 39)
+    placeholders = ",".join(["?"] * 41)
     conn.execute(
         f"""
         INSERT INTO feed_videos (
@@ -1487,13 +1539,16 @@ def _upsert_sqlite_candidate(conn: sqlite3.Connection, candidate: FeedVideoCandi
             production_style, creator_scale, score, created_at, updated_at, status,
             chrysalis_scores, ranking_reason, safety_reason, concern_reason,
             label_confidence, scored_at, scoring_version,
-            source_type, popularity_score
+            source_type, popularity_score,
+            orientation, aspect_ratio
         ) VALUES (
             {placeholders}
         )
         ON CONFLICT(youtube_video_id) DO UPDATE SET
             source_type = excluded.source_type,
             popularity_score = excluded.popularity_score,
+            orientation = excluded.orientation,
+            aspect_ratio = excluded.aspect_ratio,
             title = excluded.title,
             channel_title = excluded.channel_title,
             channel_id = excluded.channel_id,
@@ -1534,7 +1589,7 @@ def _upsert_sqlite_candidate(conn: sqlite3.Connection, candidate: FeedVideoCandi
 
 def _upsert_postgres_candidate(cur, candidate: FeedVideoCandidate) -> None:
     values = _candidate_postgres_values(candidate)
-    placeholders = ["%s"] * 39
+    placeholders = ["%s"] * 41
     for index in (10, 17, 23, 30):
         placeholders[index] = "%s::jsonb"
     cur.execute(
@@ -1548,13 +1603,16 @@ def _upsert_postgres_candidate(cur, candidate: FeedVideoCandidate) -> None:
             production_style, creator_scale, score, created_at, updated_at, status,
             chrysalis_scores, ranking_reason, safety_reason, concern_reason,
             label_confidence, scored_at, scoring_version,
-            source_type, popularity_score
+            source_type, popularity_score,
+            orientation, aspect_ratio
         ) VALUES (
             {",".join(placeholders)}
         )
         ON CONFLICT(youtube_video_id) DO UPDATE SET
             source_type = excluded.source_type,
             popularity_score = excluded.popularity_score,
+            orientation = excluded.orientation,
+            aspect_ratio = excluded.aspect_ratio,
             title = excluded.title,
             channel_title = excluded.channel_title,
             channel_id = excluded.channel_id,
@@ -1634,6 +1692,8 @@ def _candidate_sqlite_values(candidate: FeedVideoCandidate) -> tuple:
         candidate.scoring_version,
         candidate.source_type,
         candidate.popularity_score,
+        candidate.orientation,
+        candidate.aspect_ratio,
     )
 
 
@@ -1751,6 +1811,31 @@ def _safe_int(value) -> int:
         return int(value or 0)
     except (TypeError, ValueError):
         return 0
+
+
+def _derive_orientation(
+    embed_width: int | None,
+    embed_height: int | None,
+) -> tuple[float | None, str]:
+    """Classify a video's orientation from its YouTube embed dimensions.
+
+    `videos.list?part=player&maxWidth=...` returns embedWidth/embedHeight that
+    reflect the video's true aspect ratio (thumbnails are unreliable for Shorts).
+    Returns (aspect_ratio, orientation). Missing/zero dims -> (None, "unknown");
+    we never guess from duration or thumbnails.
+    """
+    w = _safe_int(embed_width)
+    h = _safe_int(embed_height)
+    if w <= 0 or h <= 0:
+        return None, "unknown"
+    ratio = w / h
+    if ratio >= 1.05:
+        orientation = "landscape"
+    elif ratio <= 0.95:
+        orientation = "portrait"
+    else:
+        orientation = "square"
+    return ratio, orientation
 
 
 def _chunks(items: list[str], size: int) -> Iterable[list[str]]:
