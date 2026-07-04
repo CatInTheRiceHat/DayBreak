@@ -9,7 +9,7 @@ import { supabase } from './supabaseClient';
  */
 
 // Insert one completed diagnostic for the given user.
-export async function saveDiagnostic({ userId, answers, scores, unlockedFeatures, recommendedMode }) {
+export async function saveDiagnostic({ userId, answers, scores, unlockedFeatures, recommendedMode, interests = [] }) {
   if (!supabase) return { data: null, error: new Error('Supabase not configured') };
   return supabase
     .from('diagnostics')
@@ -19,6 +19,7 @@ export async function saveDiagnostic({ userId, answers, scores, unlockedFeatures
       scores,
       unlocked_features: unlockedFeatures,
       recommended_mode: recommendedMode,
+      interests,
     })
     .select()
     .single();

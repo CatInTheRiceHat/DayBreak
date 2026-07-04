@@ -88,12 +88,12 @@ function AppShell() {
           <Route path="/" element={<ReelsPage />} />
           <Route path="/algorithm" element={<Navigate to="/" replace />} />
           <Route path="/reels" element={<Navigate to="/" replace />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/community" element={<CommunityPage />} />
+          <Route path="/home" element={<Navigate to="/" replace />} />
+          <Route path="/community" element={<Navigate to="/" replace />} />
           <Route path="/challenges" element={<ChallengesPage />} />
           <Route path="/saved" element={<SavedPage />} />
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/inbox" element={<InboxPage />} />
+          <Route path="/search" element={<Navigate to="/" replace />} />
+          <Route path="/inbox" element={<Navigate to="/" replace />} />
           <Route path="/login" element={<AuthPage mode="login" />} />
           <Route path="/signup" element={<AuthPage mode="signup" />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -101,7 +101,7 @@ function AppShell() {
           <Route path="/diagnostic" element={<DiagnosticPage />} />
           <Route path="/profile" element={<ProfilePage mode="me" />} />
           <Route path="/profile/edit" element={<EditProfileForm />} />
-          <Route path="/u/:username" element={<ProfilePage mode="public" />} />
+          <Route path="/u/:username" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </>

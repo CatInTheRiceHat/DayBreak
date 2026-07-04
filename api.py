@@ -27,7 +27,6 @@ from integrations.youtube_ingest import (
     YouTubeIngestError,
     ingest_youtube_videos_sqlite,
     load_active_feed_video_rows_sqlite,
-    merge_primary_rows,
 )
 from core.preferences import (
     DEFAULT_LANGUAGE,
@@ -36,13 +35,6 @@ from core.preferences import (
     ensure_sqlite_preferences_table,
     get_preferences,
     upsert_preferences,
-)
-from migration_scheduler import create_scheduler
-from core.cocoon import (
-    CocoonProfile,
-    calculate_this_weeks_cap,
-    should_graduate,
-    advance_week,
 )
 
 DB_PATH = resolve_database_path()
@@ -89,10 +81,7 @@ def _load_content_preferences(session_id: str | None, user_id: str | None) -> di
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    scheduler = create_scheduler()
-    scheduler.start()
     yield
-    scheduler.shutdown(wait=False)
 
 
 app = FastAPI(lifespan=lifespan)
@@ -322,11 +311,7 @@ def chrysalis_feed(
     public_signal_context = None
     try:
         feed_rows = load_active_feed_video_rows_sqlite(conn)
-        try:
-            legacy_rows = [dict(r) for r in conn.execute("SELECT * FROM videos").fetchall()]
-        except sqlite3.OperationalError:
-            legacy_rows = []
-        rows = merge_primary_rows(feed_rows, legacy_rows)
+        rows = list(feed_rows)
         try:
             # Feed reads are read-only by default. Set
             # CHRYSALIS_REFRESH_PUBLIC_SIGNALS_ON_FEED=1 only when you explicitly
@@ -402,165 +387,6 @@ def save_content_preferences(request: ContentPreferencesRequest):
         )
     finally:
         conn.close()
-
-
-# ---------------------------------------------------------------------------
-# Migration Mode
-# ---------------------------------------------------------------------------
-
-@app.get("/api/migration/today")
-def migration_today():
-    """
-    Return today's Migration Mode drops (morning at 07:00, evening at 19:00).
-    Each drop is the same 10-15 posts for every user — non-personalized.
-
-    - 200: at least one drop has run; absent drop is null in the response.
-    - 404: no drops have been written for today yet.
-    """
-    today = date.today().isoformat()
-    conn = sqlite3.connect(DB_PATH)
-    try:
-        rows = conn.execute(
-            """
-            SELECT mode, scheduled_at, feed_json, item_count
-            FROM migration_drops
-            WHERE drop_date = ?
-            """,
-            (today,),
-        ).fetchall()
-    finally:
-        conn.close()
-
-    if not rows:
-        raise HTTPException(
-            status_code=404,
-            detail=(
-                f"No Migration Mode drops have run yet for {today}. "
-                "Morning drop is scheduled for 07:00, evening drop for 19:00."
-            ),
-        )
-
-    drops: dict = {}
-    for mode, scheduled_at, feed_json, item_count in rows:
-        drops[mode] = {
-            "mode": mode,
-            "scheduled_at": scheduled_at,
-            "item_count": item_count,
-            "feed": json.loads(feed_json),
-        }
-
-    return {
-        "date": today,
-        "morning": drops.get("morning"),   # None if not yet run
-        "evening": drops.get("evening"),   # None if not yet run
-    }
-
-
-class CocoonEnrollRequest(BaseModel):
-    user_id: str
-    current_daily_minutes: int = Field(..., gt=0)
-
-
-@app.post("/api/cocoon/enroll")
-def cocoon_enroll(request: CocoonEnrollRequest):
-    today = date.today().isoformat()
-    conn = sqlite3.connect(DB_PATH)
-    try:
-        conn.execute(
-            """
-            INSERT OR IGNORE INTO cocoon_profiles
-                (user_id, start_minutes, current_week, start_date, graduated)
-            VALUES (?, ?, 0, ?, 0)
-            """,
-            (request.user_id, request.current_daily_minutes, today),
-        )
-        conn.commit()
-        row = conn.execute(
-            "SELECT start_minutes, current_week FROM cocoon_profiles WHERE user_id = ?",
-            (request.user_id,),
-        ).fetchone()
-    finally:
-        conn.close()
-
-    profile = CocoonProfile(
-        user_id=request.user_id,
-        start_minutes=row[0],
-        current_week=row[1],
-        start_date=date.fromisoformat(today),
-    )
-    daily_cap = calculate_this_weeks_cap(profile)
-    return {
-        "user_id": profile.user_id,
-        "start_minutes": profile.start_minutes,
-        "current_week": profile.current_week,
-        "daily_cap": daily_cap,
-        "should_graduate": should_graduate(profile),
-    }
-
-
-@app.get("/api/cocoon/status/{user_id}")
-def cocoon_status(user_id: str):
-    conn = sqlite3.connect(DB_PATH)
-    try:
-        row = conn.execute(
-            "SELECT start_minutes, current_week, start_date, graduated FROM cocoon_profiles WHERE user_id = ?",
-            (user_id,),
-        ).fetchone()
-    finally:
-        conn.close()
-
-    if row is None:
-        raise HTTPException(status_code=404, detail=f"No Cocoon profile found for user '{user_id}'.")
-
-    profile = CocoonProfile(
-        user_id=user_id,
-        start_minutes=row[0],
-        current_week=row[1],
-        start_date=date.fromisoformat(row[2]),
-    )
-    daily_cap = calculate_this_weeks_cap(profile)
-    return {
-        "user_id": user_id,
-        "current_week": profile.current_week,
-        "daily_cap": daily_cap,
-        "minutes_remaining_today": daily_cap,
-        "should_graduate": should_graduate(profile),
-    }
-
-
-@app.post("/api/cocoon/advance/{user_id}")
-def cocoon_advance(user_id: str):
-    conn = sqlite3.connect(DB_PATH)
-    try:
-        row = conn.execute(
-            "SELECT start_minutes, current_week, start_date FROM cocoon_profiles WHERE user_id = ?",
-            (user_id,),
-        ).fetchone()
-        if row is None:
-            raise HTTPException(status_code=404, detail=f"No Cocoon profile found for user '{user_id}'.")
-
-        profile = CocoonProfile(
-            user_id=user_id,
-            start_minutes=row[0],
-            current_week=row[1],
-            start_date=date.fromisoformat(row[2]),
-        )
-        next_profile = advance_week(profile)
-        graduating = should_graduate(next_profile)
-        conn.execute(
-            "UPDATE cocoon_profiles SET current_week = ?, graduated = ? WHERE user_id = ?",
-            (next_profile.current_week, int(graduating), user_id),
-        )
-        conn.commit()
-    finally:
-        conn.close()
-
-    return {
-        "user_id": user_id,
-        "current_week": next_profile.current_week,
-        "daily_cap": calculate_this_weeks_cap(next_profile),
-        "graduated": graduating,
-    }
 
 
 if __name__ == "__main__":

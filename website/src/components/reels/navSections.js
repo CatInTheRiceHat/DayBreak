@@ -14,11 +14,8 @@ import { Home, Film, Users, Trophy, Search, Bookmark, UserCircle } from 'lucide-
  * the mobile top bar instead (see HomeShell).
  */
 export const NAV_SECTIONS = [
-  { key: 'home', label: 'Home', Icon: Home, route: '/home', bottomNav: true },
   { key: 'reels', label: 'Reels', Icon: Film, route: '/', bottomNav: true },
-  { key: 'community', label: 'Community', Icon: Users, route: '/community', bottomNav: true },
   { key: 'challenges', label: 'Challenges', Icon: Trophy, route: '/challenges', bottomNav: true },
-  { key: 'search', label: 'Search', Icon: Search, route: '/search', bottomNav: false },
   { key: 'saved', label: 'Saved', Icon: Bookmark, route: '/saved', bottomNav: false },
   { key: 'profile', label: 'Profile', Icon: UserCircle, route: '/profile', bottomNav: true },
 ];

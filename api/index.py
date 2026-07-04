@@ -28,18 +28,11 @@ from integrations.youtube_ingest import (
     YouTubeIngestError,
     ingest_youtube_videos_postgres,
     load_active_feed_video_rows_postgres,
-    merge_primary_rows,
 )
 from integrations.youtube_service import (
     fetch_videos_by_topic,
     get_youtube_id_for_video,
     get_all_topics_cache_status,
-)
-from core.cocoon import (
-    CocoonProfile,
-    calculate_this_weeks_cap,
-    should_graduate,
-    advance_week,
 )
 from core.preferences import (
     DEFAULT_LANGUAGE,
@@ -53,11 +46,6 @@ from core.preferences import (
 ROOT = Path(__file__).parent.parent
 DEFAULT_DATASET = ROOT / "datasets" / "processed_dataset.csv"
 
-MORNING_WEIGHTS = {"e": 0.20, "d": 0.35, "p": 0.35, "r": 0.10}
-EVENING_WEIGHTS = {"e": 0.15, "d": 0.35, "p": 0.35, "r": 0.15}
-DROP_K = 12
-_MIGRATION_USER_PROFILE = {"age_group": None}
-_FEED_COLS = ["video_id", "topic", "channel", "prosocial", "risk", "engagement", "diversity", "score"]
 
 
 def get_db():
@@ -304,14 +292,7 @@ def chrysalis_feed(
     try:
         cur = conn.cursor()
         feed_rows = load_active_feed_video_rows_postgres(conn)
-        try:
-            cur.execute("SELECT * FROM videos")
-            cols = [d[0] for d in cur.description]
-            legacy_rows = [dict(zip(cols, r)) for r in cur.fetchall()]
-        except Exception:
-            conn.rollback()
-            legacy_rows = []
-        rows = merge_primary_rows(feed_rows, legacy_rows)
+        rows = list(feed_rows)
         try:
             # Feed reads are read-only by default. Set
             # CHRYSALIS_REFRESH_PUBLIC_SIGNALS_ON_FEED=1 only when you explicitly
@@ -389,232 +370,6 @@ def save_content_preferences(request: ContentPreferencesRequest):
         conn.close()
 
 
-@app.get("/api/migration/today")
-def migration_today():
-    today = date.today().isoformat()
-    conn = get_db()
-    try:
-        cur = conn.cursor()
-        cur.execute(
-            """
-            SELECT mode, scheduled_at, feed_json, item_count
-            FROM migration_drops
-            WHERE drop_date = %s
-            """,
-            (today,),
-        )
-        rows = cur.fetchall()
-    finally:
-        conn.close()
-
-    if not rows:
-        raise HTTPException(
-            status_code=404,
-            detail=(
-                f"No Migration Mode drops have run yet for {today}. "
-                "Morning drop is scheduled for 07:00, evening drop for 19:00."
-            ),
-        )
-
-    drops: dict = {}
-    for mode, scheduled_at, feed_json, item_count in rows:
-        drops[mode] = {
-            "mode": mode,
-            "scheduled_at": scheduled_at,
-            "item_count": item_count,
-            "feed": json.loads(feed_json),
-        }
-
-    return {
-        "date": today,
-        "morning": drops.get("morning"),
-        "evening": drops.get("evening"),
-    }
-
-
-class CocoonEnrollRequest(BaseModel):
-    user_id: str
-    current_daily_minutes: int = Field(..., gt=0)
-
-
-@app.post("/api/cocoon/enroll")
-def cocoon_enroll(request: CocoonEnrollRequest):
-    today = date.today().isoformat()
-    conn = get_db()
-    try:
-        cur = conn.cursor()
-        cur.execute(
-            """
-            INSERT INTO cocoon_profiles
-                (user_id, start_minutes, current_week, start_date, graduated)
-            VALUES (%s, %s, 0, %s, 0)
-            ON CONFLICT (user_id) DO NOTHING
-            """,
-            (request.user_id, request.current_daily_minutes, today),
-        )
-        conn.commit()
-        cur.execute(
-            "SELECT start_minutes, current_week FROM cocoon_profiles WHERE user_id = %s",
-            (request.user_id,),
-        )
-        row = cur.fetchone()
-    finally:
-        conn.close()
-
-    profile = CocoonProfile(
-        user_id=request.user_id,
-        start_minutes=row[0],
-        current_week=row[1],
-        start_date=date.fromisoformat(today),
-    )
-    daily_cap = calculate_this_weeks_cap(profile)
-    return {
-        "user_id": profile.user_id,
-        "start_minutes": profile.start_minutes,
-        "current_week": profile.current_week,
-        "daily_cap": daily_cap,
-        "should_graduate": should_graduate(profile),
-    }
-
-
-@app.get("/api/cocoon/status/{user_id}")
-def cocoon_status(user_id: str):
-    conn = get_db()
-    try:
-        cur = conn.cursor()
-        cur.execute(
-            "SELECT start_minutes, current_week, start_date, graduated FROM cocoon_profiles WHERE user_id = %s",
-            (user_id,),
-        )
-        row = cur.fetchone()
-    finally:
-        conn.close()
-
-    if row is None:
-        raise HTTPException(status_code=404, detail=f"No Cocoon profile found for user '{user_id}'.")
-
-    profile = CocoonProfile(
-        user_id=user_id,
-        start_minutes=row[0],
-        current_week=row[1],
-        start_date=date.fromisoformat(row[2]),
-    )
-    daily_cap = calculate_this_weeks_cap(profile)
-    return {
-        "user_id": user_id,
-        "current_week": profile.current_week,
-        "daily_cap": daily_cap,
-        "minutes_remaining_today": daily_cap,
-        "should_graduate": should_graduate(profile),
-    }
-
-
-@app.post("/api/cocoon/advance/{user_id}")
-def cocoon_advance(user_id: str):
-    conn = get_db()
-    try:
-        cur = conn.cursor()
-        cur.execute(
-            "SELECT start_minutes, current_week, start_date FROM cocoon_profiles WHERE user_id = %s",
-            (user_id,),
-        )
-        row = cur.fetchone()
-        if row is None:
-            raise HTTPException(status_code=404, detail=f"No Cocoon profile found for user '{user_id}'.")
-
-        profile = CocoonProfile(
-            user_id=user_id,
-            start_minutes=row[0],
-            current_week=row[1],
-            start_date=date.fromisoformat(row[2]),
-        )
-        next_profile = advance_week(profile)
-        graduating = should_graduate(next_profile)
-        cur.execute(
-            "UPDATE cocoon_profiles SET current_week = %s, graduated = %s WHERE user_id = %s",
-            (next_profile.current_week, int(graduating), user_id),
-        )
-        conn.commit()
-    finally:
-        conn.close()
-
-    return {
-        "user_id": user_id,
-        "current_week": next_profile.current_week,
-        "daily_cap": calculate_this_weeks_cap(next_profile),
-        "graduated": graduating,
-    }
-
-
-def _load_dataset() -> pd.DataFrame:
-    df = pd.read_csv(DEFAULT_DATASET)
-    _defaults = {
-        "topic": "unlabeled",
-        "prosocial": 0,
-        "risk": 0,
-        "active_engagement_ratio": 0.0,
-        "creator_authenticity": 0.5,
-    }
-    for col, default in _defaults.items():
-        if col not in df.columns:
-            df[col] = default
-    df = validate_and_clean(df)
-    df, _ = add_engagement(df)
-    return df
-
-
-def _run_drop(weights: dict) -> list[dict]:
-    df = _load_dataset()
-    feed = build_prototype_feed(
-        df,
-        weights=weights,
-        k=DROP_K,
-        user_profile=_MIGRATION_USER_PROFILE,
-        recent_window=10,
-    ).reset_index(drop=True)
-    cols = [c for c in _FEED_COLS if c in feed.columns]
-    return feed[cols].to_dict(orient="records")
-
-
-def _write_drop(mode: str, feed: list[dict], scheduled_at: str) -> None:
-    today = date.today().isoformat()
-    conn = get_db()
-    try:
-        cur = conn.cursor()
-        cur.execute(
-            """
-            INSERT INTO migration_drops (drop_date, mode, scheduled_at, feed_json, item_count)
-            VALUES (%s, %s, %s, %s, %s)
-            ON CONFLICT (drop_date, mode) DO UPDATE SET
-                scheduled_at = EXCLUDED.scheduled_at,
-                feed_json    = EXCLUDED.feed_json,
-                item_count   = EXCLUDED.item_count
-            """,
-            (today, mode, scheduled_at, json.dumps(feed), len(feed)),
-        )
-        conn.commit()
-    finally:
-        conn.close()
-
-
-@app.get("/api/cron/drop")
-def cron_drop(mode: str, authorization: str = Header(None)):
-    cron_secret = os.environ.get("CRON_SECRET", "")
-    if cron_secret and authorization != f"Bearer {cron_secret}":
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-    if mode not in ("morning", "evening"):
-        raise HTTPException(status_code=400, detail="mode must be 'morning' or 'evening'")
-
-    weights = MORNING_WEIGHTS if mode == "morning" else EVENING_WEIGHTS
-    time_str = "07:00:00" if mode == "morning" else "19:00:00"
-    scheduled_at = f"{date.today().isoformat()}T{time_str}"
-
-    feed = _run_drop(weights)
-    _write_drop(mode, feed, scheduled_at)
-    return {"ok": True, "mode": mode, "items": len(feed)}
-
-
 @app.get("/api/cron/extract")
 def cron_extract(
     authorization: str = Header(None),
@@ -627,9 +382,7 @@ def cron_extract(
 
     Delegates to the canonical ``ingest_youtube_videos_postgres`` path so the
     cron writes into ``feed_videos`` — the exact table ``GET /api/feed/{mode}``
-    reads from via ``load_active_feed_video_rows_postgres``. The deprecated
-    standalone ``videos`` table is no longer required (and does not exist in
-    production Supabase); its absence is logged, not fatal.
+    reads from via ``load_active_feed_video_rows_postgres``.
 
     Locale targeting is preserved end-to-end by the ingest path: search.list
     uses ``relevanceLanguage`` + ``regionCode`` and videos.list uses ``hl`` +
@@ -651,21 +404,6 @@ def cron_extract(
     except YouTubeIngestError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
     finally:
-        # Best-effort, non-fatal diagnostic: the cron no longer depends on the
-        # legacy `videos` table, but surface whether it still exists for ops
-        # visibility into the migration. `to_regclass` returns NULL (no error)
-        # when the table is absent; the try/except guards an aborted txn state.
-        try:
-            cur = conn.cursor()
-            cur.execute("SELECT to_regclass('public.videos')")
-            if cur.fetchone()[0] is None:
-                print(
-                    "[cron_extract] legacy `videos` table absent — writing to "
-                    "feed_videos (canonical feed store)."
-                )
-        except Exception as exc:  # pragma: no cover - diagnostics only
-            conn.rollback()
-            print(f"[cron_extract] legacy `videos` table check skipped: {exc}")
         conn.close()
 
     payload = result.to_dict()
