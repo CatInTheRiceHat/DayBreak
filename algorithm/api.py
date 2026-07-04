@@ -95,6 +95,10 @@ app.add_middleware(
             "http://localhost:5174",
             "http://127.0.0.1:5173",
             "http://127.0.0.1:5174",
+            # Vite dev server is pinned to 6767 (see website/vite.config.js) so the
+            # OAuth redirect URL is stable; keep this allowlist in sync with it.
+            "http://localhost:6767",
+            "http://127.0.0.1:6767",
             "http://localhost:8001",
             "http://localhost:3000",
             "null",
