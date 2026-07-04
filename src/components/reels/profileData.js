@@ -20,18 +20,18 @@ export const WELLBEING_GOALS = [
 ];
 
 export const INTERESTS = [
-  { id: 'art', label: 'Art' },
-  { id: 'music', label: 'Music' },
-  { id: 'journaling', label: 'Journaling' },
-  { id: 'walking', label: 'Walking' },
-  { id: 'cooking', label: 'Cooking' },
-  { id: 'reading', label: 'Reading' },
-  { id: 'photography', label: 'Photography' },
-  { id: 'gaming', label: 'Gaming' },
-  { id: 'sports', label: 'Sports' },
-  { id: 'nature', label: 'Nature' },
-  { id: 'volunteering', label: 'Volunteering' },
-  { id: 'learning', label: 'Learning' },
+  { id: 'art', label: 'Art', emoji: '🎨' },
+  { id: 'music', label: 'Music', emoji: '🎵' },
+  { id: 'journaling', label: 'Journaling', emoji: '📔' },
+  { id: 'walking', label: 'Walking', emoji: '🚶' },
+  { id: 'cooking', label: 'Cooking', emoji: '🍳' },
+  { id: 'reading', label: 'Reading', emoji: '📚' },
+  { id: 'photography', label: 'Photography', emoji: '📷' },
+  { id: 'gaming', label: 'Gaming', emoji: '🎮' },
+  { id: 'sports', label: 'Sports', emoji: '⚽' },
+  { id: 'nature', label: 'Nature', emoji: '🌿' },
+  { id: 'volunteering', label: 'Volunteering', emoji: '🤝' },
+  { id: 'learning', label: 'Learning', emoji: '🧠' },
 ];
 
 // Favorite activities reuse the break/challenge activity vocabulary so the whole

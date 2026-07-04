@@ -54,6 +54,8 @@ export function FirstRunGate() {
     // 1. Just signed in with a survey waiting → persist it under their account.
     if (user && pending) {
       window.localStorage.setItem(DIAG_DONE_KEY, '1'); // don't re-run the funnel
+      // The full pending blob (survey answers + chosen interests) is stored on the
+      // diagnostics row; interests already drive the feed via the local profile.
       saveDiagnostic({ userId: user.id, ...pending }).then(({ error }) => {
         // Keep the pending answers if the save failed (e.g. table not created yet)
         // so a later visit retries; only clear once they're safely stored.
