@@ -1,9 +1,9 @@
-import { BRAND } from '../../brand.js';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
 import { useAuth } from '../../lib/authContext';
 import { CxShell } from './CxShell';
+import { DayBreakAuthBrand } from './DayBreakAuthBrand';
 
 /**
  * Request a password reset. Enter your email and Supabase sends a reset link
@@ -40,11 +40,8 @@ export function ForgotPasswordPage() {
         <ArrowLeft size={18} aria-hidden="true" /> Back
       </Link>
 
-      <div className="cx-card cx-card--auth">
-        <div className="cx-brand">
-          <span className="cx-brand__logo" aria-hidden="true"><img src="/images/logo.png" alt="" /></span>
-          <span className="cx-brand__word">{BRAND}</span>
-        </div>
+      <div className="cx-card cx-card--auth db-auth-card" aria-busy={busy}>
+        <DayBreakAuthBrand />
 
         <h1 className="cx-card__title">Reset your password</h1>
         <p className="cx-card__lede">
@@ -63,10 +60,11 @@ export function ForgotPasswordPage() {
             a reset link is on its way. Open it to choose a new password.
           </p>
         ) : (
-          <form className="cx-form" onSubmit={submit}>
+          <form className="cx-form" onSubmit={submit} aria-describedby={error ? 'forgot-password-error' : undefined}>
             <label className="cx-field">
               <span className="cx-field__label">Email</span>
               <input
+                id="forgot-password-email"
                 type="email"
                 autoComplete="email"
                 required
@@ -74,10 +72,12 @@ export function ForgotPasswordPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 disabled={!configured || busy}
+                aria-invalid={Boolean(error)}
+                aria-describedby={error ? 'forgot-password-error' : undefined}
               />
             </label>
 
-            {error && <p className="cx-form__error" role="alert">{error}</p>}
+            {error && <p id="forgot-password-error" className="cx-form__error" role="alert">{error}</p>}
 
             <button type="submit" className="cx-btn cx-btn--primary" disabled={!configured || busy}>
               {busy ? <Loader2 size={16} className="cx-spin" aria-hidden="true" /> : null}

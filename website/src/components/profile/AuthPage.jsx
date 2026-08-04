@@ -1,14 +1,14 @@
-import { BRAND } from '../../brand.js';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
 import { useAuth } from '../../lib/authContext';
 import { CxShell } from './CxShell';
+import { DayBreakAuthBrand } from './DayBreakAuthBrand';
 
 /**
  * Combined sign-in / sign-up screen (mode = "login" | "signup").
  *
- * Email + password only. We deliberately do NOT ask for a phone number — Chrysalis
+ * Email + password only. We deliberately do NOT ask for a phone number — DayBreak
  * is teen-centered and keeps required data minimal. Email/phone are owned by
  * Supabase Auth, never written to the public profiles table.
  */
@@ -80,11 +80,8 @@ export function AuthPage({ mode = 'login' }) {
         <ArrowLeft size={18} aria-hidden="true" /> Back
       </Link>
 
-      <div className="cx-card cx-card--auth">
-        <div className="cx-brand">
-          <span className="cx-brand__logo" aria-hidden="true"><img src="/images/logo.png" alt="" /></span>
-          <span className="cx-brand__word">{BRAND}</span>
-        </div>
+      <div className="cx-card cx-card--auth db-auth-card" aria-busy={busy}>
+        <DayBreakAuthBrand />
 
         <h1 className="cx-card__title">
           {isSignup ? 'Your feed starts with you.' : 'Welcome back.'}
@@ -119,10 +116,11 @@ export function AuthPage({ mode = 'login' }) {
 
         <div className="cx-divider" aria-hidden="true"><span>or</span></div>
 
-        <form className="cx-form" onSubmit={submit}>
+        <form className="cx-form" onSubmit={submit} aria-describedby={error ? 'auth-error' : undefined}>
           <label className="cx-field">
             <span className="cx-field__label">Email</span>
             <input
+              id={`${mode}-email`}
               type="email"
               autoComplete="email"
               required
@@ -130,11 +128,14 @@ export function AuthPage({ mode = 'login' }) {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               disabled={!configured || busy}
+              aria-invalid={Boolean(error)}
+              aria-describedby={error ? 'auth-error' : undefined}
             />
           </label>
           <label className="cx-field">
             <span className="cx-field__label">Password</span>
             <input
+              id={`${mode}-password`}
               type="password"
               autoComplete={isSignup ? 'new-password' : 'current-password'}
               required
@@ -143,6 +144,8 @@ export function AuthPage({ mode = 'login' }) {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="At least 6 characters"
               disabled={!configured || busy}
+              aria-invalid={Boolean(error)}
+              aria-describedby={error ? 'auth-error' : undefined}
             />
           </label>
 
@@ -150,6 +153,7 @@ export function AuthPage({ mode = 'login' }) {
             <label className="cx-field">
               <span className="cx-field__label">Confirm password</span>
               <input
+                id="signup-confirm-password"
                 type="password"
                 autoComplete="new-password"
                 required
@@ -158,6 +162,8 @@ export function AuthPage({ mode = 'login' }) {
                 onChange={(e) => setConfirm(e.target.value)}
                 placeholder="Re-enter your password"
                 disabled={!configured || busy}
+                aria-invalid={Boolean(error)}
+                aria-describedby={error ? 'auth-error' : undefined}
               />
             </label>
           )}
@@ -168,7 +174,7 @@ export function AuthPage({ mode = 'login' }) {
             </p>
           )}
 
-          {error && <p className="cx-form__error" role="alert">{error}</p>}
+          {error && <p id="auth-error" className="cx-form__error" role="alert">{error}</p>}
           {notice && <p className="cx-form__notice" role="status">{notice}</p>}
 
           <button type="submit" className="cx-btn cx-btn--primary" disabled={!configured || busy}>
@@ -182,7 +188,7 @@ export function AuthPage({ mode = 'login' }) {
           {isSignup ? (
             <>Already here? <Link to="/login">Log in</Link></>
           ) : (
-            <>New to {BRAND}? <Link to="/signup">Create your space</Link></>
+            <>New to DayBreak? <Link to="/signup">Create your space</Link></>
           )}
         </p>
       </div>
