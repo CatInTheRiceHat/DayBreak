@@ -36,12 +36,36 @@ from core.preferences import (
     get_preferences,
     upsert_preferences,
 )
+from core.research_storage import ensure_sqlite_research_tables
+from research_api import create_research_router
 
 DB_PATH = resolve_database_path()
 REFRESH_PUBLIC_SIGNALS_ON_FEED = os.getenv(
     "CHRYSALIS_REFRESH_PUBLIC_SIGNALS_ON_FEED",
     "",
 ).lower() in {"1", "true", "yes"}
+
+
+def get_research_db():
+    """Open the local research database and mirror research migrations 015-016."""
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    ensure_sqlite_research_tables(conn)
+    return conn
+
+
+def _load_research_feed_source(conn):
+    rows = list(load_active_feed_video_rows_sqlite(conn))
+    try:
+        context = (
+            load_or_scan_context_sqlite(conn, rows)
+            if REFRESH_PUBLIC_SIGNALS_ON_FEED
+            else load_cached_context_sqlite(conn, rows)
+        )
+    except Exception as exc:
+        print(f"[research_feed] public-signal cache unavailable: {exc}")
+        context = None
+    return rows, context
 
 
 def _require_feed_ingest_secret(
@@ -85,6 +109,12 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+app.include_router(create_research_router(
+    get_connection=get_research_db,
+    backend="sqlite",
+    load_feed_source=_load_research_feed_source,
+))
 
 app.add_middleware(
     CORSMiddleware,

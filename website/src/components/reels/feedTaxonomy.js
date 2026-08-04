@@ -1,4 +1,5 @@
 import { BRAND } from '../../brand.js';
+import { researchRecommendationSummary } from '../research/researchParticipantCopy';
 export const FEED_BALANCE_COPY = `${BRAND} mixes positive, wellness, perspective, and regular videos so your feed stays fun without becoming draining.`;
 
 const CATEGORY_BADGES = {
@@ -79,13 +80,13 @@ export function getContentBadge(card = {}) {
   return null;
 }
 
-export function getRecommendationInsight(card = {}) {
+export function getRecommendationInsight(card = {}, { researchMode = false } = {}) {
   const category = normalizeKey(card.content_category || card.contentCategory);
   const lane = normalizeKey(card.recommendation_lane || card.recommendationLane);
   const wellness = numberOrNull(card.wellness_score ?? card.wellnessScore);
   const positivity = numberOrNull(card.positivity_score ?? card.positivityScore);
   const badge = getContentBadge(card);
-  const detail = card.ranking_reason || card.rankingReason || card.reason || '';
+  const detail = researchMode ? '' : (card.ranking_reason || card.rankingReason || card.reason || '');
 
   let summary = 'A balanced pick chosen to keep your feed varied.';
   if (category === 'perspective' || lane === 'perspective_mix') {
@@ -114,6 +115,10 @@ export function getRecommendationInsight(card = {}) {
     }
   } else if (category === 'reduced' || lane === 'reduced_filler') {
     summary = 'A lower-priority fallback after higher-conflict picks were reduced.';
+  }
+
+  if (researchMode) {
+    summary = researchRecommendationSummary(category);
   }
 
   return {

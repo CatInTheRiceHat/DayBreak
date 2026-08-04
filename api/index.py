@@ -42,6 +42,7 @@ from core.preferences import (
     get_preferences,
     upsert_preferences,
 )
+from research_api import create_research_router
 
 ROOT = Path(__file__).parent.parent
 DEFAULT_DATASET = ROOT / "datasets" / "processed_dataset.csv"
@@ -50,6 +51,20 @@ DEFAULT_DATASET = ROOT / "datasets" / "processed_dataset.csv"
 
 def get_db():
     return psycopg2.connect(os.environ["DATABASE_URL"])
+
+
+def _load_research_feed_source(conn):
+    rows = list(load_active_feed_video_rows_postgres(conn))
+    try:
+        context = (
+            load_or_scan_context_postgres(conn, rows)
+            if REFRESH_PUBLIC_SIGNALS_ON_FEED
+            else load_cached_context_postgres(conn, rows)
+        )
+    except Exception as exc:
+        print(f"[research_feed] public-signal cache unavailable: {exc}")
+        context = None
+    return rows, context
 
 
 def _load_content_preferences(session_id: str | None, user_id: str | None) -> dict:
@@ -75,6 +90,12 @@ def _load_content_preferences(session_id: str | None, user_id: str | None) -> di
 
 
 app = FastAPI()
+
+app.include_router(create_research_router(
+    get_connection=get_db,
+    backend="postgres",
+    load_feed_source=_load_research_feed_source,
+))
 
 app.add_middleware(
     CORSMiddleware,

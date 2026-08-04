@@ -11,14 +11,26 @@ import { useVideoOrientation } from './useVideoOrientation';
 import { useSavedVideos } from './useSavedVideos';
 import { useLikedVideos } from './useLikedVideos';
 import { useReflections } from './useReflections';
+import { useMeaningfulPostVisibility } from '../research/useMeaningfulPostVisibility';
+import { researchProvenanceMetadata } from '../research/researchProvenance';
+
+const RESEARCH_CONTENT_CATEGORIES = new Set([
+  'healthy', 'positive', 'regular', 'perspective', 'reduced', 'blocked', 'unknown',
+]);
+
+function researchContentCategory(reel) {
+  return RESEARCH_CONTENT_CATEGORIES.has(reel.content_category)
+    ? reel.content_category
+    : 'unknown';
+}
 
 function scoreValue(card, key) {
   const value = Number(card.chrysalis_scores?.[key]);
   return Number.isFinite(value) ? value : null;
 }
 
-function buildSignalHint(reel) {
-  const insight = getRecommendationInsight(reel);
+function buildSignalHint(reel, researchMode = false) {
+  const insight = getRecommendationInsight(reel, { researchMode });
   if (insight.hasTaxonomy) return insight.summary;
 
   const hints = [];
@@ -71,22 +83,35 @@ export function ReelCard({
   onStatus,
   onRegenerate,
   onOpenComments,
+  researchTracker = null,
+  researchSession = null,
+  position = null,
 }) {
   const [loaded, setLoaded] = useState(false);
   const iframeRef = useRef(null);
   const { isSaved, toggleSave } = useSavedVideos();
   const { isLiked, toggleLike } = useLikedVideos();
   const { reflectionFor, setReflection } = useReflections();
+  const researchCardRef = useMeaningfulPostVisibility({
+    enabled: Boolean(researchSession && researchTracker),
+    postId: reel.id,
+    contentCategory: researchContentCategory(reel),
+    position,
+    sourceType: reel.source_type,
+    researchTracker,
+    provenance: researchProvenanceMetadata(reel),
+  });
 
   const videoSource = reel.embed_url || reel.embedUrl || reel.youtube_id || reel.youtubeId;
   const hasVideo = Boolean(videoSource);
   const poster = reel.thumbnail || reel.image;
-  const recommendationInsight = getRecommendationInsight(reel);
+  const researchMode = Boolean(researchSession && researchTracker);
+  const recommendationInsight = getRecommendationInsight(reel, { researchMode });
   const displayLabel = reel.label || recommendationInsight.label || (hasVideo ? 'Curated' : null);
   const isPopular = Boolean(reel.is_popular ?? reel.isPopular) || reel.source_type === 'most_popular';
   const popularBadgeLabel = reel.popularity_badge || reel.popularityBadge || 'Popular';
   const displayHashtags = Array.isArray(reel.display_hashtags) ? reel.display_hashtags.slice(0, 3) : [];
-  const signalHint = buildSignalHint(reel);
+  const signalHint = buildSignalHint(reel, researchMode);
   const embedOrigin = typeof window !== 'undefined' ? window.location.origin : undefined;
   const embedSrc = buildYouTubeEmbedUrl(videoSource, {
     autoplay: true,
@@ -127,6 +152,17 @@ export function ReelCard({
   const liked = isLiked(reel.id);
   const handleToggleLike = () => {
     const nowLiked = toggleLike(reel);
+    if (researchSession && researchTracker) {
+      researchTracker.track(nowLiked ? 'post_liked' : 'post_unliked', {
+        postId: String(reel.id),
+        contentCategory: researchContentCategory(reel),
+        metadata: {
+          position,
+          interaction_source: 'action_rail',
+          ...researchProvenanceMetadata(reel),
+        },
+      }).catch(() => {});
+    }
     onStatus?.(nowLiked ? 'Added to your likes.' : 'Removed from your likes.');
   };
 
@@ -137,7 +173,7 @@ export function ReelCard({
   };
 
   return (
-    <article className="reel-card">
+    <article className="reel-card" ref={researchCardRef}>
       <MOTION.div
         className="reel-layout"
         initial={{ opacity: 0, scale: 0.97 }}
@@ -250,7 +286,7 @@ export function ReelCard({
         <ReelActionRail
           title={reel.title}
           source={reel.source}
-          rankingReason={reel.ranking_reason}
+          rankingReason={researchMode ? null : reel.ranking_reason}
           recommendationSummary={recommendationInsight.summary}
           categoryLabel={recommendationInsight.label}
           categoryTone={recommendationInsight.tone}
@@ -269,6 +305,7 @@ export function ReelCard({
           onStatus={onStatus}
           onRegenerate={onRegenerate}
           onComment={onOpenComments}
+          researchMode={researchMode}
         />
       </MOTION.div>
     </article>

@@ -10,7 +10,7 @@ import { BREAK_ACTIVITIES, MINUTE_MS, formatCountdown } from './sessionBreaks';
  * hard lockout. The user picks an activity, optionally reflects / runs a gentle
  * countdown, then returns refreshed.
  */
-export function BreakScreen({ tier, elapsedMin, onComplete, onOpenChallenges }) {
+export function BreakScreen({ tier, elapsedMin, onComplete, onOpenChallenges, researchMode = false }) {
   const breakMin = tier?.breakMin ?? 10;
   const [activity, setActivity] = useState(null);
   const [reflection, setReflection] = useState('');
@@ -128,16 +128,18 @@ export function BreakScreen({ tier, elapsedMin, onComplete, onOpenChallenges }) 
           </div>
         </div>
 
-        <label className="break-screen__reflection">
-          <span>How are you feeling? <em>(optional)</em></span>
-          <textarea
-            value={reflection}
-            onChange={(event) => setReflection(event.target.value)}
-            placeholder="A word or two is plenty…"
-            rows={2}
-            maxLength={280}
-          />
-        </label>
+        {!researchMode && (
+          <label className="break-screen__reflection">
+            <span>How are you feeling? <em>(optional)</em></span>
+            <textarea
+              value={reflection}
+              onChange={(event) => setReflection(event.target.value)}
+              placeholder="A word or two is plenty…"
+              rows={2}
+              maxLength={280}
+            />
+          </label>
+        )}
 
         <label className="break-screen__checkbox">
           <input

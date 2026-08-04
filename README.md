@@ -47,6 +47,45 @@ npm run dev
 The local API allows Vite on `localhost` or `127.0.0.1` ports `5173` and `5174`,
 so `/reels` can still fetch live cards when Vite moves to the next open port.
 
+### Anonymous research feed
+
+`/study` uses an anonymous bearer credential and a server-owned research session.
+The browser cannot select a condition: it requests
+`GET /api/research/sessions/{session_id}/feed`, and the backend reads the stored
+condition, private seed, and immutable policy version from the session record.
+
+The current policies are:
+
+- `regular-v1`: the existing `flutter-feed` ordering, with no additional
+  research quota or repetition rule.
+- `balanced-v1`: a deterministic, seeded 60% normal / 30% existing healthy or
+  positive / 10% perspective target across a 12-item window, with bounded
+  category and creator repetition penalties and inventory fallbacks.
+
+Apply PostgreSQL migrations in order before deploying the research route:
+
+```bash
+psql "$DATABASE_URL" -f migrations/015_research_sessions_and_events.sql
+psql "$DATABASE_URL" -f migrations/016_research_feed_policies.sql
+```
+
+Local SQLite creates the same tables and upgrades Phase 1 research sessions on
+startup. `feed_seed` is server-only. Issued item provenance is stored in
+`research_feed_items`, then resolved by the server when it accepts any post
+event; client-supplied category, position, bucket, reason, and policy values are
+not authoritative.
+
+For local verification only, `CHRYSALIS_RESEARCH_DEBUG=1` adds the active policy
+to the `X-Chrysalis-Research-Policy` response header and backend log. Leave it
+unset in production. Run the engineering distribution check with:
+
+```bash
+.venv/bin/python scripts/research_feed_sanity.py --windows 500 --window-size 12
+```
+
+The script uses the repository's demo-video fixtures and validates selection
+behavior only; it does not analyze participants or support well-being claims.
+
 ### Daily YouTube feed ingestion
 
 The Algorithm feed is populated by a backend-only YouTube Data API ingestion job.
