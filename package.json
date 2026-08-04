@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test:unit": "node --test src/components/reels/*.test.js src/components/diagnostic/*.test.js src/components/research/*.test.js src/lib/researchEvents.test.js",
-    "qa:responsive": "node qa/responsive-check.mjs"
+    "qa:responsive": "node qa/responsive-check.mjs",
+    "qa:study": "node qa/study-check.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.108.2",
