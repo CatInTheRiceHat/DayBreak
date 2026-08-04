@@ -6,29 +6,41 @@
    ───────────────────────────────────────────────────────────────────────── */
 
 [data-algorithm] {
-  /* Light — soft, airy, butterfly-like, warm */
-  --bg:           #faf9f6;
-  --bg-soft:      #f2eef5;
-  --text:         #2b2631;
-  --text-muted:   #938e97;
-  --card:         #ffffff;
-  --border:       rgba(147, 142, 151, 0.28);
-  --accent:       #7c6d8c;
-  --accent-soft:  #ad9eb8;
-  --tone-healthy: #7fa384;
-  --tone-positive:#d78b9a;
-  --tone-fun:     #d6a456;
-  --tone-perspective: #938e97;
-  --tone-creative:#bf8f61;
-  --tone-social:  #83a99f;
-  --tone-reset:   #8ba989;
-  --overlay:      linear-gradient(to top, rgba(43, 38, 49, 0.62) 0%, rgba(43, 38, 49, 0.18) 38%, transparent 60%);
-  --button-bg:    rgba(250, 249, 246, 0.72);
-  --button-text:  #2b2631;
-  --on-accent:    #fff;
+  /* DayBreak base palette. These page-scoped aliases intentionally fall back
+     to the official colors until the global design-system branch is merged. */
+  --daybreak-midnight: var(--color-midnight-horizon, #233a57);
+  --daybreak-twilight: var(--color-twilight-violet, #6d597a);
+  --daybreak-rose: var(--color-horizon-rose, #ce6969);
+  --daybreak-coral: var(--color-sunrise-coral, #e6866c);
+  --daybreak-morning: var(--color-morning-light, #ffdfab);
 
-  --reel-shadow:  0 24px 60px rgba(43, 38, 49, 0.16);
-  --reel-radius:  28px;
+  /* Feed semantic layer. Components consume these roles, not base colors. */
+  --bg: var(--color-background, #fffaf2);
+  --bg-soft: var(--color-background-subtle, #fff2df);
+  --text: var(--color-text-primary, var(--daybreak-midnight));
+  --text-muted: var(--color-text-secondary, #5f6d7e);
+  --card: var(--color-surface, #fffdf9);
+  --border: var(--color-border, rgba(35, 58, 87, 0.2));
+  --border-strong: var(--color-border-strong, rgba(35, 58, 87, 0.4));
+  --accent: var(--color-action-primary, var(--daybreak-coral));
+  --accent-soft: var(--color-action-secondary, var(--daybreak-twilight));
+  --selected: var(--color-selected, var(--daybreak-rose));
+  --focus-ring: var(--color-focus-ring, var(--daybreak-rose));
+  --tone-healthy: #4f7a65;
+  --tone-positive: var(--daybreak-rose);
+  --tone-fun: #a66e2c;
+  --tone-perspective: var(--daybreak-twilight);
+  --tone-creative: #a35f4c;
+  --tone-social: #4d7182;
+  --tone-reset: #527765;
+  --overlay: linear-gradient(to top, rgba(24, 37, 54, 0.88) 0%, rgba(24, 37, 54, 0.42) 45%, transparent 72%);
+  --button-bg: color-mix(in srgb, var(--card) 94%, transparent);
+  --button-text: var(--text);
+  --on-accent: var(--color-text-on-primary, #1b3049);
+  --on-selected: var(--color-text-on-selected, #0b2035);
+
+  --reel-shadow: 0 12px 30px rgba(35, 58, 87, 0.14);
+  --reel-radius: 22px;
 
   /* Typography — style-guide roles. Headings/titles use the display
      face Abril Fatface; tags/labels/chips use Story Script; body copy
@@ -39,39 +51,85 @@
 }
 
 [data-algorithm][data-theme="dark"] {
-  /* Dark — calm, elegant, not pure black (deep plum-charcoal) */
-  --bg:           #161320;
-  --bg-soft:      #1f1a2b;
-  --text:         #efeaf3;
-  --text-muted:   #a79fb2;
-  --card:         #221c30;
-  --border:       rgba(173, 158, 184, 0.22);
-  --accent:       #c9b8d8;
-  --accent-soft:  #8d7ca0;
-  --tone-healthy: #95b99a;
-  --tone-positive:#efa8b6;
-  --tone-fun:     #e2b867;
-  --tone-perspective: #938e97;
-  --tone-creative:#d1a277;
-  --tone-social:  #9ac0b7;
-  --tone-reset:   #9fb99d;
-  --overlay:      linear-gradient(to top, rgba(10, 8, 14, 0.74) 0%, rgba(10, 8, 14, 0.24) 38%, transparent 60%);
-  --button-bg:    rgba(34, 28, 48, 0.62);
-  --button-text:  #efeaf3;
-  --on-accent:    #fff;
+  --bg: var(--color-background, #172a40);
+  --bg-soft: var(--color-background-subtle, #203650);
+  --text: var(--color-text-primary, #fff4df);
+  --text-muted: var(--color-text-secondary, #d3c5ba);
+  --card: var(--color-surface, #29415e);
+  --border: var(--color-border, rgba(255, 223, 171, 0.22));
+  --border-strong: var(--color-border-strong, rgba(255, 223, 171, 0.42));
+  --accent: var(--color-action-primary, #f19a81);
+  --accent-soft: var(--color-action-secondary, #c4a9d1);
+  --selected: var(--color-selected, #e58383);
+  --focus-ring: var(--color-focus-ring, var(--daybreak-morning));
+  --tone-healthy: #9bc6a9;
+  --tone-positive: #f2a0a0;
+  --tone-fun: #f0bd72;
+  --tone-perspective: #c4a9d1;
+  --tone-creative: #efae91;
+  --tone-social: #9bc4d3;
+  --tone-reset: #a7ceb5;
+  --button-bg: color-mix(in srgb, var(--card) 92%, transparent);
+  --button-text: var(--text);
+  --on-accent: var(--daybreak-midnight);
+  --on-selected: #0b2035;
+  --reel-shadow: 0 14px 34px rgba(8, 20, 34, 0.34);
+  --reel-radius: 22px;
+}
 
-  --reel-shadow:  0 24px 60px rgba(0, 0, 0, 0.45);
-  --reel-radius:  28px;
+/* The formal study route owns its own presentation branch. Preserve its
+   existing feed palette here while the product feed adopts DayBreak. */
+[data-algorithm][data-research="true"] {
+  --bg: #faf9f6;
+  --bg-soft: #f2eef5;
+  --text: #2b2631;
+  --text-muted: #938e97;
+  --card: #fff;
+  --border: rgba(147, 142, 151, 0.28);
+  --border-strong: rgba(147, 142, 151, 0.52);
+  --accent: #7c6d8c;
+  --accent-soft: #ad9eb8;
+  --selected: #7c6d8c;
+  --focus-ring: #7c6d8c;
+  --tone-healthy: #7fa384;
+  --tone-positive: #d78b9a;
+  --tone-fun: #d6a456;
+  --tone-perspective: #938e97;
+  --tone-creative: #bf8f61;
+  --tone-social: #83a99f;
+  --tone-reset: #8ba989;
+  --button-bg: rgba(250, 249, 246, 0.72);
+  --button-text: #2b2631;
+  --on-accent: #fff;
+  --on-selected: #fff;
+  --reel-shadow: 0 24px 60px rgba(43, 38, 49, 0.16);
+  --reel-radius: 28px;
+}
+[data-algorithm][data-research="true"][data-theme="dark"] {
+  --bg: #161320;
+  --bg-soft: #1f1a2b;
+  --text: #efeaf3;
+  --text-muted: #a79fb2;
+  --card: #221c30;
+  --border: rgba(173, 158, 184, 0.22);
+  --border-strong: rgba(173, 158, 184, 0.44);
+  --accent: #c9b8d8;
+  --accent-soft: #8d7ca0;
+  --selected: #c9b8d8;
+  --focus-ring: #c9b8d8;
+  --button-bg: rgba(34, 28, 48, 0.62);
+  --button-text: #efeaf3;
+  --on-accent: #fff;
+  --on-selected: #fff;
+  --reel-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  --reel-radius: 28px;
 }
 
 /* ── Page shell ─────────────────────────────────────────────────────────── */
 .reels-shell {
   position: relative;
   height: 100dvh;
-  background:
-    radial-gradient(circle at 18% 12%, color-mix(in srgb, var(--accent-soft) 26%, transparent), transparent 32rem),
-    radial-gradient(circle at 84% 88%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 30rem),
-    var(--bg);
+  background: var(--bg);
   color: var(--text);
   font-family: var(--font-reels-body);
   overflow: hidden;
@@ -137,6 +195,10 @@
 .reel-frame:hover {
   transform: translateY(-6px) scale(1.006);
   box-shadow: 0 30px 72px rgba(43, 38, 49, 0.22);
+}
+[data-algorithm]:not([data-research="true"]) .reel-frame:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 34px rgba(35, 58, 87, 0.18);
 }
 
 /* ── Landscape videos: contain the full 16:9 embed and fill the empty top/
@@ -248,6 +310,28 @@
   color: var(--on-accent);
   border-color: transparent;
 }
+[data-algorithm]:not([data-research="true"]) .reel-action__btn {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 2px 8px rgba(35, 58, 87, 0.12);
+}
+[data-algorithm]:not([data-research="true"]) .reel-action:hover .reel-action__btn {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+}
+[data-algorithm]:not([data-research="true"]) .reel-action__btn.is-on {
+  background: var(--selected);
+  color: var(--on-selected);
+}
+[data-algorithm]:not([data-research="true"]) .reel-action--save .reel-action__btn.is-on {
+  background: var(--accent-soft);
+  color: #fff;
+}
+[data-algorithm]:not([data-research="true"]) .reel-action--regenerate .reel-action__btn {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: transparent;
+}
 .reel-action__label {
   font-size: 0.62rem;
   font-weight: 600;
@@ -261,6 +345,12 @@
 .reel-back:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
+}
+[data-algorithm]:not([data-research="true"]) .reel-action:focus-visible .reel-action__btn,
+[data-algorithm]:not([data-research="true"]) .reel-action__btn:focus-visible,
+[data-algorithm]:not([data-research="true"]) .reels-fab:focus-visible,
+[data-algorithm]:not([data-research="true"]) .reel-back:focus-visible {
+  outline: 3px solid var(--focus-ring);
 }
 
 /* ── Bottom caption overlay ─────────────────────────────────────────────── */
@@ -3198,6 +3288,265 @@
 
 .reels-feed-end__refresh:hover { filter: brightness(1.05); transform: translateY(-1px); }
 .reels-feed-end__refresh:active { transform: translateY(0); }
+
+/* ── DayBreak core-experience polish ──
+   Product-feed-only refinements. The formal study feed is explicitly excluded
+   so its route-level presentation can be handled independently. */
+[data-algorithm]:not([data-research="true"]) .reel-caption__chip {
+  background: color-mix(in srgb, var(--daybreak-morning) 88%, transparent);
+  color: var(--daybreak-midnight);
+}
+
+[data-algorithm]:not([data-research="true"]) .reel-source-badge,
+[data-algorithm]:not([data-research="true"]) .reel-popular-badge,
+[data-algorithm]:not([data-research="true"]) .reel-mute {
+  border-color: color-mix(in srgb, var(--daybreak-midnight) 28%, transparent);
+  background: color-mix(in srgb, var(--card) 94%, transparent);
+  box-shadow: 0 2px 8px rgba(35, 58, 87, 0.12);
+}
+
+[data-algorithm]:not([data-research="true"]) .reel-why,
+[data-algorithm]:not([data-research="true"]) .reel-reflect {
+  border-radius: 18px;
+  border-color: var(--border-strong);
+  box-shadow: 0 10px 28px rgba(35, 58, 87, 0.18);
+}
+
+[data-algorithm]:not([data-research="true"]) .reel-why__close {
+  width: 42px;
+  height: 42px;
+  color: var(--text);
+}
+
+[data-algorithm]:not([data-research="true"]) .reel-why__title,
+[data-algorithm]:not([data-research="true"]) .reel-why__public-title {
+  color: var(--accent-soft);
+}
+
+[data-algorithm]:not([data-research="true"]) .reel-reflect__chips button {
+  min-height: 42px;
+  border-radius: 12px;
+}
+
+[data-algorithm]:not([data-research="true"]) .reel-reflect__chips button.is-selected {
+  background: var(--selected);
+  color: var(--on-selected);
+}
+
+[data-algorithm]:not([data-research="true"]) .feed-compass {
+  border-radius: 18px;
+  background: var(--card);
+  box-shadow: 0 10px 28px rgba(35, 58, 87, 0.14);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+[data-algorithm]:not([data-research="true"]) .feed-compass__eyebrow,
+[data-algorithm]:not([data-research="true"]) .feed-compass__label,
+[data-algorithm]:not([data-research="true"]) .feed-compass__section-title {
+  color: var(--accent-soft);
+}
+
+[data-algorithm]:not([data-research="true"]) .feed-compass__balance-copy,
+[data-algorithm]:not([data-research="true"]) .feed-compass__status,
+[data-algorithm]:not([data-research="true"]) .feed-compass__why-card,
+[data-algorithm]:not([data-research="true"]) .feed-compass__tune-messages p {
+  border-radius: 12px;
+  background: var(--bg-soft);
+}
+
+[data-algorithm]:not([data-research="true"]) .feed-compass__bar span {
+  background: var(--accent-soft);
+}
+
+[data-algorithm]:not([data-research="true"]) .feed-compass__tunes button,
+[data-algorithm]:not([data-research="true"]) .feed-compass__mode button {
+  min-height: 42px;
+  border-radius: 12px;
+}
+
+[data-algorithm]:not([data-research="true"]) .feed-compass__tunes button.is-selected {
+  background: var(--selected);
+  color: var(--on-selected);
+  box-shadow: none;
+}
+
+[data-algorithm]:not([data-research="true"]) .mode-card {
+  border-radius: 18px;
+  box-shadow: none;
+}
+
+[data-algorithm]:not([data-research="true"]) .mode-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+}
+
+[data-algorithm]:not([data-research="true"]) .mode-card.is-selected {
+  border-color: var(--selected);
+  background: color-mix(in srgb, var(--selected) 12%, var(--card));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--selected) 60%, transparent);
+}
+
+[data-algorithm]:not([data-research="true"]) .onboard-cta,
+[data-algorithm]:not([data-research="true"]) .reels-feed-end__refresh {
+  min-height: 46px;
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: 0 5px 14px rgba(35, 58, 87, 0.14);
+}
+
+[data-algorithm]:not([data-research="true"]) .break-screen__scrim {
+  background: rgba(35, 58, 87, 0.72);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+[data-algorithm]:not([data-research="true"]) .break-screen__panel {
+  border-radius: 20px;
+  border-color: var(--border-strong);
+  box-shadow: 0 14px 34px rgba(35, 58, 87, 0.2);
+  text-align: left;
+}
+
+[data-algorithm]:not([data-research="true"]) .break-screen__eyebrow {
+  align-self: flex-start;
+  color: var(--tone-reset);
+}
+
+[data-algorithm]:not([data-research="true"]) .break-activity {
+  position: relative;
+  min-height: 48px;
+  border-radius: 12px;
+  background: var(--card);
+}
+
+[data-algorithm]:not([data-research="true"]) .break-activity.is-selected {
+  border-color: var(--selected);
+  background: color-mix(in srgb, var(--selected) 11%, var(--card));
+}
+
+[data-algorithm]:not([data-research="true"]) .break-activity.is-selected::after {
+  content: "Selected";
+  margin-left: auto;
+  color: var(--text);
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+}
+
+[data-algorithm]:not([data-research="true"]) .break-screen__timer {
+  align-items: flex-start;
+  border-radius: 12px;
+}
+
+[data-algorithm]:not([data-research="true"]) .break-screen__timer-controls {
+  justify-content: flex-start;
+}
+
+[data-algorithm]:not([data-research="true"]) .break-ghost-btn,
+[data-algorithm]:not([data-research="true"]) .break-screen__done {
+  min-height: 44px;
+}
+
+[data-algorithm]:not([data-research="true"]) .break-screen__done {
+  border-radius: 12px;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+[data-algorithm]:not([data-research="true"]) .break-screen__checkbox input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--selected);
+}
+
+[data-algorithm]:not([data-research="true"]) .comments {
+  outline: none;
+}
+
+[data-algorithm]:not([data-research="true"]) .comments__eyebrow {
+  color: var(--accent-soft);
+}
+
+[data-algorithm]:not([data-research="true"]) .comments__close,
+[data-algorithm]:not([data-research="true"]) .comments__send {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+}
+
+[data-algorithm]:not([data-research="true"]) .comment {
+  border-radius: 12px;
+  background: var(--card);
+}
+
+[data-algorithm]:not([data-research="true"]) .comment.is-you {
+  border-left: 3px solid var(--selected);
+  background: color-mix(in srgb, var(--selected) 8%, var(--card));
+}
+
+[data-algorithm]:not([data-research="true"]) .comment__you-tag {
+  background: var(--selected);
+  color: var(--on-selected);
+}
+
+[data-algorithm]:not([data-research="true"]) .comment__controls button {
+  min-height: 40px;
+  padding-inline: 10px;
+}
+
+[data-algorithm]:not([data-research="true"]) .comments__composer input {
+  min-height: 44px;
+  border-radius: 12px;
+  background: var(--card);
+}
+
+[data-algorithm]:not([data-research="true"]) .comments__send,
+[data-algorithm]:not([data-research="true"]) .comment-guard__rewrite {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+[data-algorithm]:not([data-research="true"]) .reels-feed-status {
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: 0 5px 16px rgba(35, 58, 87, 0.14);
+  backdrop-filter: none;
+}
+
+[data-algorithm]:not([data-research="true"]) :is(
+  .mode-card,
+  .onboard-cta,
+  .onboard-skip,
+  .reel-action,
+  .reel-mute,
+  .reel-play,
+  .reel-why__close,
+  .reel-reflect__chips button,
+  .feed-compass button,
+  .break-activity,
+  .break-ghost-btn,
+  .break-screen__done,
+  .break-screen__challenges-link,
+  .comments button,
+  .comments input,
+  .comments__close
+):focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+@media (max-width: 540px) {
+  [data-algorithm]:not([data-research="true"]) .reel-rail {
+    right: 10px;
+    bottom: 126px;
+    gap: 10px;
+  }
+  [data-algorithm]:not([data-research="true"]) .reel-action__btn {
+    width: 44px;
+    height: 44px;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .reels-feed-status__spinner { animation: none; }
