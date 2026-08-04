@@ -22,6 +22,10 @@ import { logEvent } from '../../lib/events';
 import { DEFAULT_TIME_SCALE_MS, DEMO_TIME_SCALE_MS } from './sessionBreaks';
 import { useChallenges } from './useChallenges';
 import { CommentsPanel } from './CommentsPanel';
+import {
+  researchProvenanceFromFeedItem,
+  researchProvenanceMetadata,
+} from '../research/researchProvenance';
 import '../../reels.css';
 
 const THEME_KEY = 'chrysalis-algorithm-theme';
@@ -176,6 +180,7 @@ function apiItemToCard(item) {
     safety_risk: item.safety_risk ?? item.safetyRisk ?? null,
     perspective_topic: item.perspective_topic || item.perspectiveTopic || null,
     recommendation_lane: item.recommendation_lane || item.recommendationLane || null,
+    ...researchProvenanceFromFeedItem(item),
   };
 }
 
@@ -295,11 +300,21 @@ function applySessionTuning(cards, mode, selectedTunes) {
   return tuned.map((item) => item.card);
 }
 
-export function ReelsPage() {
+const RESEARCH_CONTENT_CATEGORIES = new Set([
+  'healthy', 'positive', 'regular', 'perspective', 'reduced', 'blocked', 'unknown',
+]);
+
+function researchContentCategory(reel) {
+  const category = reel?.content_category;
+  return RESEARCH_CONTENT_CATEGORIES.has(category) ? category : 'unknown';
+}
+
+export function ReelsPage({ researchSession = null, researchTracker = null }) {
+  const isResearchSession = Boolean(researchSession && researchTracker);
   const scrollRef = useRef(null);
   const [theme, setTheme] = useState(initialTheme);
-  const [onboarded, setOnboarded] = useState(initialOnboarded);
-  const [mode, setMode] = useState(initialMode);
+  const [onboarded, setOnboarded] = useState(() => (isResearchSession ? true : initialOnboarded()));
+  const [mode, setMode] = useState(() => (isResearchSession ? DEFAULT_MODE : initialMode()));
   const [modeSelectionInitial, setModeSelectionInitial] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [soundOn, setSoundOn] = useState(initialSoundOn);
@@ -321,7 +336,11 @@ export function ReelsPage() {
     completeBreak,
     triggerBreakNow,
     reset: resetSessionTimer,
-  } = useSessionTimer({ active: onboarded, scaleMs: breakScaleMs });
+  } = useSessionTimer({
+    active: onboarded,
+    scaleMs: breakScaleMs,
+    persistCompletions: !isResearchSession,
+  });
   const breakActive = onboarded && Boolean(dueTier);
 
   // IRL challenges (points, streaks, friend competition) — local demo state.
@@ -340,11 +359,21 @@ export function ReelsPage() {
   // (leaving and returning to the feed) logs a new session.
   const sessionLoggedRef = useRef(false);
   useEffect(() => {
-    if (user && !sessionLoggedRef.current) {
+    if (!isResearchSession && user && !sessionLoggedRef.current) {
       sessionLoggedRef.current = true;
       logEvent(user.id, 'session_start');
     }
-  }, [user]);
+  }, [isResearchSession, user]);
+
+  useEffect(() => {
+    if (!isResearchSession || !dueTier) return;
+    researchTracker.track('break_prompt_shown', {
+      metadata: {
+        threshold_min: dueTier.thresholdMin,
+        break_min: dueTier.breakMin,
+      },
+    }, { onceKey: `break_prompt_shown:${dueTier.thresholdMin}` }).catch(() => {});
+  }, [dueTier, isResearchSession, researchTracker]);
 
   const goToProfile = () => navigate(user ? '/profile' : '/login');
   const goToCommunity = () => navigate('/community');
@@ -389,30 +418,39 @@ export function ReelsPage() {
     try {
       const seed = reset ? createFeedSeed() : (pg.seed ?? createFeedSeed());
       const excludeIds = reset ? [] : pg.excludeIds;
-      const params = new URLSearchParams({ k: String(PAGE_SIZE), seed });
-      const sessionId = getSessionId();
-      if (sessionId) params.set('session_id', sessionId);
-      if (excludeIds.length) params.set('exclude_ids', excludeIds.join(','));
-
-      const response = await fetch(`${API_URL}/api/feed/${activeMode}?${params.toString()}`);
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const data = await response.json();
+      let data;
+      if (isResearchSession) {
+        data = await researchTracker.fetchFeed({ k: PAGE_SIZE, excludeIds });
+      } else {
+        const params = new URLSearchParams({ k: String(PAGE_SIZE), seed });
+        const sessionId = getSessionId();
+        if (sessionId) params.set('session_id', sessionId);
+        if (excludeIds.length) params.set('exclude_ids', excludeIds.join(','));
+        const response = await fetch(`${API_URL}/api/feed/${activeMode}?${params.toString()}`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        data = await response.json();
+      }
       if (modeRef.current !== activeMode) return; // user switched modes mid-flight
 
       const seen = reset ? new Set() : pg.seen;
       const mapped = (data.items ?? []).map(apiItemToCard);
       const { fresh: deduped, returnedIds } = selectFreshCards(seen, mapped);  // dedupe by video id
       // Gently boost cards matching the user's chosen interests (stable; no drops).
-      const fresh = rankByInterests(deduped, readInterests());
+      const fresh = isResearchSession ? deduped : rankByInterests(deduped, readInterests());
 
       if (reset && fresh.length === 0) {
+        if (isResearchSession) {
+          Object.assign(pg, { seed: null, excludeIds: [], seen: new Set(), hasMore: false, source: 'empty' });
+          setFeed({ mode: activeMode, cards: [], debug: null, hasMore: false, source: 'empty' });
+          return;
+        }
         // Backend genuinely has no eligible videos → static sample fallback.
         Object.assign(pg, { seed, excludeIds: [], seen: new Set(), hasMore: false, source: 'fallback' });
         setFeed({ mode: activeMode, cards: synthetic, debug: null, hasMore: false, source: 'fallback' });
         return;
       }
 
-      pg.seed = seed;
+      pg.seed = isResearchSession ? null : seed;
       pg.seen = seen;
       pg.excludeIds = reset ? returnedIds : [...pg.excludeIds, ...returnedIds];
       pg.hasMore = Boolean(data.has_more) && fresh.length > 0;
@@ -432,16 +470,21 @@ export function ReelsPage() {
         console.warn('[Chrysalis algorithm] Feed page failed:', error);
       }
       if (reset) {
-        const synthetic2 = reelsByMode[modeRef.current] ?? reelsByMode[DEFAULT_MODE];
-        Object.assign(pg, { hasMore: false, source: 'fallback' });
-        setFeed({ mode: modeRef.current, cards: synthetic2, debug: null, hasMore: false, source: 'fallback' });
+        if (isResearchSession) {
+          Object.assign(pg, { hasMore: false, source: 'error' });
+          setFeed({ mode: modeRef.current, cards: [], debug: null, hasMore: false, source: 'error' });
+        } else {
+          const synthetic2 = reelsByMode[modeRef.current] ?? reelsByMode[DEFAULT_MODE];
+          Object.assign(pg, { hasMore: false, source: 'fallback' });
+          setFeed({ mode: modeRef.current, cards: synthetic2, debug: null, hasMore: false, source: 'fallback' });
+        }
       }
       // Non-reset errors keep the current feed; a later scroll can retry.
     } finally {
       pg.loading = false;
       setLoadingMore(false);
     }
-  }, []);
+  }, [isResearchSession, researchTracker]);
 
   // (Re)load page 0 whenever the mode changes or the feed is (re)entered.
   useEffect(() => {
@@ -477,13 +520,13 @@ export function ReelsPage() {
   }, [theme]);
 
   useEffect(() => {
-    if (SKIP_ALGORITHM_ONBOARDING) return;
+    if (SKIP_ALGORITHM_ONBOARDING || isResearchSession) return;
     window.localStorage.setItem(ONBOARDED_KEY, onboarded ? '1' : '0');
-  }, [onboarded]);
+  }, [isResearchSession, onboarded]);
 
   useEffect(() => {
-    window.localStorage.setItem(MODE_KEY, mode);
-  }, [mode]);
+    if (!isResearchSession) window.localStorage.setItem(MODE_KEY, mode);
+  }, [isResearchSession, mode]);
 
   useEffect(() => {
     if (!toast) return undefined;
@@ -502,12 +545,15 @@ export function ReelsPage() {
     setOnboarded(true);
   };
 
-  const cards = (feed.mode === mode && feed.cards)
-    ? feed.cards
-    : (reelsByMode[mode] ?? reelsByMode[DEFAULT_MODE]);
+  const cards = useMemo(
+    () => ((feed.mode === mode && feed.cards)
+      ? feed.cards
+      : (isResearchSession ? [] : (reelsByMode[mode] ?? reelsByMode[DEFAULT_MODE]))),
+    [feed.cards, feed.mode, isResearchSession, mode],
+  );
   const tunedCards = useMemo(
-    () => applySessionTuning(cards, mode, selectedTunes),
-    [cards, mode, selectedTunes],
+    () => (isResearchSession ? cards : applySessionTuning(cards, mode, selectedTunes)),
+    [cards, isResearchSession, mode, selectedTunes],
   );
   const activeCard = tunedCards[Math.min(activeIndex, Math.max(tunedCards.length - 1, 0))]
     ?? tunedCards[0];
@@ -554,11 +600,32 @@ export function ReelsPage() {
   };
 
   const handleBreakComplete = (entry) => {
+    if (isResearchSession && dueTier) {
+      researchTracker.track('break_prompt_accepted', {
+        metadata: {
+          threshold_min: dueTier.thresholdMin,
+          break_min: dueTier.breakMin,
+          reason_code: entry.activity || 'unspecified',
+        },
+      }).catch(() => {});
+    }
     completeBreak(entry);
     announceStatus('Welcome back — enjoy your refreshed feed.');
   };
 
   const showNextCard = (index) => {
+    const skippedCard = tunedCards[index];
+    if (isResearchSession && skippedCard?.id) {
+      researchTracker.track('post_skipped', {
+        postId: String(skippedCard.id),
+        contentCategory: researchContentCategory(skippedCard),
+        metadata: {
+          position: index,
+          interaction_source: 'regenerate',
+          ...researchProvenanceMetadata(skippedCard),
+        },
+      }).catch(() => {});
+    }
     if (tunedCards.length < 2) {
       announceStatus('Regenerating this session view.');
       return;
@@ -662,6 +729,9 @@ export function ReelsPage() {
                       onStatus={announceStatus}
                       onRegenerate={() => showNextCard(index)}
                       onOpenComments={() => setCommentsOpen(true)}
+                      researchTracker={researchTracker}
+                      researchSession={researchSession}
+                      position={index}
                     />
                   ))}
 
@@ -712,6 +782,7 @@ export function ReelsPage() {
                 onResetIntro={resetIntro}
                 onTuneChange={toggleTune}
                 onClose={() => setCompassOpen(false)}
+                researchMode={isResearchSession}
               />
             </FeedDetailsDrawer>
           </MOTION.div>
@@ -726,6 +797,7 @@ export function ReelsPage() {
             elapsedMin={elapsedMin}
             onComplete={handleBreakComplete}
             onOpenChallenges={goToChallenges}
+            researchMode={isResearchSession}
           />
         )}
       </AnimatePresence>
