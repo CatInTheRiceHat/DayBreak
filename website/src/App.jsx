@@ -3,6 +3,7 @@ import { BRAND } from './brand.js';
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Lenis from 'lenis';
 import { Navbar } from './components/Navbar';
+import { GlobalErrorBoundary } from './components/GlobalErrorBoundary';
 import { FirstRunGate } from './components/FirstRunGate';
 import { RebootPage } from './components/RebootPage';
 import { ReelsPage } from './components/reels/ReelsPage';
@@ -22,6 +23,7 @@ import { ChallengesPage } from './components/challenges/ChallengesPage';
 import { ResearchPage } from './components/research/ResearchPage';
 import './App.css';
 import './auth.css';
+import './app-shell.css';
 
 function MainPage() {
   return <RebootPage />;
@@ -113,15 +115,17 @@ function AppShell() {
 
 function App() {
   useEffect(() => {
-    document.title = `${BRAND} — by Elaine Che`;
+    document.title = `${BRAND} — A brighter way to scroll`;
   }, []);
 
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <AppShell />
-      </AuthProvider>
-    </BrowserRouter>
+    <GlobalErrorBoundary>
+      <BrowserRouter>
+        <AuthProvider>
+          <AppShell />
+        </AuthProvider>
+      </BrowserRouter>
+    </GlobalErrorBoundary>
   );
 }
 

@@ -2,6 +2,7 @@ import { BRAND } from '../../brand.js';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, SlidersHorizontal, Trophy, UserCircle } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
+import { DayBreakLogo } from '../DayBreakLogo.jsx';
 
 /**
  * App-style top header for the Chrysalis algorithm feed.
@@ -42,7 +43,7 @@ export function ChrysalisTopBar({
         <Link to="/home" className="app-topbar__home" aria-label={`Back to ${BRAND} home`}>
           <ArrowLeft size={18} aria-hidden="true" />
         </Link>
-        <span className="app-topbar__logo" aria-hidden="true"><img src="/images/logo.png" alt="" /></span>
+        <span className="app-topbar__logo" aria-hidden="true"><DayBreakLogo /></span>
         <span className="app-topbar__wordmark">{BRAND}</span>
       </div>
 
