@@ -3,12 +3,13 @@
 //
 // Single source of truth for the app's DISPLAY name. Kept as a
 // constant so the wordmark, titles, aria-labels, system messages,
-// and @handles all resolve to "Chrysalis" in one place.
+// and @handles all resolve to the public DayBreak brand in one place.
+// Internal Chrysalis identifiers remain unchanged for compatibility.
 // ──────────────────────────────────────────────────────────────
-export const BRAND = 'Chrysalis';
+export const BRAND = 'DayBreak';
 
 // Lowercase handle/slug form used in demo @mentions.
-export const BRAND_HANDLE = 'chrysalis';
+export const BRAND_HANDLE = 'daybreak';
 
 // Skip the "choose your algorithm" start screen and drop straight
 // into the feed on the default mode (Cruisin' / flutter-feed).

@@ -1,19 +1,19 @@
 .db-public-page {
-  --db-midnight: var(--color-midnight-horizon, #233a57);
-  --db-twilight: var(--color-twilight-violet, #6d597a);
-  --db-rose: var(--color-horizon-rose, #ce6969);
-  --db-coral: var(--color-sunrise-coral, #e6866c);
-  --db-morning: var(--color-morning-light, #ffdfab);
-  --db-background: var(--color-background, #fffaf2);
-  --db-background-subtle: var(--color-background-subtle, #fff4e2);
-  --db-surface: var(--color-surface, #ffffff);
-  --db-text: var(--color-text-primary, var(--db-midnight));
-  --db-text-secondary: var(--color-text-secondary, #4f6075);
-  --db-border: var(--color-border, rgba(35, 58, 87, 0.18));
-  --db-focus: var(--color-focus-ring, var(--db-twilight));
+  --db-midnight: var(--db-color-midnight-horizon);
+  --db-twilight: var(--db-color-twilight-violet);
+  --db-rose: var(--db-color-horizon-rose);
+  --db-coral: var(--db-color-sunrise-coral);
+  --db-morning: var(--db-color-morning-light);
+  --db-background: var(--db-color-background);
+  --db-background-subtle: var(--db-color-background-subtle);
+  --db-surface: var(--db-color-surface);
+  --db-text: var(--db-color-text-primary);
+  --db-text-secondary: var(--db-color-text-secondary);
+  --db-border: var(--db-color-border);
+  --db-focus: var(--db-color-focus-ring);
   color: var(--db-text);
   background: var(--db-background);
-  font-family: var(--font-body, "Montserrat", sans-serif);
+  font-family: var(--db-font-sans);
   font-weight: 400;
   overflow: clip;
 }
@@ -80,7 +80,7 @@
 .db-contact h2 {
   margin: 0;
   color: var(--db-midnight);
-  font-family: var(--font-display, "Abril Fatface", serif);
+  font-family: var(--db-font-display);
   font-weight: 400;
   text-wrap: balance;
 }
@@ -146,7 +146,7 @@
   position: relative;
   overflow: hidden;
   border: 1px solid var(--db-border);
-  border-radius: var(--radius-large, 28px);
+  border-radius: var(--db-radius-xl);
   background: var(--db-midnight);
   isolation: isolate;
 }
@@ -221,7 +221,7 @@
 .db-tension-card {
   padding: clamp(1.5rem, 3vw, 2.4rem);
   border: 1px solid var(--db-border);
-  border-radius: var(--radius-large, 24px);
+  border-radius: var(--db-radius-xl);
 }
 
 .db-tension-card--positive { background: var(--db-background-subtle); }
@@ -268,7 +268,7 @@
   min-height: 17rem;
   padding: 1.5rem;
   border: 1px solid var(--db-border);
-  border-radius: var(--radius-large, 22px);
+  border-radius: var(--db-radius-xl);
   background: var(--db-surface);
 }
 .db-principle-card__icon {
@@ -294,9 +294,9 @@
   margin: 0 auto;
   padding: 0.75rem;
   border: 1px solid var(--db-border);
-  border-radius: var(--radius-large, 28px);
+  border-radius: var(--db-radius-xl);
   background: var(--db-surface);
-  box-shadow: var(--shadow-elevated, 0 18px 45px rgba(35, 58, 87, 0.1));
+  box-shadow: var(--db-shadow-lg);
 }
 .db-feed-preview figcaption { padding: 0.5rem 0.5rem 0.8rem; color: var(--db-twilight); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; }
 .db-feed-preview__media {
@@ -305,7 +305,7 @@
   display: flex;
   align-items: flex-end;
   color: var(--db-surface);
-  border-radius: calc(var(--radius-large, 28px) - 9px);
+  border-radius: calc(var(--db-radius-xl) - 9px);
   background: var(--db-twilight);
   position: relative;
   overflow: hidden;
@@ -322,7 +322,7 @@
 }
 .db-feed-preview__media::before { right: -10rem; top: -9rem; }
 .db-feed-preview__media::after { left: -11rem; bottom: -10rem; border-color: var(--db-morning); }
-.db-feed-preview__media span { position: relative; z-index: 1; max-width: 9ch; font-family: var(--font-display, "Abril Fatface", serif); font-size: 2rem; line-height: 1; }
+.db-feed-preview__media span { position: relative; z-index: 1; max-width: 9ch; font-family: var(--db-font-display); font-size: 2rem; line-height: 1; }
 .db-feed-preview__meta { padding: 1rem 0.4rem; display: flex; gap: 0.75rem; align-items: center; }
 .db-avatar { width: 2.5rem; height: 2.5rem; display: grid; place-items: center; color: var(--db-surface); border-radius: 50%; background: var(--db-rose); }
 .db-feed-preview__meta div { display: grid; gap: 0.2rem; }
@@ -338,7 +338,7 @@
 .db-research .db-section-heading h2 { color: var(--db-surface); }
 .db-research .db-section-heading__body { color: color-mix(in srgb, var(--db-surface) 74%, transparent); }
 .db-research__notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
-.db-research__notes article { padding: 1.5rem; border: 1px solid color-mix(in srgb, var(--db-surface) 24%, transparent); border-radius: var(--radius-large, 20px); }
+.db-research__notes article { padding: 1.5rem; border: 1px solid color-mix(in srgb, var(--db-surface) 24%, transparent); border-radius: var(--db-radius-xl); }
 .db-research__notes svg { color: var(--db-morning); }
 .db-research__notes h3 { margin: 2rem 0 0; font-size: 1.05rem; font-weight: 500; }
 .db-research__notes p { margin: 0.65rem 0 0; color: color-mix(in srgb, var(--db-surface) 72%, transparent); font-size: 0.88rem; line-height: 1.6; }

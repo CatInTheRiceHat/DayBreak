@@ -2,18 +2,18 @@
 .cx-shell[data-cx]:has(.diag-quiz),
 .cx-shell[data-cx]:has(.diag-result),
 .cx-shell[data-cx]:has(.interest-grid) {
-  --db-midnight: var(--color-midnight-horizon, #233a57);
-  --db-twilight: var(--color-twilight-violet, #6d597a);
-  --db-rose: var(--color-horizon-rose, #ce6969);
-  --db-coral: var(--color-sunrise-coral, #e6866c);
-  --db-morning: var(--color-morning-light, #ffdfab);
-  --db-background: var(--color-background, #fffaf2);
-  --db-background-subtle: var(--color-background-subtle, #fff4e2);
-  --db-surface: var(--color-surface, #ffffff);
-  --db-text: var(--color-text-primary, var(--db-midnight));
-  --db-text-secondary: var(--color-text-secondary, #526174);
-  --db-border: var(--color-border, rgba(35, 58, 87, 0.2));
-  --db-focus: var(--color-focus-ring, var(--db-twilight));
+  --db-midnight: var(--db-color-midnight-horizon);
+  --db-twilight: var(--db-color-twilight-violet);
+  --db-rose: var(--db-color-horizon-rose);
+  --db-coral: var(--db-color-sunrise-coral);
+  --db-morning: var(--db-color-morning-light);
+  --db-background: var(--db-color-background);
+  --db-background-subtle: var(--db-color-background-subtle);
+  --db-surface: var(--db-color-surface);
+  --db-text: var(--db-color-text-primary);
+  --db-text-secondary: var(--db-color-text-secondary);
+  --db-border: var(--db-color-border);
+  --db-focus: var(--db-color-focus-ring);
   --bg: var(--db-background);
   --bg-soft: var(--db-background-subtle);
   --text: var(--db-text);
@@ -55,9 +55,9 @@
   gap: 1rem;
   padding: clamp(1.4rem, 5vw, 2.5rem);
   border: 1px solid var(--db-border);
-  border-radius: var(--radius-large, 24px);
+  border-radius: var(--db-radius-xl);
   background: var(--db-surface);
-  box-shadow: var(--shadow-elevated, 0 16px 42px rgba(35, 58, 87, 0.1));
+  box-shadow: var(--db-shadow-lg);
 }
 
 .db-auth-brand {
@@ -94,7 +94,7 @@
 
 .db-auth-brand__copy strong {
   color: var(--db-midnight);
-  font-family: var(--font-display, "Abril Fatface", serif);
+  font-family: var(--db-font-display);
   font-size: 1.45rem;
   font-weight: 400;
   line-height: 1;
@@ -108,7 +108,7 @@
 
 .cx-shell[data-cx] .db-auth-card .cx-card__title {
   color: var(--db-midnight);
-  font-family: var(--font-display, "Abril Fatface", serif);
+  font-family: var(--db-font-display);
   font-size: clamp(2rem, 8vw, 2.8rem);
   line-height: 1;
 }
@@ -134,7 +134,7 @@
   min-height: 48px;
   padding: 0.75rem 0.9rem;
   border: 1px solid var(--db-border);
-  border-radius: var(--radius-medium, 12px);
+  border-radius: var(--db-radius-md);
   background: var(--db-background-subtle);
   color: var(--db-midnight);
 }
@@ -230,9 +230,9 @@
 .cx-shell[data-cx] .diag-result,
 .cx-shell[data-cx] .cx-card:has(.interest-grid) {
   border-color: var(--db-border);
-  border-radius: var(--radius-large, 24px);
+  border-radius: var(--db-radius-xl);
   background: var(--db-surface);
-  box-shadow: var(--shadow-elevated, 0 16px 42px rgba(35, 58, 87, 0.1));
+  box-shadow: var(--db-shadow-lg);
 }
 
 .cx-shell[data-cx] .diag-progress { background: var(--db-background-subtle); }
@@ -245,7 +245,7 @@
 .cx-shell[data-cx] .diag-mode {
   min-height: 48px;
   border-color: var(--db-border);
-  border-radius: var(--radius-medium, 14px);
+  border-radius: var(--db-radius-md);
   background: var(--db-background-subtle);
 }
 .cx-shell[data-cx] .diag-option.is-selected,

@@ -3,32 +3,18 @@
 }
 
 .study-route [data-algorithm] {
-  --bg: var(--color-background, var(--background-color, #fff8ed));
-  --bg-soft: var(--color-background-subtle, var(--background-subtle, #f8eee1));
-  --text: var(--color-text-primary, var(--text-primary, #233a57));
-  --text-muted: var(--color-text-muted, var(--text-muted-color, #5f6e81));
-  --card: var(--color-surface, var(--surface, #fffdf8));
-  --border: var(--color-border, var(--border-color, rgba(35, 58, 87, 0.2)));
-  --accent: var(--color-primary-action, var(--primary-action, #e6866c));
-  --accent-soft: var(--color-selected, var(--selected-state, #ce6969));
-  --button-bg: var(--color-surface-elevated, var(--surface-elevated, #fffdf8));
-  --button-text: var(--color-text-primary, var(--text-primary, #233a57));
-  --reel-radius: var(--radius-card, 1.25rem);
-  --reel-shadow: var(--shadow-card, 0 12px 32px rgba(35, 58, 87, 0.12));
-}
-
-.study-route [data-algorithm][data-theme="dark"] {
-  --bg: var(--color-midnight-horizon, #233a57);
-  --bg-soft: color-mix(in srgb, var(--color-twilight-violet, #6d597a) 38%, var(--color-midnight-horizon, #233a57));
-  --text: var(--color-morning-light, #ffdfab);
-  --text-muted: color-mix(in srgb, var(--color-morning-light, #ffdfab) 72%, var(--color-midnight-horizon, #233a57));
-  --card: color-mix(in srgb, var(--color-midnight-horizon, #233a57) 88%, white);
-  --border: color-mix(in srgb, var(--color-morning-light, #ffdfab) 24%, transparent);
-  --accent: var(--color-sunrise-coral, #e6866c);
-  --accent-soft: var(--color-horizon-rose, #ce6969);
-  --button-bg: color-mix(in srgb, var(--color-midnight-horizon, #233a57) 84%, white);
-  --button-text: var(--color-morning-light, #ffdfab);
-  --reel-shadow: 0 12px 32px rgba(10, 22, 37, 0.24);
+  --bg: var(--db-color-background);
+  --bg-soft: var(--db-color-background-subtle);
+  --text: var(--db-color-text-primary);
+  --text-muted: var(--db-color-text-muted);
+  --card: var(--db-color-surface);
+  --border: var(--db-color-border);
+  --accent: var(--db-color-action-primary);
+  --accent-soft: var(--db-color-action-secondary);
+  --button-bg: var(--db-color-surface-elevated);
+  --button-text: var(--db-color-text-primary);
+  --reel-radius: var(--db-radius-xl);
+  --reel-shadow: var(--db-shadow-md);
 }
 
 .study-visually-hidden {
@@ -51,15 +37,15 @@
   place-items: center;
   overflow: hidden;
   padding: clamp(1rem, 5vw, 3rem);
-  background: var(--color-background-subtle, var(--background-subtle, #fff8ed));
-  color: var(--color-text-primary, var(--text-primary, #233a57));
-  font-family: var(--font-body, "Montserrat", sans-serif);
+  background: var(--db-color-background-subtle);
+  color: var(--db-color-text-primary);
+  font-family: var(--db-font-sans);
 }
 
 .study-state::before,
 .study-state::after {
   position: absolute;
-  border: 1px solid color-mix(in srgb, var(--color-secondary-action, var(--secondary-action, #6d597a)) 30%, transparent);
+  border: 1px solid color-mix(in srgb, var(--db-color-action-secondary) 30%, transparent);
   border-radius: 50%;
   content: "";
   pointer-events: none;
@@ -85,16 +71,16 @@
   width: min(100%, 34rem);
   box-sizing: border-box;
   padding: clamp(1.5rem, 5vw, 2.75rem);
-  border: 1px solid var(--color-border, var(--border-color, rgba(35, 58, 87, 0.2)));
-  border-radius: var(--radius-card, 1.25rem);
-  background: var(--color-surface, var(--surface, #fffdf8));
-  box-shadow: var(--shadow-card, 0 12px 32px rgba(35, 58, 87, 0.1));
+  border: 1px solid var(--db-color-border);
+  border-radius: var(--db-radius-xl);
+  background: var(--db-color-surface);
+  box-shadow: var(--db-shadow-md);
   text-align: center;
 }
 
 .study-state__eyebrow {
   margin: 0 0 1.25rem;
-  color: var(--color-text-secondary, var(--text-secondary, #6d597a));
+  color: var(--db-color-text-secondary);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -108,8 +94,8 @@
   margin: 0 auto 1.25rem;
   place-items: center;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--color-selected, var(--selected-state, #ce6969)) 14%, transparent);
-  color: var(--color-primary-action, var(--primary-action, #ce6969));
+  background: var(--db-color-selected-subtle);
+  color: var(--db-color-action-primary);
 }
 
 .study-state__icon svg {
@@ -122,14 +108,14 @@
 }
 
 .study-state--completed .study-state__icon {
-  background: color-mix(in srgb, var(--color-success, var(--success, #3f7654)) 14%, transparent);
-  color: var(--color-success, var(--success, #3f7654));
+  background: color-mix(in srgb, var(--db-color-success) 14%, transparent);
+  color: var(--db-color-success);
 }
 
 .study-state h1 {
   margin: 0;
   color: inherit;
-  font-family: var(--font-heading, var(--font-body, "Montserrat", sans-serif));
+  font-family: var(--db-font-sans);
   font-size: clamp(1.75rem, 6vw, 2.5rem);
   font-weight: 700;
   letter-spacing: -0.025em;
@@ -139,7 +125,7 @@
 .study-state__message {
   max-width: 28rem;
   margin: 0.9rem auto 0;
-  color: var(--color-text-secondary, var(--text-secondary, #516176));
+  color: var(--db-color-text-secondary);
   font-size: 1rem;
   line-height: 1.65;
 }
@@ -148,27 +134,27 @@
 .research-session-controls button {
   min-height: 2.75rem;
   border: 1px solid transparent;
-  border-radius: var(--radius-control, 0.75rem);
+  border-radius: var(--db-radius-md);
   font: inherit;
   font-size: 0.875rem;
   font-weight: 700;
   cursor: pointer;
   transition:
-    background-color var(--motion-fast, 150ms) var(--ease-standard, ease),
-    border-color var(--motion-fast, 150ms) var(--ease-standard, ease),
-    transform var(--motion-fast, 150ms) var(--ease-standard, ease);
+    background-color var(--db-duration-fast) var(--db-ease-standard),
+    border-color var(--db-duration-fast) var(--db-ease-standard),
+    transform var(--db-duration-fast) var(--db-ease-standard);
 }
 
 .study-state__action {
   margin-top: 1.5rem;
   padding: 0.65rem 1.15rem;
-  background: var(--color-primary-action, var(--primary-action, #e6866c));
-  color: var(--color-primary-action-text, var(--primary-action-text, #233a57));
+  background: var(--db-color-action-primary);
+  color: var(--db-color-on-primary);
 }
 
 .study-state__action:hover,
 .research-session-controls button:hover {
-  background: var(--color-primary-action-hover, var(--primary-action-hover, #d87760));
+  background: var(--db-color-action-primary-hover);
 }
 
 .study-state__action:active,
@@ -178,7 +164,7 @@
 
 .study-state__action:focus-visible,
 .research-session-controls button:focus-visible {
-  outline: 3px solid var(--color-focus-ring, var(--focus-ring, #6d597a));
+  outline: var(--db-focus-width) solid var(--db-color-focus-ring);
   outline-offset: 3px;
 }
 
@@ -193,12 +179,12 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.7rem;
-  border: 1px solid var(--color-border-strong, var(--border-strong, #6d597a));
-  border-radius: var(--radius-card, 1rem);
-  background: var(--color-surface-elevated, var(--surface-elevated, #fffdf8));
-  box-shadow: var(--shadow-elevated, 0 8px 24px rgba(35, 58, 87, 0.16));
-  color: var(--color-text-primary, var(--text-primary, #233a57));
-  font-family: var(--font-body, "Montserrat", sans-serif);
+  border: 1px solid var(--db-color-border-strong);
+  border-radius: var(--db-radius-lg);
+  background: var(--db-color-surface-elevated);
+  box-shadow: var(--db-shadow-lg);
+  color: var(--db-color-text-primary);
+  font-family: var(--db-font-sans);
 }
 
 .research-session-controls__label {
@@ -210,7 +196,7 @@
 }
 
 .research-session-controls__label span {
-  color: var(--color-text-muted, var(--text-muted, #68758a));
+  color: var(--db-color-text-muted);
   font-size: 0.625rem;
   font-weight: 700;
   letter-spacing: 0.09em;
@@ -228,21 +214,21 @@
 .research-session-controls button {
   flex: 0 0 auto;
   padding: 0.6rem 0.9rem;
-  background: var(--color-primary-action, var(--primary-action, #e6866c));
-  color: var(--color-primary-action-text, var(--primary-action-text, #233a57));
+  background: var(--db-color-action-primary);
+  color: var(--db-color-on-primary);
 }
 
 .research-session-controls button:disabled {
   cursor: wait;
-  opacity: var(--disabled-opacity, 0.58);
+  opacity: var(--db-disabled-opacity);
   transform: none;
 }
 
 .research-session-controls__error {
   flex-basis: 100%;
   padding-top: 0.55rem;
-  border-top: 1px solid var(--color-border, var(--border-color, rgba(35, 58, 87, 0.2)));
-  color: var(--color-error, var(--error, #9b3434));
+  border-top: 1px solid var(--db-color-border);
+  color: var(--db-color-error);
   font-size: 0.75rem;
   line-height: 1.45;
 }
