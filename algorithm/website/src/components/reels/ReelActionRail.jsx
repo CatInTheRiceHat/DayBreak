@@ -2,6 +2,7 @@ import { BRAND } from '../../brand.js';
 import { useState } from 'react';
 import { Heart, Bookmark, MessageCircle, Sparkles, RefreshCw, HelpCircle, Share2, X } from 'lucide-react';
 import { FEED_BALANCE_COPY } from './feedTaxonomy';
+import { RESEARCH_PARTICIPANT_COPY } from '../research/researchParticipantCopy';
 
 const REFLECTION_OPTIONS = ['Calmer', 'Curious', 'Not for me'];
 
@@ -31,6 +32,7 @@ export function ReelActionRail({
   onStatus,
   onRegenerate,
   onComment,
+  researchMode = false,
 }) {
   const [showReflect, setShowReflect] = useState(false);
   const [showWhy, setShowWhy] = useState(false);
@@ -208,12 +210,18 @@ export function ReelActionRail({
             </span>
           )}
           <p className="reel-why__summary">
-            {recommendationSummary || 'A balanced pick chosen to keep your feed varied.'}
+            {recommendationSummary || (researchMode
+              ? RESEARCH_PARTICIPANT_COPY.genericRecommendation
+              : 'A balanced pick chosen to keep your feed varied.')}
           </p>
           {(rankingReason || fallbackReason) && (
             <p className="reel-why__body">{rankingReason || fallbackReason}</p>
           )}
-          <p className="reel-why__balance">{FEED_BALANCE_COPY}</p>
+          <p className="reel-why__balance">
+            {researchMode
+              ? RESEARCH_PARTICIPANT_COPY.fixedOrdering
+              : FEED_BALANCE_COPY}
+          </p>
           {showPublicSignal && (
             <div className="reel-why__public">
               <p className="reel-why__public-title">Reputation context</p>

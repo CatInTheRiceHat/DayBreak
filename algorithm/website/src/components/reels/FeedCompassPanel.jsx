@@ -12,6 +12,7 @@ import {
   FEED_BALANCE_COPY,
   getRecommendationInsight,
 } from './feedTaxonomy';
+import { RESEARCH_PARTICIPANT_COPY } from '../research/researchParticipantCopy';
 
 const MODE_COPY = {
   'daily-dew': {
@@ -130,10 +131,11 @@ export function FeedCompassPanel({
   onResetIntro,
   onTuneChange,
   onClose,
+  researchMode = false,
 }) {
   const mode = MODE_COPY[activeMode] || MODE_COPY['flutter-feed'];
   const scores = activeCard?.chrysalis_scores || mode.fallbackScores;
-  const recommendationInsight = getRecommendationInsight(activeCard);
+  const recommendationInsight = getRecommendationInsight(activeCard, { researchMode });
   const whyText = recommendationInsight.detail
     || 'Shown because it matches your intention with lighter, calmer feed signals.';
   const shameRage = Math.max(
@@ -166,12 +168,22 @@ export function FeedCompassPanel({
         )}
       </div>
 
-      <p className="feed-compass__mode-copy">{mode.description}</p>
-      <p className="feed-compass__lede">Your feed is shaped around your intention — a softer scroll, designed with you in mind.</p>
+      <p className="feed-compass__mode-copy">
+        {researchMode ? RESEARCH_PARTICIPANT_COPY.modeDescription : mode.description}
+      </p>
+      <p className="feed-compass__lede">
+        {researchMode
+          ? RESEARCH_PARTICIPANT_COPY.modeLede
+          : 'Your feed is shaped around your intention — a softer scroll, designed with you in mind.'}
+      </p>
 
       <div className="feed-compass__balance-copy">
         <Leaf size={15} aria-hidden="true" />
-        <p>{FEED_BALANCE_COPY}</p>
+        <p>
+          {researchMode
+            ? RESEARCH_PARTICIPANT_COPY.poolDescription
+            : FEED_BALANCE_COPY}
+        </p>
       </div>
 
       <div className="feed-compass__section feed-compass__mode">
@@ -179,10 +191,12 @@ export function FeedCompassPanel({
           <span className="feed-compass__label">Your intention</span>
           <p>{mode.label}</p>
         </div>
-        <button type="button" onClick={onResetIntro}>
-          <RefreshCw size={13} aria-hidden="true" />
-          Change intention
-        </button>
+        {!researchMode && (
+          <button type="button" onClick={onResetIntro}>
+            <RefreshCw size={13} aria-hidden="true" />
+            Change intention
+          </button>
+        )}
       </div>
 
       <div className="feed-compass__status">
@@ -190,7 +204,7 @@ export function FeedCompassPanel({
         <span>{statusLabel(feedStatus)}</span>
       </div>
 
-      <div className="feed-compass__section">
+      {!researchMode && <div className="feed-compass__section">
         <div className="feed-compass__section-title">
           <ShieldCheck size={15} aria-hidden="true" />
           <span>Healthy vs regular balance</span>
@@ -221,7 +235,7 @@ export function FeedCompassPanel({
         <div className="feed-compass__risk-note">
           {lowShameRage ? 'Low shame/rage signal' : 'Some high-conflict signals flagged gently'}
         </div>
-      </div>
+      </div>}
 
       <div className="feed-compass__section">
         <span className="feed-compass__label">Why this video</span>
@@ -255,7 +269,7 @@ export function FeedCompassPanel({
         </div>
       </div>
 
-      <div className="feed-compass__section">
+      {!researchMode && <div className="feed-compass__section">
         <div className="feed-compass__section-title">
           <SlidersHorizontal size={15} aria-hidden="true" />
           <span>Quick tune</span>
@@ -288,7 +302,7 @@ export function FeedCompassPanel({
             ))}
           </div>
         )}
-      </div>
+      </div>}
     </section>
   );
 }

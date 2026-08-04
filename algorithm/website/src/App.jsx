@@ -19,6 +19,7 @@ import { InboxPage } from './components/home/InboxPage';
 import { CommunityPage } from './components/community/CommunityPage';
 import { SavedPage } from './components/saved/SavedPage';
 import { ChallengesPage } from './components/challenges/ChallengesPage';
+import { ResearchPage } from './components/research/ResearchPage';
 import './App.css';
 import './auth.css';
 
@@ -46,6 +47,7 @@ function isAppPath(pathname) {
     || pathname === '/diagnostic'
     || pathname === '/profile'
     || pathname === '/profile/edit'
+    || pathname === '/study'
     || pathname.startsWith('/u/')
   );
 }
@@ -99,6 +101,7 @@ function AppShell() {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/diagnostic" element={<DiagnosticPage />} />
+          <Route path="/study" element={<ResearchPage />} />
           <Route path="/profile" element={<ProfilePage mode="me" />} />
           <Route path="/profile/edit" element={<EditProfileForm />} />
           <Route path="/u/:username" element={<Navigate to="/" replace />} />

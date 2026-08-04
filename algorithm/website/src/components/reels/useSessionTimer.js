@@ -46,7 +46,11 @@ export function getBreakCompletions() {
  *   triggerBreakNow()       demo/dev: jump to the next break instantly
  *   reset()                 clear the session (e.g. on leaving the feed)
  */
-export function useSessionTimer({ active = true, scaleMs = DEFAULT_TIME_SCALE_MS } = {}) {
+export function useSessionTimer({
+  active = true,
+  scaleMs = DEFAULT_TIME_SCALE_MS,
+  persistCompletions = true,
+} = {}) {
   const [elapsedMs, setElapsedMs] = useState(0);
   const [completedMin, setCompletedMin] = useState(0);
   const lastTickRef = useRef(null);
@@ -92,12 +96,14 @@ export function useSessionTimer({ active = true, scaleMs = DEFAULT_TIME_SCALE_MS
     const tier = dueBreakTier(minutesFromElapsed(elapsedMs, scaleMs), completedMin);
     if (tier) {
       setCompletedMin(tier.thresholdMin);
-      recordBreakCompletion({
-        ...entry,
-        thresholdMin: tier.thresholdMin,
-        breakMin: tier.breakMin,
-        completedAt: new Date().toISOString(),
-      });
+      if (persistCompletions) {
+        recordBreakCompletion({
+          ...entry,
+          thresholdMin: tier.thresholdMin,
+          breakMin: tier.breakMin,
+          completedAt: new Date().toISOString(),
+        });
+      }
     }
     lastTickRef.current = Date.now();
   }
