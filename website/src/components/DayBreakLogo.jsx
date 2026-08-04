@@ -8,7 +8,7 @@ export function DayBreakLogo({ className = '', labelled = false }) {
   return (
     <img
       className={className}
-      src="/favicon.svg?v=3"
+      src="/favicon.svg?v=4"
       alt={labelled ? `${BRAND} logo` : ''}
       aria-hidden={labelled ? undefined : 'true'}
     />

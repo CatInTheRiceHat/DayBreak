@@ -37,7 +37,7 @@ export function HomeProfilePanel() {
   if (!user) {
     return (
       <section className="home-signin" aria-label={`Sign in to ${BRAND}`}>
-        <span className="home-signin__mark" aria-hidden="true"><img src="/images/logo.png" alt="" /></span>
+        <span className="home-signin__mark" aria-hidden="true"><img src="/images/logo.png?v=4" alt="" /></span>
         <h2 className="home-signin__title">Sign in to shape your {BRAND} profile</h2>
         <p className="home-signin__copy">
           Save your intention, share small wins, and connect a little more calmly.

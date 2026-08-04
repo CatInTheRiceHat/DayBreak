@@ -19,7 +19,7 @@ export function InboxPage() {
         <h1 className="page-title">Inbox</h1>
 
         <section className="inbox-empty" aria-label="Messages coming soon">
-          <span className="inbox-empty__mark" aria-hidden="true"><img src="/images/logo.png" alt="" /></span>
+          <span className="inbox-empty__mark" aria-hidden="true"><img src="/images/logo.png?v=4" alt="" /></span>
           <h2 className="inbox-empty__title">Messages are coming soon.</h2>
           <p className="inbox-empty__copy">
             {BRAND} messages are designed for safer, more intentional connection.

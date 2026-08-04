@@ -128,7 +128,7 @@ const journeySteps = [
     mosaic: 'chrysalis',
     artifacts: [
       {
-        src: '/images/app-icon.png',
+        src: '/images/app-icon.png?v=4',
         alt: 'DayBreak app icon',
         label: 'DayBreak app icon',
         variant: 'chrysalis-app',
