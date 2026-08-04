@@ -1,14 +1,15 @@
-import { BRAND } from '../brand.js';
 import { useEffect, useRef, useState } from 'react';
 import { motion as MOTION, useReducedMotion } from 'motion/react';
+import { BRAND } from '../brand.js';
 import { DayBreakLogo } from './DayBreakLogo.jsx';
+import './public-onboarding.css';
 
 export function IntroScreen({ onDone }) {
   const [day, setDay] = useState(0);
   const reduceMotion = useReducedMotion();
   const maxDays = 14;
   const progress = Math.min(100, Math.round((day / maxDays) * 100));
-  const statusText = progress < 62 ? 'Setting your intention…' : 'Preparing a brighter feed…';
+  const statusText = progress < 62 ? 'Making space to notice...' : 'Choosing a direction...';
   const doneRef = useRef(false);
 
   useEffect(() => {
@@ -47,7 +48,7 @@ export function IntroScreen({ onDone }) {
         transition={{ duration: 1.45, ease: [0.22, 1, 0.36, 1] }}
         aria-hidden="true"
       >
-        <span className="intro-logo" role="img" aria-label={`${BRAND} logo`}><DayBreakLogo /></span>
+        <span className="intro-logo"><DayBreakLogo /></span>
       </MOTION.div>
       <MOTION.p
         className="intro-eyebrow"
@@ -63,7 +64,9 @@ export function IntroScreen({ onDone }) {
         animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
         transition={{ duration: 1.1, delay: 0.65, ease: [0.22, 1, 0.36, 1] }}
       >
-        A brighter way to scroll.
+        A brighter way to scroll
+        <br />
+        starts with a moment to choose.
       </MOTION.h1>
       <MOTION.p
         className="intro-tagline"
@@ -71,7 +74,7 @@ export function IntroScreen({ onDone }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.85, delay: 1.25 }}
       >
-        Exploring healthier, more intentional recommendation systems for teens.
+        Explore a feed shaped around intention, variety, and clearer choices.
       </MOTION.p>
       <MOTION.div
         className="intro-formula-wrapper"
@@ -82,7 +85,14 @@ export function IntroScreen({ onDone }) {
         <p className="intro-formula-text">
           {statusText}
         </p>
-        <div className="intro-bar-track">
+        <div
+          className="intro-bar-track"
+          role="progressbar"
+          aria-label="Preparing DayBreak"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow={progress}
+        >
           <MOTION.div
             className="intro-bar-fill"
             animate={{ width: `${progress}%` }}
