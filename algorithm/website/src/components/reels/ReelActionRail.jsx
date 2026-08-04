@@ -111,7 +111,8 @@ export function ReelActionRail({
   return (
     <div className="reel-rail" role="group" aria-label="Algorithm card actions">
       <Action
-        label="Like"
+        variant="like"
+        label={liked ? 'Liked' : 'Like'}
         pressed={liked}
         ariaLabel={liked ? 'Unlike' : 'Like'}
         onClick={toggleLiked}
@@ -120,7 +121,8 @@ export function ReelActionRail({
       </Action>
 
       <Action
-        label="Save"
+        variant="save"
+        label={saved ? 'Saved' : 'Save'}
         pressed={saved}
         ariaLabel={saved ? 'Remove from saved' : 'Save'}
         onClick={toggleSaved}
@@ -129,13 +131,14 @@ export function ReelActionRail({
       </Action>
 
       {onComment && (
-        <Action label="Comments" ariaLabel="Open comments" onClick={onComment}>
+        <Action variant="comments" label="Comments" ariaLabel="Open comments" onClick={onComment}>
           <MessageCircle size={20} aria-hidden="true" />
         </Action>
       )}
 
       <Action
-        label="Reflect"
+        variant="reflect"
+        label={reflection ? 'Reflected' : 'Reflect'}
         pressed={showReflect || Boolean(reflection)}
         expanded={showReflect}
         ariaLabel={showReflect ? 'Close reflection prompt' : 'Reflect on this card'}
@@ -145,6 +148,7 @@ export function ReelActionRail({
       </Action>
 
       <Action
+        variant="regenerate"
         label="Regenerate"
         ariaLabel="Show a different card from this mode"
         onClick={handleRegenerate}
@@ -246,13 +250,14 @@ function Action({
   pressed,
   expanded,
   onClick,
+  variant,
 }) {
   const isPressed = typeof pressed === 'boolean' ? pressed : false;
 
   return (
     <button
       type="button"
-      className="reel-action"
+      className={`reel-action${variant ? ` reel-action--${variant}` : ''}`}
       onClick={onClick}
       aria-label={ariaLabel}
       aria-pressed={typeof pressed === 'boolean' ? pressed : undefined}

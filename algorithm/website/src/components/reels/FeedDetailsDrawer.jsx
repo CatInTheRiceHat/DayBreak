@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion as MOTION } from 'motion/react';
+import { useDialogFocus } from './useDialogFocus';
 
 /**
  * Container that reveals the Feed details / Algorithm Compass content on demand.
@@ -21,6 +22,7 @@ function readIsDesktop() {
 
 export function FeedDetailsDrawer({ open, onClose, label = 'Feed details', children }) {
   const [isDesktop, setIsDesktop] = useState(readIsDesktop);
+  const dialogRef = useDialogFocus(open);
 
   // Keep the slide direction in sync with the viewport while the drawer is open.
   useEffect(() => {
@@ -49,6 +51,7 @@ export function FeedDetailsDrawer({ open, onClose, label = 'Feed details', child
     <AnimatePresence>
       {open && (
         <MOTION.div
+          ref={dialogRef}
           className={`feed-details-drawer${isDesktop ? ' feed-details-drawer--side' : ' feed-details-drawer--sheet'}`}
           role="dialog"
           aria-modal="true"
