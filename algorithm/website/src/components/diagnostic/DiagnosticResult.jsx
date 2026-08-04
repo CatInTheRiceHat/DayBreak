@@ -19,10 +19,10 @@ export function DiagnosticResult({ result, ctaLabel = 'Start My Algorithm', onSt
 
   return (
     <div className="cx-card cx-card--auth diag-result">
-      <p className="diag-result__eyebrow">Your Chrysalis is ready</p>
+      <p className="diag-result__eyebrow">Your DayBreak setup is ready</p>
       <h1 className="cx-card__title">Here’s what we turned on for you.</h1>
       <p className="cx-card__lede">
-        Based on your answers, we’ve tuned your feed to work with you — not against you.
+        Based on your answers, we’ve tuned your starting feed while keeping your choices visible.
       </p>
 
       <ul className="diag-unlocks">
