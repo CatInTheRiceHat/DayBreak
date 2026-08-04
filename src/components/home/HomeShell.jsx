@@ -9,6 +9,7 @@ import { ThemeToggle } from '../reels/ThemeToggle';
 import { MODES, DEFAULT_MODE } from '../reels/reelsData';
 import { NAV_SECTIONS } from '../reels/navSections';
 import { useChallenges } from '../reels/useChallenges';
+import { DayBreakLogo } from '../DayBreakLogo.jsx';
 import '../../reels.css';
 import '../../home.css';
 
@@ -86,7 +87,7 @@ export function HomeShell({ active = 'home', children }) {
           the 5-slot bottom bar). */}
       <header className="home-topbar">
         <Link to="/home" className="home-topbar__brand" aria-label={`${BRAND} home`}>
-          <span className="home-topbar__brandmark" aria-hidden="true"><img src="/images/logo.png" alt="" /></span>
+          <span className="home-topbar__brandmark" aria-hidden="true"><DayBreakLogo /></span>
           <span>{BRAND}</span>
         </Link>
         <div className="home-topbar__actions">

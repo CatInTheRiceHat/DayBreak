@@ -1,13 +1,14 @@
 import { BRAND } from '../brand.js';
 import { useEffect, useRef, useState } from 'react';
 import { motion as MOTION, useReducedMotion } from 'motion/react';
+import { DayBreakLogo } from './DayBreakLogo.jsx';
 
 export function IntroScreen({ onDone }) {
   const [day, setDay] = useState(0);
   const reduceMotion = useReducedMotion();
   const maxDays = 14;
   const progress = Math.min(100, Math.round((day / maxDays) * 100));
-  const statusText = progress < 62 ? 'Fluttering my wings...' : 'Emerging out of my cocoon...';
+  const statusText = progress < 62 ? 'Setting your intention…' : 'Preparing a brighter feed…';
   const doneRef = useRef(false);
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export function IntroScreen({ onDone }) {
         transition={{ duration: 1.45, ease: [0.22, 1, 0.36, 1] }}
         aria-hidden="true"
       >
-        <span className="intro-logo" role="img" aria-label={BRAND}><img src="/images/logo.png" alt="" /></span>
+        <span className="intro-logo" role="img" aria-label={`${BRAND} logo`}><DayBreakLogo /></span>
       </MOTION.div>
       <MOTION.p
         className="intro-eyebrow"
@@ -62,9 +63,7 @@ export function IntroScreen({ onDone }) {
         animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
         transition={{ duration: 1.1, delay: 0.65, ease: [0.22, 1, 0.36, 1] }}
       >
-        Reimagining the social media feed
-        <br />
-        for human wellbeing.
+        A brighter way to scroll.
       </MOTION.h1>
       <MOTION.p
         className="intro-tagline"
@@ -72,7 +71,7 @@ export function IntroScreen({ onDone }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.85, delay: 1.25 }}
       >
-        What if your feed helped you feel more like yourself again?
+        Exploring healthier, more intentional recommendation systems for teens.
       </MOTION.p>
       <MOTION.div
         className="intro-formula-wrapper"
