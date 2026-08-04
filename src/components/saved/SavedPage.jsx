@@ -5,6 +5,7 @@ import { useSavedVideos } from '../reels/useSavedVideos';
 import { useLikedVideos } from '../reels/useLikedVideos';
 import { useReflections } from '../reels/useReflections';
 import { buildYouTubeEmbedUrl } from '../reels/youtubeEmbed';
+import { useDialogFocus } from '../reels/useDialogFocus';
 import '../../saved.css';
 
 /**
@@ -154,6 +155,7 @@ function CollectionGrid({ items, emptyIcon, emptyTitle, emptyNote, onOpen, onRem
 }
 
 function SavedVideoModal({ video, onClose }) {
+  const dialogRef = useDialogFocus();
   useEffect(() => {
     const onKey = (event) => {
       if (event.key === 'Escape') onClose();
@@ -172,10 +174,12 @@ function SavedVideoModal({ video, onClose }) {
 
   return (
     <div
+      ref={dialogRef}
       className="saved-modal"
       role="dialog"
       aria-modal="true"
       aria-label={video.title}
+      tabIndex={-1}
       onClick={onClose}
     >
       <div className="saved-modal__panel" onClick={(event) => event.stopPropagation()}>
@@ -184,6 +188,7 @@ function SavedVideoModal({ video, onClose }) {
           className="saved-modal__close"
           onClick={onClose}
           aria-label="Close player"
+          data-dialog-initial-focus
         >
           <X size={18} aria-hidden="true" />
         </button>

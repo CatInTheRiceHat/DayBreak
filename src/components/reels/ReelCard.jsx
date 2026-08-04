@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react';
+import { BRAND } from '../../brand.js';
 import { motion as MOTION } from 'motion/react';
 import { Volume2, VolumeX } from 'lucide-react';
 import { ReelActionRail } from './ReelActionRail';
@@ -248,11 +249,11 @@ export function ReelCard({
             )}
 
             {hasVideo && (
-              <span className="reel-source-badge">YouTube embed · curated by Chrysalis</span>
+              <span className="reel-source-badge">YouTube embed · curated by {BRAND}</span>
             )}
 
             {hasVideo && isPopular && (
-              <span className="reel-popular-badge" title="Currently popular on YouTube — still safety-checked by Chrysalis">
+              <span className="reel-popular-badge" title={`Currently popular on YouTube — still safety-checked by ${BRAND}`}>
                 {popularBadgeLabel}
               </span>
             )}
