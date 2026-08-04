@@ -1,8 +1,9 @@
 import { BRAND } from '../brand.js';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion as MOTION } from 'motion/react';
 import { Menu, X } from 'lucide-react';
+import { DayBreakLogo } from './DayBreakLogo.jsx';
 
 const SCROLL_LINKS = [
   { label: 'Problem', id: 'problem' },
@@ -20,6 +21,8 @@ export function Navbar() {
   const { pathname }              = useLocation();
   const navigate                  = useNavigate();
   const onAlgorithm               = pathname === '/';
+  const menuButtonRef             = useRef(null);
+  const menuDialogRef             = useRef(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -28,9 +31,45 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    if (!menuOpen) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    const previousFocus = document.activeElement;
+    document.body.style.overflow = 'hidden';
+
+    const focusableSelector = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const focusFirstControl = () => {
+      menuDialogRef.current?.querySelector(focusableSelector)?.focus();
+    };
+    const frame = window.requestAnimationFrame(focusFirstControl);
+
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setMenuOpen(false);
+        return;
+      }
+      if (event.key !== 'Tab' || !menuDialogRef.current) return;
+
+      const controls = [...menuDialogRef.current.querySelectorAll(focusableSelector)];
+      if (controls.length === 0) return;
+      const first = controls[0];
+      const last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+
     return () => {
-      document.body.style.overflow = '';
+      window.cancelAnimationFrame(frame);
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = previousOverflow;
+      if (previousFocus?.isConnected) previousFocus.focus();
     };
   }, [menuOpen]);
 
@@ -72,7 +111,7 @@ export function Navbar() {
             className="ct-nav__brand"
             aria-label="Go to homepage"
           >
-            <span className="ct-nav__mark" aria-hidden="true"><img src="/images/logo.png" alt="" /></span>
+            <span className="ct-nav__mark" aria-hidden="true"><DayBreakLogo /></span>
             <span>{BRAND}</span>
           </button>
 
@@ -106,11 +145,14 @@ export function Navbar() {
               Contact
             </button>
             <button
+              ref={menuButtonRef}
               type="button"
               onClick={() => setMenuOpen(true)}
               data-cursor="soft"
               className="ct-nav__menu"
               aria-label="Open navigation menu"
+              aria-controls="daybreak-navigation-dialog"
+              aria-expanded={menuOpen}
             >
               <Menu size={19} />
             </button>
@@ -128,7 +170,12 @@ export function Navbar() {
             transition={{ duration: 0.28 }}
           >
             <MOTION.div
+              ref={menuDialogRef}
+              id="daybreak-navigation-dialog"
               className="nav-overlay__panel"
+              role="dialog"
+              aria-modal="true"
+              aria-label={`${BRAND} navigation`}
               initial={{ y: '-100%', borderRadius: '0 0 80px 80px' }}
               animate={{ y: 0, borderRadius: '0 0 36px 36px' }}
               exit={{ y: '-100%', borderRadius: '0 0 80px 80px' }}
@@ -136,7 +183,7 @@ export function Navbar() {
             >
               <div className="nav-overlay__top">
                 <div className="ct-overlay-brand">
-                  <span className="ct-overlay-brand__mark" aria-hidden="true"><img src="/images/logo.png" alt="" /></span>
+                  <span className="ct-overlay-brand__mark" aria-hidden="true"><DayBreakLogo /></span>
                   <span>{BRAND}</span>
                 </div>
                 <button
