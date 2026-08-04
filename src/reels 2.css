@@ -172,7 +172,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  background: url('/images/logo.png') center / contain no-repeat;
+  background: url('/images/logo.png?v=4') center / contain no-repeat;
 }
 
 /* ── Side action rail ───────────────────────────────────────────────────── */
@@ -3132,7 +3132,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  background: url('/images/logo.png') center / contain no-repeat;
+  background: url('/images/logo.png?v=4') center / contain no-repeat;
 }
 
 @keyframes reelsFeedSpin {
