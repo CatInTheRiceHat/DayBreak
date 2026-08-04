@@ -23,8 +23,9 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
+  min-height: 44px;
   padding: 8px 14px;
-  border-radius: 999px;
+  border-radius: 12px;
   border: 1px solid var(--border);
   background: var(--button-bg);
   color: var(--text);
@@ -39,9 +40,9 @@
 }
 
 .lib-tab.is-active {
-  background: var(--accent);
+  background: var(--selected, var(--accent));
   border-color: transparent;
-  color: var(--on-accent);
+  color: var(--on-selected, var(--on-accent));
 }
 
 .lib-tab__count {
@@ -93,8 +94,8 @@
   text-align: center;
   padding: 48px 20px;
   border: 1px dashed var(--border);
-  border-radius: 18px;
-  background: color-mix(in srgb, var(--card) 60%, transparent);
+  border-radius: 16px;
+  background: var(--card);
 }
 
 .saved-empty__icon {
@@ -104,7 +105,7 @@
   height: 56px;
   border-radius: 50%;
   background: color-mix(in srgb, var(--accent-soft) 22%, var(--button-bg));
-  color: var(--accent);
+  color: var(--accent-soft);
 }
 
 .saved-empty__title {
@@ -152,7 +153,7 @@
   position: relative;
   display: block;
   aspect-ratio: 9 / 16;
-  border-radius: 14px;
+  border-radius: 16px;
   overflow: hidden;
   background: var(--bg-soft);
   border: 1px solid var(--border);
@@ -213,8 +214,8 @@
   position: absolute;
   top: 8px;
   right: 8px;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
   border: none;
@@ -238,7 +239,7 @@
   place-items: center;
   padding: 20px;
   background: rgba(12, 10, 18, 0.72);
-  backdrop-filter: blur(4px);
+  backdrop-filter: none;
 }
 
 .saved-modal__panel {
@@ -246,9 +247,9 @@
   width: min(420px, 100%);
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 18px;
+  border-radius: 20px;
   padding: 14px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 14px 36px rgba(11, 25, 42, 0.32);
 }
 
 .saved-modal__close {
@@ -256,8 +257,8 @@
   top: 10px;
   right: 10px;
   z-index: 2;
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
   border: none;
@@ -303,4 +304,17 @@
   margin: 2px 4px 0;
   font-size: 0.8rem;
   color: var(--text-muted);
+}
+
+.saved-page :is(.lib-tab, .saved-tile__open, .saved-tile__remove):focus-visible,
+.saved-modal :is(.saved-modal__close, .saved-modal__panel):focus-visible {
+  outline: 3px solid var(--focus-ring, var(--accent));
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lib-tab,
+  .saved-tile__play {
+    transition: none;
+  }
 }

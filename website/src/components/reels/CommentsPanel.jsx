@@ -9,6 +9,7 @@ import {
   analyzeComment,
 } from './commentSafety';
 import { canMessage, FRIENDS_ONLY_MESSAGE } from './messaging';
+import { useDialogFocus } from './useDialogFocus';
 
 /**
  * Comments sheet with safer-by-default behavior:
@@ -24,6 +25,7 @@ export function CommentsPanel({ onClose, onStatus }) {
   const [pending, setPending] = useState(null); // { level, suggestion } for caution/block
   const [cooldownLeft, setCooldownLeft] = useState(0);
   const inputRef = useRef(null);
+  const panelRef = useDialogFocus();
 
   useEffect(() => {
     if (cooldownLeft <= 0) return undefined;
@@ -87,7 +89,7 @@ export function CommentsPanel({ onClose, onStatus }) {
   };
 
   return (
-    <section className="comments" aria-label="Comments">
+    <section ref={panelRef} className="comments" aria-label="Comments" tabIndex={-1}>
       <div className="comments__head">
         <div>
           <span className="comments__eyebrow">
@@ -97,7 +99,7 @@ export function CommentsPanel({ onClose, onStatus }) {
           <h2>Comments</h2>
         </div>
         {onClose && (
-          <button type="button" className="comments__close" onClick={onClose} aria-label="Close comments">
+          <button type="button" className="comments__close" onClick={onClose} aria-label="Close comments" data-dialog-initial-focus>
             <X size={16} aria-hidden="true" />
           </button>
         )}
@@ -177,7 +179,7 @@ export function CommentsPanel({ onClose, onStatus }) {
           <Send size={16} aria-hidden="true" />
         </button>
       </div>
-      <p className="comments__footnote">Chrysalis keeps conversations safe and respectful. Messaging is friends-only.</p>
+      <p className="comments__footnote">{BRAND} keeps conversations safe and respectful. Messaging is friends-only.</p>
     </section>
   );
 }

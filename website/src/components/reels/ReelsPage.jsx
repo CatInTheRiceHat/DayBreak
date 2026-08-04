@@ -665,6 +665,7 @@ export function ReelsPage({ researchSession = null, researchTracker = null }) {
       data-algorithm
       data-theme={theme}
       data-onboarded={onboarded ? 'true' : 'false'}
+      data-research={isResearchSession ? 'true' : undefined}
     >
       {onboarded && (
         <AppSidebar
