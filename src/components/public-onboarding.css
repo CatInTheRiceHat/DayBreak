@@ -1,10 +1,10 @@
 .intro-screen {
-  --db-midnight: var(--color-midnight-horizon, #233a57);
-  --db-twilight: var(--color-twilight-violet, #6d597a);
-  --db-rose: var(--color-horizon-rose, #ce6969);
-  --db-coral: var(--color-sunrise-coral, #e6866c);
-  --db-morning: var(--color-morning-light, #ffdfab);
-  --db-surface: var(--color-surface, #ffffff);
+  --db-midnight: var(--db-color-midnight-horizon);
+  --db-twilight: var(--db-color-twilight-violet);
+  --db-rose: var(--db-color-horizon-rose);
+  --db-coral: var(--db-color-sunrise-coral);
+  --db-morning: var(--db-color-morning-light);
+  --db-surface: var(--db-color-surface);
   color: var(--db-midnight);
   background: var(--db-morning);
 }

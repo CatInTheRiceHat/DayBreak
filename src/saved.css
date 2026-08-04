@@ -308,7 +308,7 @@
 
 .saved-page :is(.lib-tab, .saved-tile__open, .saved-tile__remove):focus-visible,
 .saved-modal :is(.saved-modal__close, .saved-modal__panel):focus-visible {
-  outline: 3px solid var(--focus-ring, var(--accent));
+  outline: 3px solid var(--db-color-focus-ring);
   outline-offset: 3px;
 }
 

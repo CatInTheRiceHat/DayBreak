@@ -12,10 +12,10 @@ import {
  * Search — people, activities, and (eventually) saved resets.
  *
  * Backend search does not exist yet, so this searches the local demo cast and the
- * activity vocabulary, and is honest about it ("Searching Chrysalis demo content").
+ * activity vocabulary, and is honest about the current demo-content scope.
  * No fake backend claims, no popularity ranking.
  */
-// Healthy-feed vibe filters — Chrysalis's content tones, so Search reads as a calm
+// Healthy-feed vibe filters — DayBreak's content tones, so Search reads as a calm
 // discovery surface rather than a generic explore grid. Tapping one searches it.
 const FILTER_TAGS = ['calm', 'funny', 'wellness', 'perspective', 'creative', 'study', 'social'];
 
@@ -131,7 +131,7 @@ export function SearchPage() {
           <p className="empty-note">No demo matches for “{query.trim()}”. Try a suggested search.</p>
         )}
 
-        <p className="demo-note">Searching Chrysalis demo content — full search is on the way.</p>
+        <p className="demo-note">Searching DayBreak demo content — full search is on the way.</p>
       </div>
     </HomeShell>
   );
