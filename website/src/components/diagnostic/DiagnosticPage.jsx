@@ -100,7 +100,7 @@ export function DiagnosticPage() {
   if (phase === 'checking') {
     return (
       <CxShell center>
-        <div className="cx-card cx-card--auth" style={{ alignItems: 'center' }}>
+        <div className="cx-card cx-card--auth" style={{ alignItems: 'center' }} role="status" aria-live="polite">
           <Loader2 size={22} className="cx-spin" aria-hidden="true" />
           <p className="cx-card__lede">Getting things ready…</p>
         </div>
@@ -133,7 +133,14 @@ export function DiagnosticPage() {
   return (
     <CxShell center>
       <div className="cx-card cx-card--auth diag-quiz">
-        <div className="diag-progress" aria-hidden="true">
+        <div
+          className="diag-progress"
+          role="progressbar"
+          aria-label="Onboarding progress"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow={progress}
+        >
           <span className="diag-progress__bar" style={{ width: `${progress}%` }} />
         </div>
         <p className="diag-quiz__count">Question {step + 1} of {QUESTIONS.length}</p>
@@ -153,7 +160,7 @@ export function DiagnosticPage() {
                 {q.options.map((opt) => {
                   const on = selectedGoals.includes(opt.value);
                   return (
-                    <button
+                  <button
                       key={opt.value}
                       type="button"
                       className={`diag-option${on ? ' is-selected' : ''}`}
@@ -176,8 +183,9 @@ export function DiagnosticPage() {
                 <button
                   key={opt.value}
                   type="button"
-                  className={`diag-option${answers[q.id] === opt.value ? ' is-selected' : ''}`}
-                  onClick={() => answerScale(opt.value)}
+                    className={`diag-option${answers[q.id] === opt.value ? ' is-selected' : ''}`}
+                    aria-pressed={answers[q.id] === opt.value}
+                    onClick={() => answerScale(opt.value)}
                 >
                   {opt.label}
                 </button>

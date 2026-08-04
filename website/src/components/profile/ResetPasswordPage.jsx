@@ -1,9 +1,9 @@
-import { BRAND } from '../../brand.js';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import { useAuth } from '../../lib/authContext';
 import { CxShell } from './CxShell';
+import { DayBreakAuthBrand } from './DayBreakAuthBrand';
 
 /**
  * Set a new password. Reached from the emailed reset link, which lands here with
@@ -44,14 +44,11 @@ export function ResetPasswordPage() {
 
   return (
     <CxShell center>
-      <div className="cx-card cx-card--auth">
-        <div className="cx-brand">
-          <span className="cx-brand__logo" aria-hidden="true"><img src="/images/logo.png" alt="" /></span>
-          <span className="cx-brand__word">{BRAND}</span>
-        </div>
+      <div className="cx-card cx-card--auth db-auth-card" aria-busy={busy}>
+        <DayBreakAuthBrand />
 
         <h1 className="cx-card__title">Choose a new password</h1>
-        <p className="cx-card__lede">Pick something you'll remember this time.</p>
+        <p className="cx-card__lede">Choose a secure password you will be comfortable using.</p>
 
         {!configured && (
           <p className="cx-form__notice" role="status">
@@ -64,10 +61,11 @@ export function ResetPasswordPage() {
             Password updated — taking you to your profile…
           </p>
         ) : (
-          <form className="cx-form" onSubmit={submit}>
+          <form className="cx-form" onSubmit={submit} aria-describedby={error ? 'reset-password-error' : undefined}>
             <label className="cx-field">
               <span className="cx-field__label">New password</span>
               <input
+                id="reset-password-new"
                 type="password"
                 autoComplete="new-password"
                 required
@@ -76,11 +74,14 @@ export function ResetPasswordPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="At least 6 characters"
                 disabled={!configured || busy}
+                aria-invalid={Boolean(error)}
+                aria-describedby={error ? 'reset-password-error' : undefined}
               />
             </label>
             <label className="cx-field">
               <span className="cx-field__label">Confirm new password</span>
               <input
+                id="reset-password-confirm"
                 type="password"
                 autoComplete="new-password"
                 required
@@ -89,10 +90,12 @@ export function ResetPasswordPage() {
                 onChange={(e) => setConfirm(e.target.value)}
                 placeholder="Re-enter your password"
                 disabled={!configured || busy}
+                aria-invalid={Boolean(error)}
+                aria-describedby={error ? 'reset-password-error' : undefined}
               />
             </label>
 
-            {error && <p className="cx-form__error" role="alert">{error}</p>}
+            {error && <p id="reset-password-error" className="cx-form__error" role="alert">{error}</p>}
 
             <button type="submit" className="cx-btn cx-btn--primary" disabled={!configured || busy}>
               {busy ? <Loader2 size={16} className="cx-spin" aria-hidden="true" /> : null}
