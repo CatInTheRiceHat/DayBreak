@@ -1,13 +1,13 @@
-import { BRAND } from '../brand.js';
 import { useEffect, useRef, useState } from 'react';
 import { motion as MOTION, useReducedMotion } from 'motion/react';
+import './public-onboarding.css';
 
 export function IntroScreen({ onDone }) {
   const [day, setDay] = useState(0);
   const reduceMotion = useReducedMotion();
   const maxDays = 14;
   const progress = Math.min(100, Math.round((day / maxDays) * 100));
-  const statusText = progress < 62 ? 'Fluttering my wings...' : 'Emerging out of my cocoon...';
+  const statusText = progress < 62 ? 'Making space to notice...' : 'Choosing a direction...';
   const doneRef = useRef(false);
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export function IntroScreen({ onDone }) {
         transition={{ duration: 1.45, ease: [0.22, 1, 0.36, 1] }}
         aria-hidden="true"
       >
-        <span className="intro-logo" role="img" aria-label={BRAND}><img src="/images/logo.png" alt="" /></span>
+        <span className="db-intro-horizon"><span /></span>
       </MOTION.div>
       <MOTION.p
         className="intro-eyebrow"
@@ -54,7 +54,7 @@ export function IntroScreen({ onDone }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.35 }}
       >
-        {BRAND}
+        DayBreak
       </MOTION.p>
       <MOTION.h1
         className="intro-title"
@@ -62,9 +62,9 @@ export function IntroScreen({ onDone }) {
         animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
         transition={{ duration: 1.1, delay: 0.65, ease: [0.22, 1, 0.36, 1] }}
       >
-        Reimagining the social media feed
+        A brighter way to scroll
         <br />
-        for human wellbeing.
+        starts with a moment to choose.
       </MOTION.h1>
       <MOTION.p
         className="intro-tagline"
@@ -72,7 +72,7 @@ export function IntroScreen({ onDone }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.85, delay: 1.25 }}
       >
-        What if your feed helped you feel more like yourself again?
+        Explore a feed shaped around intention, variety, and clearer choices.
       </MOTION.p>
       <MOTION.div
         className="intro-formula-wrapper"
@@ -83,7 +83,14 @@ export function IntroScreen({ onDone }) {
         <p className="intro-formula-text">
           {statusText}
         </p>
-        <div className="intro-bar-track">
+        <div
+          className="intro-bar-track"
+          role="progressbar"
+          aria-label="Preparing DayBreak"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow={progress}
+        >
           <MOTION.div
             className="intro-bar-fill"
             animate={{ width: `${progress}%` }}
