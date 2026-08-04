@@ -24,9 +24,9 @@ export function OnboardingStartScreen({ initialMode = null, onStart }) {
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="reels-onboard__head">
-        <h1 className="reels-onboard__title">Choose your Chrysalis algorithm.</h1>
+        <h1 className="reels-onboard__title">Choose your {BRAND} feed.</h1>
         <p className="reels-onboard__subtitle">
-          Pick the mode you want the algorithm to guide you through today.
+          Pick the pace and kind of experience that feels right for today.
         </p>
       </div>
 
@@ -59,7 +59,7 @@ export function OnboardingStartScreen({ initialMode = null, onStart }) {
           aria-disabled={!selected}
           onClick={() => selected && onStart(selected.key)}
         >
-          Start My Algorithm
+          Start my feed
           <ArrowRight size={17} aria-hidden="true" />
         </button>
         <button

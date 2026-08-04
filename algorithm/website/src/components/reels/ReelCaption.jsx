@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { Leaf, ShieldAlert } from 'lucide-react';
+import { BRAND } from '../../brand.js';
 
 /**
  * Algorithm card text block. On desktop this becomes the left-side editorial info panel;
@@ -101,7 +102,7 @@ export function ReelCaption({
         <p className="reel-caption__signal reel-meta-clamp">{signalHint}</p>
       )}
       {placement === 'desktop' && isLiveVideo && (
-        <p className="reel-caption__embed-note reel-meta-clamp">YouTube embed · curated by Chrysalis</p>
+        <p className="reel-caption__embed-note reel-meta-clamp">YouTube embed · curated by {BRAND}</p>
       )}
     </div>
   );

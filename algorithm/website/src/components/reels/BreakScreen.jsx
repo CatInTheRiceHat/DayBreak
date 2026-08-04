@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion as MOTION } from 'motion/react';
 import { Check, Leaf, Pause, Play, RotateCcw } from 'lucide-react';
 import { BREAK_ACTIVITIES, MINUTE_MS, formatCountdown } from './sessionBreaks';
+import { useDialogFocus } from './useDialogFocus';
 
 /**
  * Calm, supportive screen-time break overlay. Shown when a progressive break is
@@ -20,6 +21,7 @@ export function BreakScreen({ tier, elapsedMin, onComplete, onOpenChallenges, re
   const [remainingMs, setRemainingMs] = useState(breakMin * MINUTE_MS);
   const [timerRunning, setTimerRunning] = useState(false);
   const tickRef = useRef(null);
+  const panelRef = useDialogFocus();
 
   useEffect(() => {
     if (!timerRunning) return undefined;
@@ -67,7 +69,9 @@ export function BreakScreen({ tier, elapsedMin, onComplete, onOpenChallenges, re
     >
       <div className="break-screen__scrim" aria-hidden="true" />
       <MOTION.div
+        ref={panelRef}
         className="break-screen__panel"
+        tabIndex={-1}
         initial={{ y: 24, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 24, opacity: 0 }}
@@ -79,8 +83,11 @@ export function BreakScreen({ tier, elapsedMin, onComplete, onOpenChallenges, re
         </span>
         <h2 className="break-screen__title">{heading}</h2>
         <p className="break-screen__copy">
-          You&apos;ve been scrolling for about {roundedElapsed} minutes. Step away for
-          {' '}~{breakMin} minutes, then come back refreshed. Pick something real to do:
+          {researchMode ? (
+            <>You&apos;ve been scrolling for about {roundedElapsed} minutes. Step away for{' '}~{breakMin} minutes, then come back refreshed. Pick something real to do:</>
+          ) : (
+            <>You&apos;ve been here for about {roundedElapsed} minutes. If a pause would feel good, choose a simple reset for the next few minutes:</>
+          )}
         </p>
 
         <div className="break-screen__activities" role="group" aria-label="Choose a reset activity">
@@ -161,7 +168,7 @@ export function BreakScreen({ tier, elapsedMin, onComplete, onOpenChallenges, re
         </button>
         {onOpenChallenges && (
           <button type="button" className="break-screen__challenges-link" onClick={onOpenChallenges}>
-            Want to make it count? Open IRL Challenges →
+            Prefer a guided activity? Explore IRL Challenges →
           </button>
         )}
         <p className="break-screen__footnote">

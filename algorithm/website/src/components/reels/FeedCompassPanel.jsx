@@ -161,7 +161,7 @@ export function FeedCompassPanel({
             className="feed-compass__close"
             onClick={onClose}
             aria-label="Close feed details"
-            autoFocus
+            data-dialog-initial-focus
           >
             <X size={16} aria-hidden="true" />
           </button>
