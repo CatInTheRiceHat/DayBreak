@@ -228,6 +228,6 @@ export const SAFETY_NOTES = [
 ];
 
 export const SAFETY_COPY =
-  'Community is designed to make connection feel lower-pressure. Chrysalis uses '
+  'Community is designed to make connection feel lower-pressure. DayBreak uses '
   + 'avatar-based profiles, goal-based matching, and guided actions so users can '
   + 'build friendships without turning themselves into content.';

@@ -1,6 +1,4 @@
-/* DayBreak application chrome.
-   Semantic variables are supplied by the design-system branch. Existing app
-   variables remain as fallbacks so this branch can be reviewed independently. */
+/* DayBreak application chrome, driven by the shared design-system contract. */
 
 /* Shared mark sizing. */
 .ct-nav__mark img,
@@ -28,14 +26,14 @@
 
 /* Marketing/public navigation shell. */
 .ct-nav {
-  color: var(--color-morning-light, #ffdfab);
-  background: color-mix(in srgb, var(--color-midnight-horizon, #233a57) 96%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, var(--color-morning-light, #ffdfab) 20%, transparent);
+  color: var(--db-color-morning-light);
+  background: color-mix(in srgb, var(--db-color-midnight-horizon) 96%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--db-color-morning-light) 20%, transparent);
 }
 
 .ct-nav--scrolled {
-  background: var(--color-midnight-horizon, #233a57);
-  border-bottom-color: color-mix(in srgb, var(--color-morning-light, #ffdfab) 24%, transparent);
+  background: var(--db-color-midnight-horizon);
+  border-bottom-color: color-mix(in srgb, var(--db-color-morning-light) 24%, transparent);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
@@ -43,11 +41,11 @@
 .ct-nav__brand,
 .ct-nav__links button,
 .ct-nav__links a {
-  color: var(--color-morning-light, #ffdfab);
+  color: var(--db-color-morning-light);
 }
 
 .ct-nav__brand {
-  font-family: var(--font-body, "Montserrat", sans-serif);
+  font-family: var(--db-font-sans);
   font-size: 1rem;
   letter-spacing: 0.02em;
 }
@@ -56,39 +54,39 @@
 .ct-nav__menu {
   min-width: 44px;
   min-height: 44px;
-  color: var(--color-midnight-horizon, #233a57);
-  background: var(--color-morning-light, #ffdfab);
+  color: var(--db-color-midnight-horizon);
+  background: var(--db-color-morning-light);
   border-color: transparent;
 }
 
 .ct-nav__contact:hover,
 .ct-nav__menu:hover {
-  background: var(--color-sunrise-coral, #e6866c);
+  background: var(--db-color-sunrise-coral);
 }
 
 .ct-nav :is(a, button):focus-visible,
 .nav-overlay :is(a, button):focus-visible {
-  outline: 3px solid var(--color-focus-ring, var(--color-sunrise-coral, #e6866c));
+  outline: 3px solid var(--db-color-focus-ring);
   outline-offset: 3px;
 }
 
 .nav-overlay {
-  background: var(--color-overlay, rgba(35, 58, 87, 0.72));
+  background: var(--db-color-overlay);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
 
 .nav-overlay__panel {
-  color: var(--color-morning-light, #ffdfab);
-  background: var(--color-midnight-horizon, #233a57);
-  box-shadow: 0 18px 48px rgba(35, 58, 87, 0.22);
+  color: var(--db-color-morning-light);
+  background: var(--db-color-midnight-horizon);
+  box-shadow: var(--db-shadow-lg);
 }
 
 .ct-overlay-brand,
 .nav-overlay__links button,
 .nav-overlay__algorithm {
-  color: var(--color-morning-light, #ffdfab);
-  font-family: var(--font-body, "Montserrat", sans-serif);
+  color: var(--db-color-morning-light);
+  font-family: var(--db-font-sans);
 }
 
 .nav-overlay__links button,
@@ -100,24 +98,24 @@
 
 .nav-overlay__links button:hover,
 .nav-overlay__algorithm:hover {
-  color: var(--color-sunrise-coral, #e6866c);
+  color: var(--db-color-sunrise-coral);
 }
 
 .nav-overlay__close {
-  color: var(--color-morning-light, #ffdfab);
-  border-color: color-mix(in srgb, var(--color-morning-light, #ffdfab) 38%, transparent);
+  color: var(--db-color-morning-light);
+  border-color: color-mix(in srgb, var(--db-color-morning-light) 38%, transparent);
   background: transparent;
 }
 
 /* First-run global loading presentation. */
 .intro-screen {
-  color: var(--color-morning-light, #ffdfab);
-  background: var(--color-midnight-horizon, #233a57);
+  color: var(--db-color-morning-light);
+  background: var(--db-color-midnight-horizon);
 }
 
 .intro-screen::before,
 .intro-screen::after {
-  border-color: color-mix(in srgb, var(--color-morning-light, #ffdfab) 16%, transparent);
+  border-color: color-mix(in srgb, var(--db-color-morning-light) 16%, transparent);
 }
 
 .intro-logo {
@@ -129,31 +127,31 @@
 .intro-eyebrow,
 .intro-formula-text,
 .intro-tagline {
-  color: color-mix(in srgb, var(--color-morning-light, #ffdfab) 78%, transparent);
+  color: color-mix(in srgb, var(--db-color-morning-light) 78%, transparent);
 }
 
 .intro-title {
-  color: var(--color-morning-light, #ffdfab);
-  font-family: var(--font-display, "Abril Fatface", serif);
+  color: var(--db-color-morning-light);
+  font-family: var(--db-font-display);
   font-size: clamp(2.7rem, 8vw, 7rem);
   line-height: 0.98;
 }
 
 .intro-bar-track {
   height: 5px;
-  background: color-mix(in srgb, var(--color-morning-light, #ffdfab) 18%, transparent);
+  background: color-mix(in srgb, var(--db-color-morning-light) 18%, transparent);
 }
 
 .intro-bar-fill {
-  background: var(--color-sunrise-coral, #e6866c);
+  background: var(--db-color-sunrise-coral);
 }
 
 /* Feed/app header and desktop navigation structure. */
 .app-topbar {
   min-height: 64px;
-  color: var(--color-primary-text, var(--text));
-  background: color-mix(in srgb, var(--color-surface, var(--card)) 94%, transparent);
-  border-bottom: 1px solid var(--color-border, var(--border));
+  color: var(--db-color-text-primary);
+  background: color-mix(in srgb, var(--db-color-surface) 94%, transparent);
+  border-bottom: 1px solid var(--db-color-border);
 }
 
 .app-topbar__logo {
@@ -163,8 +161,8 @@
 
 .app-topbar__wordmark,
 .home-topbar__brand {
-  color: var(--color-primary-text, var(--text));
-  font-family: var(--font-body, "Montserrat", sans-serif);
+  color: var(--db-color-text-primary);
+  font-family: var(--db-font-sans);
   font-weight: 600;
   letter-spacing: 0.02em;
 }
@@ -173,36 +171,36 @@
 .app-topbar__intention {
   min-width: 44px;
   min-height: 44px;
-  color: var(--color-primary-text, var(--text));
-  background: var(--color-surface-elevated, var(--card));
-  border-color: var(--color-border, var(--border));
+  color: var(--db-color-text-primary);
+  background: var(--db-color-surface-elevated);
+  border-color: var(--db-color-border);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
 
 .app-topbar__intention:hover {
-  border-color: var(--color-strong-border, var(--color-twilight-violet, #6d597a));
+  border-color: var(--db-color-border-strong);
 }
 
 .app-topbar :is(a, button):focus-visible,
 .home-topbar :is(a, button):focus-visible {
-  outline: 3px solid var(--color-focus-ring, var(--color-twilight-violet, #6d597a));
+  outline: 3px solid var(--db-color-focus-ring);
   outline-offset: 2px;
 }
 
 @media (min-width: 768px) {
   [data-onboarded="true"] .app-sidebar {
-    color: var(--color-morning-light, #ffdfab);
-    background: var(--color-midnight-horizon, #233a57);
-    border-right-color: color-mix(in srgb, var(--color-morning-light, #ffdfab) 20%, transparent);
+    color: var(--db-color-morning-light);
+    background: var(--db-color-midnight-horizon);
+    border-right-color: color-mix(in srgb, var(--db-color-morning-light) 20%, transparent);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
 }
 
 .app-sidebar__brand {
-  color: var(--color-morning-light, #ffdfab);
-  font-family: var(--font-body, "Montserrat", sans-serif);
+  color: var(--db-color-morning-light);
+  font-family: var(--db-font-sans);
 }
 
 .app-sidebar__logo {
@@ -211,42 +209,42 @@
 }
 
 .app-sidebar__wordmark {
-  font-family: var(--font-body, "Montserrat", sans-serif);
+  font-family: var(--db-font-sans);
   font-weight: 600;
   letter-spacing: 0.02em;
 }
 
 .app-sidebar__intention {
   min-height: 52px;
-  color: var(--color-morning-light, #ffdfab);
-  background: color-mix(in srgb, var(--color-morning-light, #ffdfab) 8%, transparent);
-  border-color: color-mix(in srgb, var(--color-morning-light, #ffdfab) 24%, transparent);
+  color: var(--db-color-morning-light);
+  background: color-mix(in srgb, var(--db-color-morning-light) 8%, transparent);
+  border-color: color-mix(in srgb, var(--db-color-morning-light) 24%, transparent);
 }
 
 .app-sidebar__intention:hover {
-  background: color-mix(in srgb, var(--color-horizon-rose, #ce6969) 24%, transparent);
-  border-color: var(--color-horizon-rose, #ce6969);
+  background: color-mix(in srgb, var(--db-color-horizon-rose) 24%, transparent);
+  border-color: var(--db-color-horizon-rose);
 }
 
 .app-sidebar__intention-eyebrow {
-  color: color-mix(in srgb, var(--color-morning-light, #ffdfab) 68%, transparent);
+  color: color-mix(in srgb, var(--db-color-morning-light) 68%, transparent);
 }
 
 .app-sidebar__item {
   position: relative;
   min-height: 48px;
-  color: var(--color-morning-light, #ffdfab);
-  border-radius: var(--radius-medium, 12px);
+  color: var(--db-color-morning-light);
+  border-radius: var(--db-radius-md);
 }
 
 .app-sidebar__item:hover {
-  color: var(--color-morning-light, #ffdfab);
-  background: color-mix(in srgb, var(--color-morning-light, #ffdfab) 10%, transparent);
+  color: var(--db-color-morning-light);
+  background: color-mix(in srgb, var(--db-color-morning-light) 10%, transparent);
 }
 
 .app-sidebar__item.is-active {
-  color: var(--color-morning-light, #ffdfab);
-  background: color-mix(in srgb, var(--color-horizon-rose, #ce6969) 26%, transparent);
+  color: var(--db-color-morning-light);
+  background: color-mix(in srgb, var(--db-color-horizon-rose) 26%, transparent);
 }
 
 .app-sidebar__item.is-active::before {
@@ -256,62 +254,62 @@
   left: 3px;
   width: 3px;
   border-radius: 3px;
-  background: var(--color-horizon-rose, #ce6969);
+  background: var(--db-color-horizon-rose);
 }
 
 .app-sidebar__item:focus-visible {
-  outline: 3px solid var(--color-focus-ring, var(--color-sunrise-coral, #e6866c));
+  outline: 3px solid var(--db-color-focus-ring);
   outline-offset: 2px;
 }
 
 .app-sidebar__badge {
-  color: var(--color-midnight-horizon, #233a57);
-  background: var(--color-sunrise-coral, #e6866c);
+  color: var(--db-color-midnight-horizon);
+  background: var(--db-color-sunrise-coral);
 }
 
 .app-sidebar__demo {
   min-height: 44px;
-  color: color-mix(in srgb, var(--color-morning-light, #ffdfab) 76%, transparent);
-  border-color: color-mix(in srgb, var(--color-morning-light, #ffdfab) 30%, transparent);
+  color: color-mix(in srgb, var(--db-color-morning-light) 76%, transparent);
+  border-color: color-mix(in srgb, var(--db-color-morning-light) 30%, transparent);
 }
 
 /* Mobile navigation uses a solid calm surface with selected state conveyed by
    color, background, and aria-current rather than color alone. */
 .app-bottomnav__list {
-  background: var(--color-surface-elevated, var(--card));
-  border-color: var(--color-border, var(--border));
-  border-radius: var(--radius-large, 20px);
-  box-shadow: 0 10px 28px rgba(35, 58, 87, 0.14);
+  background: var(--db-color-surface-elevated);
+  border-color: var(--db-color-border);
+  border-radius: var(--db-radius-xl);
+  box-shadow: var(--db-shadow-md);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
 
 .app-bottomnav__item {
   min-height: 52px;
-  color: var(--color-muted-text, var(--text-muted));
-  border-radius: var(--radius-medium, 12px);
+  color: var(--db-color-text-muted);
+  border-radius: var(--db-radius-md);
 }
 
 .app-bottomnav__item:hover {
-  color: var(--color-primary-text, var(--text));
+  color: var(--db-color-text-primary);
 }
 
 .app-bottomnav__item.is-active {
-  color: var(--color-primary-text, var(--text));
-  background: color-mix(in srgb, var(--color-selected, var(--color-horizon-rose, #ce6969)) 22%, transparent);
-  box-shadow: inset 0 -3px 0 var(--color-selected, var(--color-horizon-rose, #ce6969));
+  color: var(--db-color-text-primary);
+  background: color-mix(in srgb, var(--db-color-selected) 22%, transparent);
+  box-shadow: inset 0 -3px 0 var(--db-color-selected);
 }
 
 .app-bottomnav__item:focus-visible {
-  outline: 3px solid var(--color-focus-ring, var(--color-twilight-violet, #6d597a));
+  outline: 3px solid var(--db-color-focus-ring);
   outline-offset: 1px;
 }
 
 .home-topbar {
   min-height: 64px;
-  color: var(--color-primary-text, var(--text));
-  background: var(--color-surface, var(--card));
-  border-bottom-color: var(--color-border, var(--border));
+  color: var(--db-color-text-primary);
+  background: var(--db-color-surface);
+  border-bottom-color: var(--db-color-border);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
@@ -324,17 +322,17 @@
 .home-iconbtn {
   width: 44px;
   height: 44px;
-  color: var(--color-primary-text, var(--text));
-  background: var(--color-surface-elevated, var(--card));
-  border-color: var(--color-border, var(--border));
-  border-radius: var(--radius-medium, 12px);
+  color: var(--db-color-text-primary);
+  background: var(--db-color-surface-elevated);
+  border-color: var(--db-color-border);
+  border-radius: var(--db-radius-md);
 }
 
 /* Authentication shell branding stays centralized without changing route form
    structure or authentication behavior. */
 .cx-shell {
-  color: var(--color-primary-text, var(--text));
-  background: var(--color-background, var(--bg));
+  color: var(--db-color-text-primary);
+  background: var(--db-color-background);
 }
 
 .cx-brand__logo {
@@ -349,8 +347,8 @@
 }
 
 .cx-brand__word {
-  color: var(--color-primary-text, var(--text));
-  font-family: var(--font-body, "Montserrat", sans-serif);
+  color: var(--db-color-text-primary);
+  font-family: var(--db-font-sans);
   font-weight: 600;
   letter-spacing: 0.02em;
 }
@@ -358,11 +356,11 @@
 /* Toasts are announced by their owning components; this layer only standardizes
    their global presentation. */
 .reels-toast {
-  color: var(--color-morning-light, #ffdfab);
-  background: var(--color-midnight-horizon, #233a57);
-  border: 1px solid color-mix(in srgb, var(--color-horizon-rose, #ce6969) 72%, transparent);
-  border-radius: var(--radius-medium, 12px);
-  box-shadow: 0 10px 26px rgba(35, 58, 87, 0.18);
+  color: var(--db-color-morning-light);
+  background: var(--db-color-midnight-horizon);
+  border: 1px solid color-mix(in srgb, var(--db-color-horizon-rose) 72%, transparent);
+  border-radius: var(--db-radius-md);
+  box-shadow: var(--db-shadow-md);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
@@ -374,19 +372,19 @@
   place-items: center;
   box-sizing: border-box;
   padding: clamp(1rem, 4vw, 2rem);
-  color: var(--color-primary-text, #233a57);
-  background: var(--color-background, #fff8ec);
-  font-family: var(--font-body, "Montserrat", sans-serif);
+  color: var(--db-color-text-primary);
+  background: var(--db-color-background);
+  font-family: var(--db-font-sans);
 }
 
 .global-error__card {
   width: min(520px, 100%);
   padding: clamp(1.5rem, 5vw, 2.5rem);
   text-align: center;
-  background: var(--color-surface, #ffffff);
-  border: 1px solid var(--color-border, rgba(35, 58, 87, 0.2));
-  border-radius: var(--radius-large, 20px);
-  box-shadow: 0 12px 32px rgba(35, 58, 87, 0.12);
+  background: var(--db-color-surface);
+  border: 1px solid var(--db-color-border);
+  border-radius: var(--db-radius-xl);
+  box-shadow: var(--db-shadow-md);
 }
 
 .global-error__logo {
@@ -397,7 +395,7 @@
 
 .global-error__eyebrow {
   margin: 0;
-  color: var(--color-secondary-text, #6d597a);
+  color: var(--db-color-text-secondary);
   font-size: 0.78rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -405,8 +403,8 @@
 
 .global-error h1 {
   margin: 0.65rem 0;
-  color: var(--color-primary-text, #233a57);
-  font-family: var(--font-display, "Abril Fatface", serif);
+  color: var(--db-color-text-primary);
+  font-family: var(--db-font-display);
   font-size: clamp(2rem, 7vw, 3.25rem);
   font-weight: 400;
   line-height: 1.05;
@@ -415,7 +413,7 @@
 .global-error p:not(.global-error__eyebrow) {
   margin: 0 auto;
   max-width: 38ch;
-  color: var(--color-secondary-text, #6d597a);
+  color: var(--db-color-text-secondary);
   line-height: 1.6;
 }
 
@@ -424,20 +422,20 @@
   min-height: 48px;
   margin-top: 1.5rem;
   padding: 0.75rem 1.25rem;
-  color: var(--color-midnight-horizon, #233a57);
-  background: var(--color-primary-action, #e6866c);
+  color: var(--db-color-midnight-horizon);
+  background: var(--db-color-action-primary);
   border: 0;
-  border-radius: var(--radius-medium, 12px);
+  border-radius: var(--db-radius-md);
   font: inherit;
   cursor: pointer;
 }
 
 .global-error button:hover {
-  background: var(--color-primary-action-hover, #ce6969);
+  background: var(--db-color-action-primary-hover);
 }
 
 .global-error button:focus-visible {
-  outline: 3px solid var(--color-focus-ring, #6d597a);
+  outline: 3px solid var(--db-color-focus-ring);
   outline-offset: 3px;
 }
 

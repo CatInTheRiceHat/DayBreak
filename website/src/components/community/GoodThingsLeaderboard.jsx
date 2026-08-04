@@ -52,7 +52,7 @@ export function GoodThingsLeaderboard({ rows }) {
             <li key={action} className="cmty-tag">{action}</li>
           ))}
         </ul>
-        <p className="cmty-note">Chrysalis rewards healthier behavior, not attention-seeking.</p>
+        <p className="cmty-note">DayBreak rewards healthier behavior, not attention-seeking.</p>
       </div>
     </section>
   );

@@ -33,7 +33,7 @@ import {
 
 const originCards = [
   ['Award recognition', 'MorphoMedia was recognized by SPV Market Research at the 2026 Synopsys Championship Science Fair.'],
-  ['Interactive prototype', 'Chrysalis later became an interactive full-stack prototype with personalized algorithm controls and three modes: Flutter Feed, Metamorphosis, and Daily Dew.'],
+  ['Interactive prototype', 'DayBreak later became an interactive full-stack prototype with personalized algorithm controls and three modes: Flutter Feed, Metamorphosis, and Daily Dew.'],
 ];
 
 const problemRows = [
@@ -122,15 +122,15 @@ const journeySteps = [
     icon: Award,
   },
   {
-    title: 'Chrysalis Phase',
-    body: 'Rebuilding: After showcasing MorphoMedia at science fair, I rebuilt the idea as Chrysalis: a more interactive full-stack passion project with three modes - Flutter Feed, Metamorphosis, and Daily Dew.',
+    title: 'DayBreak Phase',
+    body: 'Rebuilding: After showcasing MorphoMedia at science fair, I rebuilt the idea as DayBreak: a more interactive full-stack passion project with three modes - Flutter Feed, Metamorphosis, and Daily Dew.',
     symbolImage: '/images/journey-chrysalis.png',
     mosaic: 'chrysalis',
     artifacts: [
       {
         src: '/images/app-icon.png',
-        alt: 'Chrysalis app icon',
-        label: 'Chrysalis app icon',
+        alt: 'DayBreak app icon',
+        label: 'DayBreak app icon',
         variant: 'chrysalis-app',
         depth: 28,
         lateral: -7,
@@ -144,8 +144,8 @@ const journeySteps = [
       },
       {
         src: '/images/code.png',
-        alt: 'Chrysalis code screenshot',
-        label: 'Chrysalis code screenshot',
+        alt: 'DayBreak code screenshot',
+        label: 'DayBreak code screenshot',
         variant: 'chrysalis-code',
         depth: 58,
         lateral: 11,
@@ -162,7 +162,7 @@ const journeySteps = [
   },
   {
     title: 'Imago Phase',
-    body: 'Vision: My long-term goal is not to shame people for using social media. I want Chrysalis to help people use digital spaces with more agency, more self-awareness, and more respect for themselves than when they entered.',
+    body: 'Vision: My long-term goal is not to shame people for using social media. I want DayBreak to help people use digital spaces with more agency, more self-awareness, and more respect for themselves than when they entered.',
     symbolImage: '/images/journey-emerged.png',
     mosaic: 'imago',
     artifacts: [
@@ -348,7 +348,7 @@ function DroopyElement({
   );
 }
 
-function JourneyArtifact({ artifact, onPreview, stepTitle, interactive = true }) {
+function JourneyArtifact({ artifact, onPreview, interactive = true }) {
   const {
     ref,
     x,
@@ -406,7 +406,6 @@ function JourneyMosaic({ step, className = '', onPreview = () => {}, interactive
           artifact={artifact}
           key={`${step.title}-${artifact.variant}`}
           onPreview={onPreview}
-          stepTitle={step.title}
           interactive={interactive}
         />
       ))}
@@ -797,7 +796,7 @@ function HeroSection() {
             <RotatingTitle />
           </TextTrail>
           <TextTrail as="p" depth={18} lag={1.05}>
-            Chrysalis is a digital wellbeing prototype exploring how social media algorithms
+            DayBreak is a digital wellbeing prototype exploring how social media algorithms
             can support self-awareness, variety, and healthier digital habits.
           </TextTrail>
           <TextTrail as="p" className="ct-origin-line" depth={15} lag={1.16}>
@@ -865,7 +864,7 @@ function ProblemSection() {
             I started thinking more deeply about how social media affects people, especially teenagers.
             People often scroll when they are bored, stressed, tired, lonely, or procrastinating. 
             But I also know that social media is not all bad. Most of us cannot simply delete every app and disappear
-            from the internet. That is why I made Chrysalis.
+            from the internet. That is why I made DayBreak.
           </TextTrail>
           <MetricRows />
         </Reveal>
@@ -993,14 +992,14 @@ function JourneySection() {
               A lifecycle of ethical technology.
             </TextTrail>
             <TextTrail as="p" depth={18} lag={1.04}>
-              By combining the lifecycle of a butterfly with the engineering process, Chrysalis
+              By combining the lifecycle of a butterfly with the engineering process, DayBreak
               follows the way ethical technology is made: observation, experimentation,
-              rebuilding, and growth. Chrysalis grew from the intersection of my deepest
+              rebuilding, and growth. DayBreak grew from the intersection of my deepest
               interests: journalism, media, and coding.
             </TextTrail>
           </Reveal>
 
-          <div className="ct-journey-lock" aria-label="Chrysalis journey timeline">
+          <div className="ct-journey-lock" aria-label="DayBreak journey timeline">
             <div className="ct-journey-stage-art" aria-hidden="true">
               {journeySteps.map((step, index) => {
                 const isActive = activeStep === index;
@@ -1134,10 +1133,10 @@ function SolutionSection() {
             Three algorithms for three goals.
           </TextTrail>
           <TextTrail as="p" depth={18} lag={1.06}>
-            While designing Chrysalis, I thought about different ways people struggle with
+            While designing DayBreak, I thought about different ways people struggle with
             social media. Some people want a healthier feed. Some want help reducing screen
             time. Others want a small daily reset instead of an endless personalized scroll.
-            Chrysalis turns those needs into three modes.
+            DayBreak turns those needs into three modes.
           </TextTrail>
         </Reveal>
         <Reveal className="ct-mode-showcase">
@@ -1160,11 +1159,11 @@ function FutureSection() {
             A changing prototype for a changing internet.
           </TextTrail>
           <TextTrail as="p" depth={18} lag={1.06}>
-            Chrysalis is a prototype. It is not a finished product, and it should not pretend
+            DayBreak is a prototype. It is not a finished product, and it should not pretend
             to be one. The beauty and difficulty of ethical technology is that there is always
             a gray area. Social media can connect and harm, inspire and distract, help and
             overwhelm. Understanding those gray areas will take time. The next step is making
-            Chrysalis more grounded in real student experiences and more transparent about how
+            DayBreak more grounded in real student experiences and more transparent about how
             its recommendations work.
           </TextTrail>
           <DroopyElement className="ct-future__actions" depth={12} lag={0.95}>
@@ -1199,7 +1198,7 @@ function CreatorSection() {
           <TextTrail as="p" depth={18} lag={1.05}>
             My name is Elaine Che, and I am a student at Saratoga High School. As a journalist,
             coder, and researcher, I am interested in how technology shapes the way people think,
-            feel, and live. Chrysalis is where I combine those interests into one project.
+            feel, and live. DayBreak is where I combine those interests into one project.
           </TextTrail>
           <TextTrail as="p" depth={20} lag={1.14}>
             It began as MorphoMedia, my Synopsys science fair project, and grew into a prototype
@@ -1252,7 +1251,7 @@ function ContactSection() {
           Let's learn together.
         </TextTrail>
         <TextTrail as="p" className="ct-footer__lede" depth={18} lag={1.04}>
-          Chrysalis is still growing. I am looking for feedback from students, educators,
+          DayBreak is still growing. I am looking for feedback from students, educators,
           researchers, and anyone interested in healthier technology.
         </TextTrail>
       </div>
@@ -1282,7 +1281,7 @@ function ContactSection() {
         ))}
       </div>
       <div className="ct-footer__bottom">
-        <span>Chrysalis © 2026</span>
+        <span>DayBreak © 2026</span>
         <span>Teen-built recommendation systems prototype</span>
       </div>
     </footer>

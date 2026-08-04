@@ -6,27 +6,26 @@
    ───────────────────────────────────────────────────────────────────────── */
 
 [data-algorithm] {
-  /* DayBreak base palette. These page-scoped aliases intentionally fall back
-     to the official colors until the global design-system branch is merged. */
-  --daybreak-midnight: var(--color-midnight-horizon, #233a57);
-  --daybreak-twilight: var(--color-twilight-violet, #6d597a);
-  --daybreak-rose: var(--color-horizon-rose, #ce6969);
-  --daybreak-coral: var(--color-sunrise-coral, #e6866c);
-  --daybreak-morning: var(--color-morning-light, #ffdfab);
+  /* Page-scoped aliases consume the merged DayBreak design-system contract. */
+  --daybreak-midnight: var(--db-color-midnight-horizon);
+  --daybreak-twilight: var(--db-color-twilight-violet);
+  --daybreak-rose: var(--db-color-horizon-rose);
+  --daybreak-coral: var(--db-color-sunrise-coral);
+  --daybreak-morning: var(--db-color-morning-light);
 
   /* Feed semantic layer. Components consume these roles, not base colors. */
-  --bg: var(--color-background, #fffaf2);
-  --bg-soft: var(--color-background-subtle, #fff2df);
-  --text: var(--color-text-primary, var(--daybreak-midnight));
-  --text-muted: var(--color-text-secondary, #5f6d7e);
-  --card: var(--color-surface, #fffdf9);
-  --border: var(--color-border, rgba(35, 58, 87, 0.2));
-  --border-strong: var(--color-border-strong, rgba(35, 58, 87, 0.4));
-  --accent: var(--color-action-primary, var(--daybreak-coral));
-  --accent-soft: var(--color-action-secondary, var(--daybreak-twilight));
-  --selected: var(--color-selected, var(--daybreak-rose));
-  --focus-ring: var(--color-focus-ring, var(--daybreak-rose));
-  --tone-healthy: #4f7a65;
+  --bg: var(--db-color-background);
+  --bg-soft: var(--db-color-background-subtle);
+  --text: var(--db-color-text-primary);
+  --text-muted: var(--db-color-text-secondary);
+  --card: var(--db-color-surface);
+  --border: var(--db-color-border);
+  --border-strong: var(--db-color-border-strong);
+  --accent: var(--db-color-action-primary);
+  --accent-soft: var(--db-color-action-secondary);
+  --selected: var(--db-color-selected);
+  --focus-ring: var(--db-color-focus-ring);
+  --tone-healthy: var(--db-color-success);
   --tone-positive: var(--daybreak-rose);
   --tone-fun: #a66e2c;
   --tone-perspective: var(--daybreak-twilight);
@@ -36,32 +35,32 @@
   --overlay: linear-gradient(to top, rgba(24, 37, 54, 0.88) 0%, rgba(24, 37, 54, 0.42) 45%, transparent 72%);
   --button-bg: color-mix(in srgb, var(--card) 94%, transparent);
   --button-text: var(--text);
-  --on-accent: var(--color-text-on-primary, #1b3049);
-  --on-selected: var(--color-text-on-selected, #0b2035);
+  --on-accent: var(--db-color-on-primary);
+  --on-selected: var(--db-color-on-selected);
 
-  --reel-shadow: 0 12px 30px rgba(35, 58, 87, 0.14);
-  --reel-radius: 22px;
+  --reel-shadow: var(--db-shadow-lg);
+  --reel-radius: var(--db-radius-xl);
 
   /* Typography — style-guide roles. Headings/titles use the display
      face Abril Fatface; tags/labels/chips use Story Script; body copy
      uses Montserrat. Scoped here so only the algorithm feed + Home use them. */
-  --font-reels-heading: "Abril Fatface", serif;
-  --font-reels-tag:     "Story Script", sans-serif;
-  --font-reels-body:    "Montserrat", sans-serif;
+  --font-reels-heading: var(--db-font-display);
+  --font-reels-tag:     var(--db-font-accent);
+  --font-reels-body:    var(--db-font-sans);
 }
 
 [data-algorithm][data-theme="dark"] {
-  --bg: var(--color-background, #172a40);
-  --bg-soft: var(--color-background-subtle, #203650);
-  --text: var(--color-text-primary, #fff4df);
-  --text-muted: var(--color-text-secondary, #d3c5ba);
-  --card: var(--color-surface, #29415e);
-  --border: var(--color-border, rgba(255, 223, 171, 0.22));
-  --border-strong: var(--color-border-strong, rgba(255, 223, 171, 0.42));
-  --accent: var(--color-action-primary, #f19a81);
-  --accent-soft: var(--color-action-secondary, #c4a9d1);
-  --selected: var(--color-selected, #e58383);
-  --focus-ring: var(--color-focus-ring, var(--daybreak-morning));
+  --bg: var(--db-color-background);
+  --bg-soft: var(--db-color-background-subtle);
+  --text: var(--db-color-text-primary);
+  --text-muted: var(--db-color-text-secondary);
+  --card: var(--db-color-surface);
+  --border: var(--db-color-border);
+  --border-strong: var(--db-color-border-strong);
+  --accent: var(--db-color-action-primary);
+  --accent-soft: var(--db-color-action-secondary);
+  --selected: var(--db-color-selected);
+  --focus-ring: var(--db-color-focus-ring);
   --tone-healthy: #9bc6a9;
   --tone-positive: #f2a0a0;
   --tone-fun: #f0bd72;
@@ -73,56 +72,8 @@
   --button-text: var(--text);
   --on-accent: var(--daybreak-midnight);
   --on-selected: #0b2035;
-  --reel-shadow: 0 14px 34px rgba(8, 20, 34, 0.34);
-  --reel-radius: 22px;
-}
-
-/* The formal study route owns its own presentation branch. Preserve its
-   existing feed palette here while the product feed adopts DayBreak. */
-[data-algorithm][data-research="true"] {
-  --bg: #faf9f6;
-  --bg-soft: #f2eef5;
-  --text: #2b2631;
-  --text-muted: #938e97;
-  --card: #fff;
-  --border: rgba(147, 142, 151, 0.28);
-  --border-strong: rgba(147, 142, 151, 0.52);
-  --accent: #7c6d8c;
-  --accent-soft: #ad9eb8;
-  --selected: #7c6d8c;
-  --focus-ring: #7c6d8c;
-  --tone-healthy: #7fa384;
-  --tone-positive: #d78b9a;
-  --tone-fun: #d6a456;
-  --tone-perspective: #938e97;
-  --tone-creative: #bf8f61;
-  --tone-social: #83a99f;
-  --tone-reset: #8ba989;
-  --button-bg: rgba(250, 249, 246, 0.72);
-  --button-text: #2b2631;
-  --on-accent: #fff;
-  --on-selected: #fff;
-  --reel-shadow: 0 24px 60px rgba(43, 38, 49, 0.16);
-  --reel-radius: 28px;
-}
-[data-algorithm][data-research="true"][data-theme="dark"] {
-  --bg: #161320;
-  --bg-soft: #1f1a2b;
-  --text: #efeaf3;
-  --text-muted: #a79fb2;
-  --card: #221c30;
-  --border: rgba(173, 158, 184, 0.22);
-  --border-strong: rgba(173, 158, 184, 0.44);
-  --accent: #c9b8d8;
-  --accent-soft: #8d7ca0;
-  --selected: #c9b8d8;
-  --focus-ring: #c9b8d8;
-  --button-bg: rgba(34, 28, 48, 0.62);
-  --button-text: #efeaf3;
-  --on-accent: #fff;
-  --on-selected: #fff;
-  --reel-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
-  --reel-radius: 28px;
+  --reel-shadow: var(--db-shadow-lg);
+  --reel-radius: var(--db-radius-xl);
 }
 
 /* ── Page shell ─────────────────────────────────────────────────────────── */
