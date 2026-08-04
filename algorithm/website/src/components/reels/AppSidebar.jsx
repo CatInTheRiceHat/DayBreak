@@ -2,6 +2,7 @@ import { BRAND } from '../../brand.js';
 import { SlidersHorizontal, Inbox } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { NAV_SECTIONS } from './navSections';
+import { DayBreakLogo } from '../DayBreakLogo.jsx';
 
 /**
  * Desktop-only left navigation rail, in the spirit of a social-app home screen.
@@ -35,7 +36,7 @@ export function AppSidebar({
     <>
     <aside className="app-sidebar" aria-label={`${BRAND} navigation`}>
       <div className="app-sidebar__brand">
-        <span className="app-sidebar__logo" aria-hidden="true"><img src="/images/logo.png" alt="" /></span>
+        <span className="app-sidebar__logo" aria-hidden="true"><DayBreakLogo /></span>
         <span className="app-sidebar__wordmark">{BRAND}</span>
       </div>
 
