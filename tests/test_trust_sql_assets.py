@@ -12,7 +12,7 @@ import pathlib
 MIGRATIONS = pathlib.Path(__file__).resolve().parent.parent / "migrations"
 SMOKE = MIGRATIONS / "011_trusted_sources_smoke_test.sql"
 SEED = MIGRATIONS / "seed_trusted_youtube_channels.example.sql"
-DOCS = pathlib.Path(__file__).resolve().parent.parent / "docs" / "trust_sources_operations.md"
+DOCS = pathlib.Path(__file__).resolve().parent.parent / "docs" / "operations" / "trust-sources.md"
 
 TABLES = ("trusted_youtube_channels", "blocked_youtube_channels", "youtube_channel_candidates")
 

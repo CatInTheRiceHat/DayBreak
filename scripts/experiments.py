@@ -4,7 +4,7 @@ It records design metrics + baseline overlap for every run, then saves raw resul
 Outputs: results/experiment_raw.csv and results/experiment_summary.csv.
 
 Usage:
-    python experiments.py --n_sessions 10 --dataset datasets/processed_dataset.csv
+    python experiments.py --n_sessions 10 --dataset data/datasets/processed_dataset.csv
 """
 
 from pathlib import Path
@@ -241,7 +241,7 @@ def summarize(df_raw):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--dataset", default="datasets/shorts_dataset_tagged.csv")
+    ap.add_argument("--dataset", default="data/datasets/shorts_dataset_tagged.csv")
     ap.add_argument("--outdir", default="results/data")
     ap.add_argument("--n_sessions", type=int, default=10)  # seeds 0..n-1
     ap.add_argument("--recent_window", type=int, default=10)

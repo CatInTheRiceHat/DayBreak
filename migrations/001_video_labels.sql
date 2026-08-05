@@ -2,7 +2,7 @@
 --
 -- Run once in the Supabase SQL Editor on databases that already have a `videos`
 -- table (created implicitly by the older /api/cron/extract). New databases get
--- these columns directly from supabase_schema.sql, so this migration is a no-op
+-- these columns directly from data/schema/supabase-schema.sql, so this migration is a no-op
 -- there thanks to IF NOT EXISTS.
 --
 -- SQLite (local chrysalis.db) upgrades automatically via _ensure_label_columns()

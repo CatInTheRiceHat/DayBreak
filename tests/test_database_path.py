@@ -3,10 +3,10 @@ from pathlib import Path
 from core.database import DEFAULT_DATABASE_PATH, PROJECT_ROOT, resolve_database_path
 
 
-def test_default_database_path_is_project_root_db(monkeypatch):
+def test_default_database_path_is_local_data_db(monkeypatch):
     monkeypatch.delenv("DATABASE_PATH", raising=False)
     assert resolve_database_path() == DEFAULT_DATABASE_PATH
-    assert resolve_database_path().parent == PROJECT_ROOT
+    assert resolve_database_path().parent == PROJECT_ROOT / "data" / "local"
 
 
 def test_relative_database_path_resolves_from_project_root(monkeypatch):

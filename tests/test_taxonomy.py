@@ -13,7 +13,7 @@ from core.labeling.taxonomy import (
 )
 
 ROOT = Path(__file__).resolve().parent.parent
-SEED_FILE = ROOT / "datasets" / "seed_videos.json"
+SEED_FILE = ROOT / "data" / "datasets" / "seed_videos.json"
 
 
 def classify_meta(meta: dict):

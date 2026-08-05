@@ -18,7 +18,7 @@
 -- cron runs 4×/day). Do NOT approve dozens at once. See:
 --   migrations/011_trusted_sources.sql           (schema + RLS)
 --   migrations/011_trusted_sources_smoke_test.sql (verify the migration)
---   docs/trust_sources_operations.md             (operational checklist + quota)
+--   docs/operations/trust-sources.md              (operational checklist + quota)
 --
 -- `on conflict (channel_id) do nothing` makes re-running safe (no duplicates).
 -- ============================================================================

@@ -6,7 +6,7 @@
  *   - reel card / frame fits within the viewport
  *   - action rail and mode controls are not clipped off-screen
  *   - no console errors
- * Captures a screenshot per viewport into qa/screenshots/.
+ * Captures a screenshot per viewport into assets/qa/responsive/.
  *
  * Usage:  node qa/responsive-check.mjs [baseURL]
  * Requires the preview/dev server already running (default http://localhost:4317).
@@ -18,7 +18,7 @@ import { mkdirSync } from 'node:fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const BASE = process.argv[2] || 'http://localhost:4317';
-const SHOTS = join(__dirname, 'screenshots');
+const SHOTS = join(__dirname, '..', '..', 'assets', 'qa', 'responsive');
 mkdirSync(SHOTS, { recursive: true });
 
 // /algorithm shows an onboarding mode-picker first, then the feed. We QA both.

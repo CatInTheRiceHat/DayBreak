@@ -45,7 +45,7 @@ from core.preferences import (
 from research_api import create_research_router
 
 ROOT = Path(__file__).parent.parent
-DEFAULT_DATASET = ROOT / "datasets" / "processed_dataset.csv"
+DEFAULT_DATASET = ROOT / "data" / "datasets" / "processed_dataset.csv"
 
 
 

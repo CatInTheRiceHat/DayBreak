@@ -26,7 +26,7 @@ cp .env.example .env
 # Optional:
 #   YOUTUBE_FEED_QUERIES=category=query,category=query
 # Optional: pin local SQLite storage. Relative paths resolve from project root.
-DATABASE_PATH=./chrysalis.db
+DATABASE_PATH=./data/local/chrysalis.db
 
 # Run the API server
 python api.py
@@ -38,7 +38,7 @@ python api.py
 Run the API and Vite frontend together:
 
 ```bash
-DATABASE_PATH=./chrysalis.db python api.py
+DATABASE_PATH=./data/local/chrysalis.db python api.py
 cd website
 npm run dev
 ```
@@ -96,7 +96,7 @@ Required backend env vars:
 ```bash
 YOUTUBE_API_KEY=...
 FEED_INGEST_SECRET=...
-DATABASE_PATH=./chrysalis.db
+DATABASE_PATH=./data/local/chrysalis.db
 ```
 
 Optional query override. Plain queries are still accepted and stored with
@@ -109,7 +109,7 @@ YOUTUBE_FEED_QUERIES=news/current events=current events explained,gaming=gaming 
 Manual local ingestion:
 
 ```bash
-DATABASE_PATH=./chrysalis.db python scripts/ingest_youtube_feed.py --max-results 10 --days-back 7
+DATABASE_PATH=./data/local/chrysalis.db python scripts/ingest_youtube_feed.py --max-results 10 --days-back 7
 ```
 
 Or run through the API:
@@ -145,18 +145,29 @@ endpoint once per day and can also be run manually with `workflow_dispatch`.
 ## Project Structure
 
 ```
-Chrysalis/
-├── core/algorithm.py          # Core ranking algorithm with Gini diversity, engagement decay
-├── data.py               # Data processing utilities
-├── metrics.py            # Evaluation metrics (diversity@k, streak detection, etc.)
-├── graphs.py             # Visualization scripts for experiment results
-├── api.py                # FastAPI web server with YouTube integration
-├── experiments.py        # Run evaluation experiments
-├── youtube_service.py    # YouTube Data API wrapper with caching
-├── datasets/             # Processed datasets
-├── results/              # Experiment outputs (CSVs, figures)
-└── website/              # Frontend UI (served by api.py)
+DayBreak/
+├── api.py                 # Local FastAPI entry point
+├── api/                   # Hosted/Vercel API entry point
+├── core/                  # Ranking, labeling, storage, and policy logic
+├── integrations/          # YouTube and external-service adapters
+├── automation/            # Background-job boundary and configuration
+├── scripts/               # Manual data, ingestion, and analysis commands
+├── tests/                 # Python test suite
+├── website/               # React/Vite frontend
+│   └── src/
+│       ├── app/           # Router and app-wide boundaries
+│       ├── features/      # Code grouped by product feature
+│       ├── lib/           # Shared services and adapters
+│       ├── shared/        # Reusable UI
+│       └── styles/        # Global styles
+├── data/                  # Local DBs, datasets, curation, and schema snapshots
+├── migrations/            # Ordered PostgreSQL/Supabase migrations
+├── assets/                # Archived graphics and visual QA captures
+└── docs/                  # Plans, specs, research, runbooks, and reports
 ```
+
+See `docs/README.md`, `assets/README.md`, `data/README.md`, and
+`website/src/README.md` for where new files should go.
 
 ## Algorithm Overview
 
@@ -180,10 +191,10 @@ The ranking formula balances four key factors:
 
 ```bash
 # Run 10 evaluation sessions
-python experiments.py --n_sessions 10
+python scripts/experiments.py --n_sessions 10
 
 # Generate result visualizations
-python graphs.py --summary results/data/experiment_summary.csv
+python scripts/graphs.py --summary results/data/experiment_summary.csv
 ```
 
 ## API Endpoints
@@ -209,8 +220,9 @@ Night mode adds extra risk penalty and caps feed length at 15.
 
 ## Documentation
 
-- `README_ALGORITHM.md` - Mathematical formulas and UI mapping guide
-- `Social Media Algorithm Project Enhancement.md` - Research paper with full theoretical background
+- `docs/architecture/algorithm.md` - Mathematical formulas and UI mapping guide
+- `docs/research/social-media-algorithm-project-enhancement.md` - Research paper with full theoretical background
+- `docs/README.md` - Documentation filing guide
 
 ## License
 

@@ -13,7 +13,7 @@ if (!['before', 'after'].includes(stage)) {
 }
 
 const baseURL = process.argv[3] || 'http://localhost:4317';
-const outputDirectory = resolve(process.cwd(), '..', 'color-audit-screenshots', stage);
+const outputDirectory = resolve(process.cwd(), '..', 'assets', 'qa', 'color-audit', stage);
 const cases = [
   { name: 'feed-desktop-light', route: '/', width: 1440, height: 900, theme: 'light' },
   { name: 'feed-laptop-light', route: '/', width: 1280, height: 800, theme: 'light' },

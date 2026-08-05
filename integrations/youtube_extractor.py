@@ -19,7 +19,7 @@ Pipeline:
     Computed from raw stats:
         • active_engagement_ratio = (likes + comments) / views, scaled 0–1
         ↓
-    SQLite  →  chrysalis.db  (persistent; never re-fetches what it has)
+    SQLite  →  data/local/chrysalis.db  (persistent; never re-fetches what it has)
         ↓
     pandas DataFrame  →  ready for validate_and_clean() → build_prototype_feed()
 
@@ -736,7 +736,7 @@ def db_summary(db_path: Path = DB_PATH) -> None:
     conn = _get_conn(db_path)
     total = conn.execute("SELECT COUNT(*) FROM videos").fetchone()[0]
     print(f"\n{'='*50}")
-    print(f"  chrysalis.db  —  {total} videos total")
+    print(f"  {DB_PATH}  —  {total} videos total")
     print(f"{'='*50}")
     rows = conn.execute(
         "SELECT topic, COUNT(*) as n FROM videos GROUP BY topic ORDER BY n DESC"

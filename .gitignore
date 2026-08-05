@@ -1,5 +1,6 @@
 # Python
 __pycache__/
+.pytest_cache/
 *.py[cod]
 *$py.class
 *.so
@@ -45,6 +46,9 @@ Thumbs.db
 .env
 *.env.local
 
+# Local tool state
+supabase/.temp/
+
 # Results (keep the directory, ignore generated files)
 results/data/*.csv
 results/figures/*.png
@@ -55,8 +59,8 @@ results/figures/*.png
 # VK-LSVD
 VK-LSVD/
 
-# Morphomedia Data & DB
-datasets/*
-!datasets/seed_videos.json
+# Generated datasets (keep the hand-curated seed fixture)
+data/datasets/*
+!data/datasets/seed_videos.json
 morphomedia.db
-reports/
+/reports/

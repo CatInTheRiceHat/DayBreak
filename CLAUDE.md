@@ -14,8 +14,8 @@ All three draw from the same safe pool (`feed_videos`); mode-specific behavior
 lives in the ranking/explanation layer.
 
 Python interpreter: `.venv/bin/python3.13` (system Python lacks pytest and project deps).
-Dataset: `datasets/processed_dataset.csv`.
-Database: `chrysalis.db` (SQLite, project root); Supabase/Postgres in production.
+Dataset: `data/datasets/processed_dataset.csv`.
+Database: `data/local/chrysalis.db` (SQLite); Supabase/Postgres in production.
 
 Run tests: `.venv/bin/python -m pytest -q`
 

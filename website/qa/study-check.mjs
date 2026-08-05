@@ -16,7 +16,7 @@ import { chromium } from '@playwright/test';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const BASE = process.argv[2] || 'http://localhost:4317';
-const SHOTS = join(HERE, 'screenshots', 'study');
+const SHOTS = join(HERE, '..', '..', 'assets', 'qa', 'responsive', 'study');
 
 const VIEWPORTS = [
   { name: '320x568', width: 320, height: 568, mobile: true },

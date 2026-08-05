@@ -41,7 +41,7 @@ The existing strings `Starting anonymous research session…`, `We could not sta
 - Completion endpoint call count
 - Browser runtime errors
 
-Screenshots are written to the ignored `qa/screenshots/study/` directory.
+Screenshots are written to `assets/qa/responsive/study/` at the repository root.
 
 Result: all five viewport scenarios passed with 0px document overflow. Loading, reduced motion, retry, focus, hidden-condition, and completion checks also passed. Completion and retry controls measured at least 44px high at every size.
 

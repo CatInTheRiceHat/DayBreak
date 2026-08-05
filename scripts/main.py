@@ -13,7 +13,7 @@ from core.metrics import diversity_at_k, max_streak, prosocial_ratio
 # Config
 # -----------------------------
 
-DATA_PATH = Path(__file__).parent.parent / "datasets" / "processed_dataset.csv"
+DATA_PATH = Path(__file__).parent.parent / "data" / "datasets" / "processed_dataset.csv"
 
 PRESET = "entertainment"
 K_DEFAULT = 100
