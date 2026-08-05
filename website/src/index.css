@@ -15,7 +15,11 @@
 :root {
   color-scheme: light;
 
-  /* Official brand palette: do not alter these values. */
+  /* Official brand palette: do not alter these values.
+     Target visual hierarchy across the experience:
+     30% Morning Light · 25% Midnight Horizon · 17% Twilight Violet ·
+     15% Sunrise Coral · 13% Horizon Rose. The ratio is directional per screen,
+     while semantic roles and accessible contrast always take precedence. */
   --db-color-midnight-horizon: #233a57;
   --db-color-twilight-violet: #6d597a;
   --db-color-horizon-rose: #ce6969;
@@ -41,6 +45,9 @@
   --db-color-action-primary: var(--db-color-sunrise-coral);
   --db-color-action-primary-hover: #de775f;
   --db-color-action-secondary: var(--db-color-twilight-violet);
+  --db-color-link: var(--db-color-twilight-violet);
+  --db-color-link-hover: #a84e55;
+  --db-color-highlight-text: #a84e55;
   --db-color-selected: #a84e55;
   --db-color-selected-subtle: #f8e3df;
   --db-color-focus-ring: var(--db-color-twilight-violet);
@@ -52,6 +59,11 @@
   --db-color-on-secondary: #ffffff;
   --db-color-on-selected: #ffffff;
   --db-color-on-status: #ffffff;
+  --db-color-input-background: #ffffff;
+  --db-color-disabled-background: #ece5dc;
+  --db-color-disabled-text: #747b86;
+  --db-color-navigation-background: var(--db-color-midnight-horizon);
+  --db-color-footer-background: var(--db-color-midnight-horizon);
 
   /* RGB channels allow Tailwind opacity modifiers such as bg-surface/80. */
   --db-background-rgb: 255 249 239;
@@ -66,6 +78,9 @@
   --db-action-primary-rgb: 230 134 108;
   --db-action-primary-hover-rgb: 222 119 95;
   --db-action-secondary-rgb: 109 89 122;
+  --db-on-primary-rgb: 23 42 66;
+  --db-on-secondary-rgb: 255 255 255;
+  --db-on-selected-rgb: 255 255 255;
   --db-selected-rgb: 168 78 85;
   --db-focus-ring-rgb: 109 89 122;
   --db-success-rgb: 47 111 88;
@@ -148,7 +163,7 @@
   --primary-foreground: 215 48% 17%;
   --secondary: 274 16% 41%;
   --secondary-foreground: 0 0% 100%;
-  --muted: 36 41% 93%;
+  --muted: 36 100% 93%;
   --muted-foreground: 218 11% 46%;
   --accent: 0 52% 61%;
   --accent-foreground: 0 0% 100%;
@@ -202,7 +217,10 @@
   --db-color-border: #52667c;
   --db-color-border-strong: #8390a0;
   --db-color-action-primary-hover: #f09a82;
-  --db-color-action-secondary: #8c76a0;
+  --db-color-action-secondary: #c8b8d2;
+  --db-color-link: var(--db-color-morning-light);
+  --db-color-link-hover: #f09a82;
+  --db-color-highlight-text: #ed929d;
   --db-color-selected: #a84e55;
   --db-color-selected-subtle: #553e4b;
   --db-color-focus-ring: var(--db-color-morning-light);
@@ -210,6 +228,13 @@
   --db-color-warning: #e0b263;
   --db-color-error: #ed929d;
   --db-color-overlay: rgb(8 17 29 / 76%);
+  --db-color-input-background: #20344e;
+  --db-color-disabled-background: #2a3b50;
+  --db-color-disabled-text: #a99f93;
+  --db-color-navigation-background: #172a42;
+  --db-color-footer-background: #172a42;
+  --db-color-on-secondary: #172a42;
+  --db-color-on-status: #172a42;
 
   --db-background-rgb: 24 38 58;
   --db-background-subtle-rgb: 32 52 78;
@@ -221,7 +246,8 @@
   --db-border-rgb: 82 102 124;
   --db-border-strong-rgb: 131 144 160;
   --db-action-primary-hover-rgb: 240 154 130;
-  --db-action-secondary-rgb: 140 118 160;
+  --db-action-secondary-rgb: 200 184 210;
+  --db-on-secondary-rgb: 23 42 66;
   --db-selected-rgb: 168 78 85;
   --db-focus-ring-rgb: 255 223 171;
   --db-success-rgb: 121 184 156;
@@ -282,9 +308,13 @@ canvas {
 }
 
 a {
-  color: var(--db-color-action-secondary);
+  color: var(--db-color-link);
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.18em;
+}
+
+a:hover {
+  color: var(--db-color-link-hover);
 }
 
 :where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {

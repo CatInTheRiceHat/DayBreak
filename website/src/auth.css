@@ -1,36 +1,20 @@
-/* ─────────────────────────────────────────────────────────────────────────
-   Chrysalis auth + profile pages. Self-contained calm aesthetic (purple/gray,
-   butterfly), matching the feed's palette. The cx-* tokens are also used by
-   UserMenu inside the feed, where the feed's [data-algorithm] tokens supply the
-   same variables.
-   ───────────────────────────────────────────────────────────────────────── */
+/* Auth + profile pages consume the shared DayBreak semantic color system. */
 [data-cx] {
-  --bg: #faf9f6;
-  --bg-soft: #f2eef5;
-  --text: #2b2631;
-  --text-muted: #938e97;
-  --card: #ffffff;
-  --border: rgba(147, 142, 151, 0.28);
-  --accent: #7c6d8c;
-  --accent-soft: #ad9eb8;
-  --button-bg: rgba(250, 249, 246, 0.72);
+  --bg: var(--db-color-background);
+  --bg-soft: var(--db-color-background-subtle);
+  --text: var(--db-color-text-primary);
+  --text-muted: var(--db-color-text-muted);
+  --card: var(--db-color-surface);
+  --border: var(--db-color-border);
+  --accent: var(--db-color-link);
+  --accent-soft: var(--db-color-horizon-rose);
+  --button-bg: var(--db-color-surface-elevated);
 }
 /* Dark theme follows the app's in-app light/dark toggle (CxShell mirrors the
    feed's `chrysalis-algorithm-theme` setting onto data-theme), so the profile
    and auth pages stay in sync with the rest of the app rather than tracking the
    OS preference independently. When no app theme is saved, CxShell resolves the
    OS preference in JS and still sets data-theme accordingly. */
-[data-cx][data-theme="dark"] {
-  --bg: #161320;
-  --bg-soft: #1f1a2b;
-  --text: #efeaf3;
-  --text-muted: #a79fb2;
-  --card: #221c30;
-  --border: rgba(173, 158, 184, 0.22);
-  --accent: #c9b8d8;
-  --accent-soft: #8d7ca0;
-  --button-bg: rgba(34, 28, 48, 0.62);
-}
 
 .cx-shell {
   min-height: 100dvh;
@@ -132,7 +116,7 @@
   border: 1px solid var(--border);
   border-radius: 24px;
   padding: clamp(1.3rem, 4vw, 2rem);
-  box-shadow: 0 20px 54px rgba(43, 38, 49, 0.12);
+  box-shadow: 0 20px 54px color-mix(in srgb, var(--db-color-midnight-horizon) 12%, transparent);
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -187,7 +171,7 @@
 .cx-toggle strong { font-size: 0.9rem; }
 .cx-toggle small { color: var(--text-muted); font-size: 0.78rem; }
 
-.cx-form__error { margin: 0; color: #c0556a; font-size: 0.85rem; }
+.cx-form__error { margin: 0; color: var(--db-color-error); font-size: 0.85rem; }
 .cx-form__notice { margin: 0; color: var(--text-muted); font-size: 0.85rem; background: var(--bg-soft); border: 1px dashed var(--border); border-radius: 12px; padding: 10px 12px; }
 .cx-form__actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px; }
 
@@ -206,7 +190,8 @@
   cursor: pointer;
   text-decoration: none;
 }
-.cx-btn--primary { background: var(--accent); color: #fff; }
+.cx-btn--primary { background: var(--db-color-action-primary); color: var(--db-color-on-primary); }
+.cx-btn--primary:hover:not(:disabled) { background: var(--db-color-action-primary-hover); }
 .cx-btn--primary:disabled { opacity: 0.6; cursor: default; }
 .cx-btn--soft { background: var(--button-bg); border-color: var(--border); color: var(--text); }
 
@@ -214,11 +199,11 @@
 .cx-btn--google {
   width: 100%;
   gap: 10px;
-  background: #fff;
+  background: var(--db-color-surface);
   border-color: var(--border);
-  color: #1f1f1f;
+  color: var(--db-color-text-primary);
 }
-.cx-btn--google:hover:not(:disabled) { background: #f7f7f8; }
+.cx-btn--google:hover:not(:disabled) { background: var(--db-color-background-subtle); }
 .cx-btn--google:disabled { opacity: 0.6; cursor: default; }
 .cx-google-icon { flex: 0 0 auto; }
 
@@ -410,7 +395,7 @@
   position: absolute; right: -2px; bottom: -2px;
   width: 30px; height: 30px; border-radius: 50%;
   display: grid; place-items: center;
-  background: var(--accent); color: #fff;
+  background: var(--db-color-selected); color: var(--db-color-on-selected);
   border: 2px solid var(--card);
 }
 .cx-avataruploader__text { display: flex; flex-direction: column; }
@@ -423,7 +408,7 @@
   border: 1px solid var(--border);
   border-radius: 24px;
   padding: clamp(1.3rem, 4vw, 2rem);
-  box-shadow: 0 20px 54px rgba(43, 38, 49, 0.12);
+  box-shadow: 0 20px 54px color-mix(in srgb, var(--db-color-midnight-horizon) 12%, transparent);
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -476,7 +461,7 @@
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 14px;
-  box-shadow: 0 16px 44px rgba(43, 38, 49, 0.2);
+  box-shadow: 0 16px 44px color-mix(in srgb, var(--db-color-midnight-horizon) 20%, transparent);
   padding: 6px;
   display: flex; flex-direction: column; gap: 2px;
 }

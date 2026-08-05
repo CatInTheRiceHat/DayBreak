@@ -1,10 +1,10 @@
 import { motion } from 'motion/react';
 
 const PALETTES = [
-  'rgba(207,203,211,0.72)',
-  'rgba(173,158,184,0.48)',
-  'rgba(147,142,151,0.32)',
-  'rgba(124,109,140,0.18)',
+  'color-mix(in srgb, var(--db-color-morning-light) 72%, transparent)',
+  'color-mix(in srgb, var(--db-color-horizon-rose) 48%, transparent)',
+  'color-mix(in srgb, var(--db-color-sunrise-coral) 32%, transparent)',
+  'color-mix(in srgb, var(--db-color-twilight-violet) 18%, transparent)',
 ];
 
 export function FeedCard({ item, index }) {
@@ -18,8 +18,8 @@ export function FeedCard({ item, index }) {
       <div
         className="w-full h-24 rounded-lg flex items-center justify-center text-2xl"
         style={{
-          background: `linear-gradient(135deg, ${PALETTES[index % 4]}, rgba(250,249,246,0.54))`,
-          border: '1px solid rgba(147,142,151,0.26)',
+          background: `linear-gradient(135deg, ${PALETTES[index % 4]}, color-mix(in srgb, var(--db-color-surface-elevated) 54%, transparent))`,
+          border: '1px solid var(--db-color-border)',
         }}
       />
 
@@ -31,7 +31,7 @@ export function FeedCard({ item, index }) {
           {item.prosocial === 1 && (
             <span
               className="rounded-full px-2 py-0.5 font-body text-xs"
-              style={{ background: 'rgba(124,109,140,0.14)', color: '#7C6D8C' }}
+              style={{ background: 'color-mix(in srgb, var(--db-color-twilight-violet) 14%, transparent)', color: 'var(--db-color-link)' }}
             >
               prosocial
             </span>
@@ -39,7 +39,7 @@ export function FeedCard({ item, index }) {
           {item.risk > 0.5 && (
             <span
               className="rounded-full px-2 py-0.5 font-body text-xs"
-              style={{ background: 'rgba(207,203,211,0.45)', color: '#938E97' }}
+              style={{ background: 'color-mix(in srgb, var(--db-color-horizon-rose) 16%, transparent)', color: 'var(--db-color-highlight-text)' }}
             >
               risk
             </span>

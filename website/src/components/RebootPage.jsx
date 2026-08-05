@@ -446,9 +446,9 @@ function SectionFrame({ id, tone = 'paper', label, children }) {
     scrollYProgress,
     [0, 0.55, 1],
     [
-      '0 0 0 rgba(43, 38, 49, 0)',
-      '0 -18px 42px rgba(43, 38, 49, 0.08)',
-      '0 -34px 86px rgba(43, 38, 49, 0.18)',
+      '0 0 0 color-mix(in srgb, var(--db-color-midnight-horizon) 0%, transparent)',
+      '0 -18px 42px color-mix(in srgb, var(--db-color-midnight-horizon) 8%, transparent)',
+      '0 -34px 86px color-mix(in srgb, var(--db-color-midnight-horizon) 18%, transparent)',
     ],
   );
   const useFilingMotion = tone === 'paper';

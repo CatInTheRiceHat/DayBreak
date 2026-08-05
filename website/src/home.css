@@ -67,7 +67,7 @@
   border-radius: 12px;
   border: 1px solid var(--border);
   background: var(--button-bg);
-  color: var(--text);
+  color: var(--accent-soft);
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease;
 }
@@ -133,7 +133,7 @@
   border-color: transparent;
   color: var(--on-accent);
 }
-.home-btn--primary:hover { background: color-mix(in srgb, var(--accent) 86%, #000); }
+.home-btn--primary:hover { background: var(--db-color-action-primary-hover); }
 .home-btn--soft { background: color-mix(in srgb, var(--accent-soft) 16%, transparent); }
 .home-btn--chip { padding: 7px 13px; font-size: 0.82rem; }
 .home-btn.is-done { opacity: 0.6; cursor: default; }
@@ -241,7 +241,7 @@
 .wing-sheet__scrim {
   position: absolute;
   inset: 0;
-  background: rgba(20, 16, 28, 0.55);
+  background: color-mix(in srgb, var(--db-color-midnight-horizon) 55%, transparent);
   backdrop-filter: blur(2px);
 }
 .wing-sheet__panel {

@@ -4,7 +4,7 @@
 
 html {
   scroll-behavior: smooth;
-  background: #faf9f6;
+  background: var(--db-color-background);
   overflow-x: clip;
 }
 
@@ -12,7 +12,7 @@ body {
   margin: 0;
   min-height: 100vh;
   overflow-x: hidden;
-  background: #faf9f6;
+  background: var(--db-color-background);
   color: var(--ct-ink);
   font-family: "Montserrat", sans-serif;
   font-weight: 400;
@@ -40,23 +40,18 @@ a {
 }
 
 :root {
-  --ct-ink: #2b2631;
-  --ct-ink-soft: rgba(43, 38, 49, 0.68);
-  --ct-ink-faint: rgba(147, 142, 151, 0.84);
-  --ct-aqua: #7c6d8c;
-  --ct-aqua-deep: #7c6d8c;
-  --ct-paper: #faf9f6;
-  --ct-paper-2: #cfcbd3;
-  --ct-white: #faf9f6;
-  --ct-line: rgba(147, 142, 151, 0.34);
-  --ct-light-line: rgba(250, 249, 246, 0.28);
-  --ct-fog: #cfcbd3;
-  --ct-stone: #938e97;
-  --ct-charcoal: #2b2631;
-  --ct-charcoal-2: #393241;
-  --ct-purple: #7c6d8c;
-  --ct-lavender: #c9b8d8;
-  --ct-card-border: #b0acb5;
+  --ct-ink: var(--db-color-text-primary);
+  --ct-ink-soft: color-mix(in srgb, var(--db-color-text-primary) 72%, transparent);
+  --ct-ink-faint: var(--db-color-text-muted);
+  --ct-aqua-deep: var(--db-color-twilight-violet);
+  --ct-paper: var(--db-color-background);
+  --ct-white: var(--db-color-surface);
+  --ct-line: color-mix(in srgb, var(--db-color-border-strong) 34%, transparent);
+  --ct-light-line: color-mix(in srgb, var(--db-color-surface) 28%, transparent);
+  --ct-stone: var(--db-color-text-muted);
+  --ct-charcoal-2: color-mix(in srgb, var(--db-color-midnight-horizon) 78%, var(--db-color-twilight-violet));
+  --ct-purple: var(--db-color-twilight-violet);
+  --ct-lavender: var(--db-color-selected-subtle);
   --ct-reveal-gradient: radial-gradient(circle at 32% 28%, rgba(var(--wing-blue-rgb), 0.34), transparent 36%),
     radial-gradient(circle at 72% 38%, rgba(var(--wing-pink-rgb), 0.28), transparent 36%),
     radial-gradient(circle at 42% 78%, rgba(var(--wing-yellow-rgb), 0.24), transparent 38%);
@@ -69,23 +64,22 @@ a {
   --ct-step-1: clamp(1.2rem, 0.9rem + 1.2vw, 2rem);
   --ct-step-2: clamp(2.4rem, 1.16rem + 5vw, 7.8rem);
   --ct-step-3: clamp(4.2rem, 1.25rem + 10.5vw, 14rem);
-  --wing-green: #938e97;
-  --wing-blue: #cfcbd3;
-  --wing-pink: #c9b8d8;
-  --wing-yellow: #7c6d8c;
-  --wing-green-rgb: 147, 142, 151;
-  --wing-blue-rgb: 207, 203, 211;
-  --wing-pink-rgb: 201, 184, 216;
-  --wing-yellow-rgb: 124, 109, 140;
-  --wing-ink: #7c6d8c;
+  --wing-green: var(--db-color-morning-light);
+  --wing-blue: var(--db-color-twilight-violet);
+  --wing-pink: var(--db-color-horizon-rose);
+  --wing-yellow: var(--db-color-sunrise-coral);
+  --wing-blue-rgb: 109, 89, 122;
+  --wing-pink-rgb: 206, 105, 105;
+  --wing-yellow-rgb: 230, 134, 108;
+  --wing-ink: var(--db-color-midnight-horizon);
 }
 
 .ct-page {
   position: relative;
   isolation: isolate;
   background:
-    linear-gradient(rgba(147, 142, 151, 0.13) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(147, 142, 151, 0.1) 1px, transparent 1px),
+    linear-gradient(color-mix(in srgb, var(--db-color-text-muted) 13%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--db-color-text-muted) 10%, transparent) 1px, transparent 1px),
     var(--ct-paper);
   background-size: 58px 58px, 58px 58px, auto;
 }
@@ -159,7 +153,7 @@ a {
 }
 
 .ct-overlay-brand .ct-overlay-brand__mark {
-  filter: drop-shadow(0 0 18px rgba(201, 184, 216, 0.34));
+  filter: drop-shadow(0 0 18px color-mix(in srgb, var(--db-color-horizon-rose) 34%, transparent));
 }
 
 .ct-system-rail {
@@ -184,7 +178,7 @@ a {
 }
 
 .ct-kicker--light {
-  color: rgba(250, 249, 246, 0.62);
+  color: color-mix(in srgb, var(--db-color-background) 62%, transparent);
 }
 
 .ct-hero {
@@ -196,8 +190,8 @@ a {
   align-items: stretch;
   padding: clamp(6rem, 14vh, 10rem) var(--ct-pad) clamp(3.5rem, 9vh, 7rem);
   background:
-    radial-gradient(circle at 78% 42%, rgba(207, 203, 211, 0.42), transparent 30rem),
-    linear-gradient(180deg, rgba(250, 249, 246, 0.98), rgba(250, 249, 246, 0.9));
+    radial-gradient(circle at 78% 42%, color-mix(in srgb, var(--db-color-morning-light) 42%, transparent), transparent 30rem),
+    linear-gradient(180deg, color-mix(in srgb, var(--db-color-background) 98%, transparent), color-mix(in srgb, var(--db-color-background) 90%, transparent));
 }
 
 .ct-hero::before {
@@ -207,10 +201,10 @@ a {
   z-index: 0;
   pointer-events: none;
   background:
-    linear-gradient(rgba(147, 142, 151, 0.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(147, 142, 151, 0.1) 1px, transparent 1px),
-    radial-gradient(circle at 74% 45%, rgba(124, 109, 140, 0.16), transparent 28rem),
-    radial-gradient(circle at 22% 84%, rgba(147, 142, 151, 0.2), transparent 25rem);
+    linear-gradient(color-mix(in srgb, var(--db-color-text-muted) 12%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--db-color-text-muted) 10%, transparent) 1px, transparent 1px),
+    radial-gradient(circle at 74% 45%, color-mix(in srgb, var(--db-color-twilight-violet) 16%, transparent), transparent 28rem),
+    radial-gradient(circle at 22% 84%, color-mix(in srgb, var(--db-color-text-muted) 20%, transparent), transparent 25rem);
   background-size: 54px 54px, 54px 54px, auto, auto;
   mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 82%, transparent);
 }
@@ -323,7 +317,7 @@ a {
 .ct-quote-credit {
   display: inline-flex;
   margin-top: clamp(1.75rem, 3vw, 2.6rem);
-  color: rgba(250, 249, 246, 0.54);
+  color: color-mix(in srgb, var(--db-color-background) 54%, transparent);
   font-size: 0.76rem;
   letter-spacing: 0.16em;
   line-height: 1.2;
@@ -355,7 +349,7 @@ a {
   padding: 0.76rem 1.22rem 0.76rem 1.35rem;
   color: var(--ct-white);
   background: var(--ct-purple);
-  border: 1px solid rgba(124, 109, 140, 0.9);
+  border: 1px solid color-mix(in srgb, var(--db-color-twilight-violet) 90%, transparent);
   transition: transform 220ms ease, background 220ms ease;
 }
 
@@ -366,24 +360,24 @@ a {
 
 .ct-button--survey {
   color: var(--ct-white);
-  background: #938e97;
-  border-color: #938e97;
+  background: var(--db-color-text-muted);
+  border-color: var(--db-color-text-muted);
 }
 
 .ct-button--survey:hover {
   color: var(--ct-white);
-  background: #938e97;
+  background: var(--db-color-text-muted);
 }
 
 .ct-button--ghost {
   color: var(--ct-ink);
   background: transparent;
-  border: 1px solid rgba(124, 109, 140, 0.5);
+  border: 1px solid color-mix(in srgb, var(--db-color-twilight-violet) 50%, transparent);
 }
 
 .ct-button--ghost:hover {
   color: var(--ct-ink);
-  background: rgba(201, 184, 216, 0.2);
+  background: color-mix(in srgb, var(--db-color-horizon-rose) 20%, transparent);
 }
 
 .ct-pagination {
@@ -408,13 +402,13 @@ a {
   z-index: 3;
   pointer-events: none;
   background:
-    linear-gradient(90deg, rgba(250, 249, 246, 0.98) 0%, rgba(250, 249, 246, 0.76) 42%, rgba(250, 249, 246, 0.18) 78%, rgba(250, 249, 246, 0) 100%),
-    radial-gradient(circle at 26% 48%, rgba(250, 249, 246, 0.86), transparent 24rem);
+    linear-gradient(90deg, color-mix(in srgb, var(--db-color-background) 98%, transparent) 0%, color-mix(in srgb, var(--db-color-background) 76%, transparent) 42%, color-mix(in srgb, var(--db-color-background) 18%, transparent) 78%, color-mix(in srgb, var(--db-color-background) 0%, transparent) 100%),
+    radial-gradient(circle at 26% 48%, color-mix(in srgb, var(--db-color-background) 86%, transparent), transparent 24rem);
 }
 
 .ct-hero-orbit {
   position: absolute;
-  border: 1px solid rgba(147, 142, 151, 0.32);
+  border: 1px solid color-mix(in srgb, var(--db-color-text-muted) 32%, transparent);
   border-radius: 48% 52% 44% 56%;
 }
 
@@ -427,14 +421,14 @@ a {
 .ct-hero-orbit--two {
   width: min(68vw, 580px);
   aspect-ratio: 1.08;
-  border-color: rgba(124, 109, 140, 0.24);
+  border-color: color-mix(in srgb, var(--db-color-twilight-violet) 24%, transparent);
   transform: rotate(16deg);
 }
 
 .ct-hero-orbit--three {
   width: min(42vw, 360px);
   aspect-ratio: 1;
-  border-color: rgba(147, 142, 151, 0.24);
+  border-color: color-mix(in srgb, var(--db-color-text-muted) 24%, transparent);
   transform: rotate(35deg);
 }
 
@@ -540,11 +534,11 @@ a {
   min-width: 138px;
   border-radius: 4px;
   padding: 0.8rem 0.95rem;
-  background: rgba(250, 249, 246, 0.78);
-  border: 1px solid rgba(147, 142, 151, 0.3);
+  background: color-mix(in srgb, var(--db-color-background) 78%, transparent);
+  border: 1px solid color-mix(in srgb, var(--db-color-text-muted) 30%, transparent);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 22px 48px rgba(43, 38, 49, 0.09);
+  box-shadow: 0 22px 48px color-mix(in srgb, var(--db-color-midnight-horizon) 9%, transparent);
 }
 
 .ct-pulse-card span {
@@ -585,7 +579,7 @@ a {
   margin-top: clamp(1.8rem, 4vw, 3rem);
   background: var(--ct-line);
   border: 1px solid var(--ct-line);
-  box-shadow: 0 18px 46px rgba(43, 38, 49, 0.08);
+  box-shadow: 0 18px 46px color-mix(in srgb, var(--db-color-midnight-horizon) 8%, transparent);
 }
 
 .ct-origin-card {
@@ -595,7 +589,7 @@ a {
   justify-content: space-between;
   gap: 0.8rem;
   padding: 0.9rem;
-  background: rgba(250, 249, 246, 0.74);
+  background: color-mix(in srgb, var(--db-color-background) 74%, transparent);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
@@ -625,8 +619,8 @@ a {
 .ct-section-shell--aqua,
 .ct-section-shell--ink {
   background:
-    radial-gradient(circle at 82% 18%, rgba(201, 184, 216, 0.18), transparent 26rem),
-    linear-gradient(135deg, #2b2631, #393241);
+    radial-gradient(circle at 82% 18%, color-mix(in srgb, var(--db-color-horizon-rose) 18%, transparent), transparent 26rem),
+    linear-gradient(135deg, var(--db-color-midnight-horizon), color-mix(in srgb, var(--db-color-midnight-horizon) 78%, var(--db-color-twilight-violet)));
 }
 
 .ct-section-shell--paper {
@@ -650,8 +644,8 @@ a {
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(rgba(147, 142, 151, 0.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(147, 142, 151, 0.1) 1px, transparent 1px);
+    linear-gradient(color-mix(in srgb, var(--db-color-text-muted) 12%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--db-color-text-muted) 10%, transparent) 1px, transparent 1px);
   background-size: 54px 54px;
   mask-image: linear-gradient(to bottom, transparent, black 18%, black 78%, transparent);
 }
@@ -662,7 +656,7 @@ a {
   inset: 0;
   pointer-events: none;
   opacity: 0;
-  background: linear-gradient(to bottom, rgba(43, 38, 49, 0.18), transparent 18%);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--db-color-midnight-horizon) 18%, transparent), transparent 18%);
   transition: opacity 240ms ease;
 }
 
@@ -674,28 +668,28 @@ a {
 .ct-section-shell--ink .ct-section {
   color: var(--ct-white);
   background:
-    radial-gradient(circle at 82% 18%, rgba(201, 184, 216, 0.18), transparent 26rem),
-    linear-gradient(135deg, #2b2631, #393241);
+    radial-gradient(circle at 82% 18%, color-mix(in srgb, var(--db-color-horizon-rose) 18%, transparent), transparent 26rem),
+    linear-gradient(135deg, var(--db-color-midnight-horizon), color-mix(in srgb, var(--db-color-midnight-horizon) 78%, var(--db-color-twilight-violet)));
 }
 
 .ct-section-shell--aqua .ct-section::before,
 .ct-section-shell--ink .ct-section::before {
   background:
-    linear-gradient(rgba(250, 249, 246, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(250, 249, 246, 0.05) 1px, transparent 1px);
+    linear-gradient(color-mix(in srgb, var(--db-color-background) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--db-color-background) 5%, transparent) 1px, transparent 1px);
   background-size: 54px 54px;
 }
 
 .ct-section-shell--ink .ct-section {
   background:
-    radial-gradient(circle at 78% 18%, rgba(201, 184, 216, 0.18), transparent 28rem),
-    linear-gradient(135deg, #2b2631, #393241 60%, #7c6d8c);
+    radial-gradient(circle at 78% 18%, color-mix(in srgb, var(--db-color-horizon-rose) 18%, transparent), transparent 28rem),
+    linear-gradient(135deg, var(--db-color-midnight-horizon), color-mix(in srgb, var(--db-color-midnight-horizon) 78%, var(--db-color-twilight-violet)) 60%, var(--db-color-twilight-violet));
 }
 
 .ct-section-shell--paper .ct-section {
   background:
-    radial-gradient(circle at 86% 12%, rgba(124, 109, 140, 0.12), transparent 26rem),
-    radial-gradient(circle at 8% 82%, rgba(207, 203, 211, 0.36), transparent 24rem),
+    radial-gradient(circle at 86% 12%, color-mix(in srgb, var(--db-color-twilight-violet) 12%, transparent), transparent 26rem),
+    radial-gradient(circle at 8% 82%, color-mix(in srgb, var(--db-color-morning-light) 36%, transparent), transparent 24rem),
     var(--ct-paper);
 }
 
@@ -743,7 +737,7 @@ a {
 
 .ct-section-shell--aqua .ct-copy-block p,
 .ct-section-shell--ink .ct-copy-block p {
-  color: rgba(250, 249, 246, 0.72);
+  color: color-mix(in srgb, var(--db-color-background) 72%, transparent);
 }
 
 .ct-copy-block--narrow {
@@ -799,7 +793,7 @@ a {
 }
 
 .ct-metric-row span {
-  color: rgba(250, 249, 246, 0.68);
+  color: color-mix(in srgb, var(--db-color-background) 68%, transparent);
   font-size: var(--ct-step-0);
   line-height: 1.5;
 }
@@ -818,7 +812,7 @@ a {
   flex-direction: column;
   justify-content: space-between;
   padding: clamp(1.3rem, 3vw, 2.2rem);
-  background: rgba(250, 249, 246, 0.78);
+  background: color-mix(in srgb, var(--db-color-background) 78%, transparent);
   transition: background 220ms ease;
 }
 
@@ -863,15 +857,15 @@ a {
 }
 
 .ct-section-shell--ink .ct-signal-grid {
-  background: rgba(250, 249, 246, 0.16);
-  border-color: rgba(250, 249, 246, 0.18);
+  background: color-mix(in srgb, var(--db-color-background) 16%, transparent);
+  border-color: color-mix(in srgb, var(--db-color-background) 18%, transparent);
 }
 
 .ct-section-shell--ink .ct-signal-card {
   color: var(--ct-white);
   background:
-    radial-gradient(circle at 84% 14%, rgba(250, 249, 246, 0.1), transparent 12rem),
-    rgba(250, 249, 246, 0.07);
+    radial-gradient(circle at 84% 14%, color-mix(in srgb, var(--db-color-background) 10%, transparent), transparent 12rem),
+    color-mix(in srgb, var(--db-color-background) 7%, transparent);
   border-color: transparent;
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
@@ -879,13 +873,13 @@ a {
 
 .ct-section-shell--ink .ct-signal-card:hover {
   background:
-    radial-gradient(circle at 84% 14%, rgba(250, 249, 246, 0.14), transparent 12rem),
-    rgba(250, 249, 246, 0.11);
+    radial-gradient(circle at 84% 14%, color-mix(in srgb, var(--db-color-background) 14%, transparent), transparent 12rem),
+    color-mix(in srgb, var(--db-color-background) 11%, transparent);
 }
 
 .ct-section-shell--ink .ct-signal-card__header,
 .ct-section-shell--ink .ct-signal-card span {
-  color: rgba(250, 249, 246, 0.54);
+  color: color-mix(in srgb, var(--db-color-background) 54%, transparent);
 }
 
 .ct-section-shell--ink .ct-signal-card h3 {
@@ -893,7 +887,7 @@ a {
 }
 
 .ct-section-shell--ink .ct-signal-card p {
-  color: rgba(250, 249, 246, 0.68);
+  color: color-mix(in srgb, var(--db-color-background) 68%, transparent);
 }
 
 .ct-mode-showcase {
@@ -925,9 +919,9 @@ a {
   border-radius: 22px;
   color: var(--ct-white);
   background:
-    radial-gradient(circle at 76% 14%, rgba(250, 249, 246, 0.12), transparent 12rem),
-    rgba(250, 249, 246, 0.07);
-  border: 1px solid rgba(250, 249, 246, 0.18);
+    radial-gradient(circle at 76% 14%, color-mix(in srgb, var(--db-color-background) 12%, transparent), transparent 12rem),
+    color-mix(in srgb, var(--db-color-background) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--db-color-background) 18%, transparent);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
@@ -941,7 +935,7 @@ a {
 .ct-mode-card__rule {
   flex: 1;
   height: 1px;
-  background: rgba(250, 249, 246, 0.22);
+  background: color-mix(in srgb, var(--db-color-background) 22%, transparent);
 }
 
 .ct-mode-card__ring {
@@ -951,7 +945,7 @@ a {
   width: clamp(72px, 9vw, 92px);
   aspect-ratio: 1;
   border-radius: 999px;
-  border: 1px solid rgba(250, 249, 246, 0.42);
+  border: 1px solid color-mix(in srgb, var(--db-color-background) 42%, transparent);
 }
 
 .ct-mode-card__ring img {
@@ -962,7 +956,7 @@ a {
 
 .ct-mode-card__index {
   margin-top: clamp(1.4rem, 3vw, 2.2rem);
-  color: rgba(250, 249, 246, 0.5);
+  color: color-mix(in srgb, var(--db-color-background) 50%, transparent);
   font-size: 0.76rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -979,7 +973,7 @@ a {
 
 .ct-mode-card p {
   margin: 1.1rem 0 0;
-  color: rgba(250, 249, 246, 0.7);
+  color: color-mix(in srgb, var(--db-color-background) 70%, transparent);
   font-size: 0.98rem;
   line-height: 1.5;
 }
@@ -999,15 +993,15 @@ a {
   aspect-ratio: 1;
   border-radius: 999px;
   color: var(--ct-white);
-  background: rgba(250, 249, 246, 0.06);
-  border: 1px solid rgba(250, 249, 246, 0.28);
+  background: color-mix(in srgb, var(--db-color-background) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--db-color-background) 28%, transparent);
   cursor: pointer;
   transition: background 200ms ease, border-color 200ms ease, opacity 200ms ease;
 }
 
 .ct-mode-carousel__arrow:hover:not(:disabled) {
-  background: rgba(250, 249, 246, 0.14);
-  border-color: rgba(250, 249, 246, 0.5);
+  background: color-mix(in srgb, var(--db-color-background) 14%, transparent);
+  border-color: color-mix(in srgb, var(--db-color-background) 50%, transparent);
 }
 
 .ct-mode-carousel__arrow:disabled {
@@ -1028,12 +1022,12 @@ a {
   border-radius: 999px;
   border: none;
   cursor: pointer;
-  background: rgba(250, 249, 246, 0.3);
+  background: color-mix(in srgb, var(--db-color-background) 30%, transparent);
   transition: background 200ms ease, transform 200ms ease;
 }
 
 .ct-mode-carousel__dot:hover {
-  background: rgba(250, 249, 246, 0.55);
+  background: color-mix(in srgb, var(--db-color-background) 55%, transparent);
 }
 
 .ct-mode-carousel__dot.is-active {
@@ -1159,7 +1153,7 @@ a {
   top: clamp(2.8rem, 6vh, 3.5rem);
   height: 1px;
   overflow: hidden;
-  background: rgba(124, 109, 140, 0.34);
+  background: color-mix(in srgb, var(--db-color-twilight-violet) 34%, transparent);
 }
 
 .ct-journey-progress__fill {
@@ -1216,8 +1210,8 @@ a {
   flex: 0 0 auto;
   object-fit: contain;
   filter:
-    drop-shadow(0 10px 18px rgba(43, 38, 49, 0.12))
-    drop-shadow(0 0 14px rgba(124, 109, 140, 0.16));
+    drop-shadow(0 10px 18px color-mix(in srgb, var(--db-color-midnight-horizon) 12%, transparent))
+    drop-shadow(0 0 14px color-mix(in srgb, var(--db-color-twilight-violet) 16%, transparent));
 }
 
 .ct-journey-caption h3 {
@@ -1260,9 +1254,9 @@ a {
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(rgba(147, 142, 151, 0.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(147, 142, 151, 0.09) 1px, transparent 1px),
-    radial-gradient(circle at 50% 0%, rgba(201, 184, 216, 0.2), transparent 18rem);
+    linear-gradient(color-mix(in srgb, var(--db-color-text-muted) 12%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--db-color-text-muted) 9%, transparent) 1px, transparent 1px),
+    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--db-color-horizon-rose) 20%, transparent), transparent 18rem);
   background-size: 44px 44px, 44px 44px, auto;
   mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 86%, transparent);
 }
@@ -1322,7 +1316,7 @@ a {
   background: var(--ct-paper);
   border: 1px solid var(--ct-line);
   border-radius: 999px;
-  box-shadow: 0 12px 28px rgba(43, 38, 49, 0.08);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--db-color-midnight-horizon) 8%, transparent);
   isolation: isolate;
   overflow: visible;
   transition: color 240ms ease, border 240ms ease, background 240ms ease, transform 240ms ease, box-shadow 240ms ease;
@@ -1357,23 +1351,23 @@ a {
 }
 
 .ct-journey-node:not(.is-active) .ct-journey-node__icon {
-  color: rgba(147, 142, 151, 0.72);
+  color: color-mix(in srgb, var(--db-color-text-muted) 72%, transparent);
   background: var(--ct-paper);
 }
 
 .ct-journey-node:not(.is-active) .ct-journey-node__label {
-  color: rgba(147, 142, 151, 0.42);
+  color: color-mix(in srgb, var(--db-color-text-muted) 42%, transparent);
 }
 
 .ct-journey-node.is-past .ct-journey-node__label {
-  color: rgba(147, 142, 151, 0.6);
+  color: color-mix(in srgb, var(--db-color-text-muted) 60%, transparent);
 }
 
 .ct-journey-node.is-past .ct-journey-node__icon {
   color: var(--ct-white);
   background: var(--ct-purple);
-  border-color: rgba(124, 109, 140, 0.5);
-  box-shadow: 0 14px 32px rgba(124, 109, 140, 0.18);
+  border-color: color-mix(in srgb, var(--db-color-twilight-violet) 50%, transparent);
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--db-color-twilight-violet) 18%, transparent);
 }
 
 .ct-journey-node.is-past .ct-journey-node__icon::before {
@@ -1383,8 +1377,8 @@ a {
 .ct-journey-node.is-active .ct-journey-node__icon {
   color: var(--ct-white);
   background: var(--ct-purple);
-  border-color: rgba(124, 109, 140, 0.55);
-  box-shadow: 0 18px 40px rgba(124, 109, 140, 0.24);
+  border-color: color-mix(in srgb, var(--db-color-twilight-violet) 55%, transparent);
+  box-shadow: 0 18px 40px color-mix(in srgb, var(--db-color-twilight-violet) 24%, transparent);
   transform: scale(1.08);
 }
 
@@ -1478,7 +1472,7 @@ a {
 }
 
 .ct-journey-artifact:focus-visible {
-  outline: 2px solid rgba(124, 109, 140, 0.72);
+  outline: 2px solid color-mix(in srgb, var(--db-color-twilight-violet) 72%, transparent);
   outline-offset: 6px;
 }
 
@@ -1493,12 +1487,12 @@ a {
   height: auto;
   display: block;
   object-fit: contain;
-  background: rgba(250, 249, 246, 0.94);
-  border: 1px solid rgba(147, 142, 151, 0.26);
+  background: color-mix(in srgb, var(--db-color-background) 94%, transparent);
+  border: 1px solid color-mix(in srgb, var(--db-color-text-muted) 26%, transparent);
   border-radius: 6px;
   box-shadow:
-    0 24px 48px rgba(43, 38, 49, 0.18),
-    0 0 28px rgba(124, 109, 140, 0.16);
+    0 24px 48px color-mix(in srgb, var(--db-color-midnight-horizon) 18%, transparent),
+    0 0 28px color-mix(in srgb, var(--db-color-twilight-violet) 16%, transparent);
   mix-blend-mode: multiply;
   transform: translateZ(22px);
   backface-visibility: hidden;
@@ -1511,8 +1505,8 @@ a {
   border-radius: 0;
   box-shadow: none;
   filter:
-    drop-shadow(0 28px 46px rgba(43, 38, 49, 0.18))
-    drop-shadow(0 0 30px rgba(124, 109, 140, 0.22));
+    drop-shadow(0 28px 46px color-mix(in srgb, var(--db-color-midnight-horizon) 18%, transparent))
+    drop-shadow(0 0 30px color-mix(in srgb, var(--db-color-twilight-violet) 22%, transparent));
   mix-blend-mode: normal;
 }
 
@@ -1521,8 +1515,8 @@ a {
   border: 0;
   box-shadow: none;
   filter:
-    drop-shadow(0 24px 42px rgba(43, 38, 49, 0.16))
-    drop-shadow(0 0 26px rgba(124, 109, 140, 0.14));
+    drop-shadow(0 24px 42px color-mix(in srgb, var(--db-color-midnight-horizon) 16%, transparent))
+    drop-shadow(0 0 26px color-mix(in srgb, var(--db-color-twilight-violet) 14%, transparent));
   mix-blend-mode: normal;
 }
 
@@ -1532,12 +1526,12 @@ a {
 }
 
 .ct-journey-artifact--chrysalis-code img {
-  background: #1d1726;
-  border: 1px solid rgba(250, 249, 246, 0.18);
+  background: var(--db-color-midnight-horizon);
+  border: 1px solid color-mix(in srgb, var(--db-color-background) 18%, transparent);
   border-radius: 10px;
   box-shadow:
-    0 28px 54px rgba(43, 38, 49, 0.24),
-    0 0 34px rgba(124, 109, 140, 0.18);
+    0 28px 54px color-mix(in srgb, var(--db-color-midnight-horizon) 24%, transparent),
+    0 0 34px color-mix(in srgb, var(--db-color-twilight-violet) 18%, transparent);
   mix-blend-mode: normal;
 }
 
@@ -1600,10 +1594,10 @@ a {
   top: 38%;
   overflow: hidden;
   border-radius: 24%;
-  background: rgba(250, 249, 246, 0.92);
+  background: color-mix(in srgb, var(--db-color-background) 92%, transparent);
   box-shadow:
-    0 24px 46px rgba(43, 38, 49, 0.16),
-    0 0 28px rgba(124, 109, 140, 0.18);
+    0 24px 46px color-mix(in srgb, var(--db-color-midnight-horizon) 16%, transparent),
+    0 0 28px color-mix(in srgb, var(--db-color-twilight-violet) 18%, transparent);
   clip-path: inset(0 round 24%);
   --artifact-rotate: -8deg;
 }
@@ -1644,8 +1638,8 @@ a {
   aspect-ratio: 1;
   object-fit: contain;
   filter:
-    drop-shadow(0 18px 28px rgba(43, 38, 49, 0.14))
-    drop-shadow(0 0 24px rgba(124, 109, 140, 0.2));
+    drop-shadow(0 18px 28px color-mix(in srgb, var(--db-color-midnight-horizon) 14%, transparent))
+    drop-shadow(0 0 24px color-mix(in srgb, var(--db-color-twilight-violet) 20%, transparent));
 }
 
 .ct-method-deck {
@@ -1661,8 +1655,8 @@ a {
   border-radius: 4px;
   padding: clamp(1.25rem, 3vw, 2.2rem);
   color: var(--ct-white);
-  background: rgba(250, 249, 246, 0.08);
-  border: 1px solid rgba(250, 249, 246, 0.2);
+  background: color-mix(in srgb, var(--db-color-background) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--db-color-background) 20%, transparent);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
@@ -1675,7 +1669,7 @@ a {
 }
 
 .ct-method-card span {
-  color: rgba(250, 249, 246, 0.52);
+  color: color-mix(in srgb, var(--db-color-background) 52%, transparent);
 }
 
 .ct-method-card h3 {
@@ -1683,7 +1677,7 @@ a {
 }
 
 .ct-method-card p {
-  color: rgba(250, 249, 246, 0.68);
+  color: color-mix(in srgb, var(--db-color-background) 68%, transparent);
 }
 
 .ct-artifact-preview {
@@ -1694,8 +1688,8 @@ a {
   place-items: center;
   padding: clamp(4.5rem, 10vh, 7rem) clamp(1rem, 3vw, 2.5rem) clamp(2rem, 5vh, 3.5rem);
   background:
-    radial-gradient(circle at 70% 28%, rgba(124, 109, 140, 0.34), transparent 32rem),
-    rgba(18, 13, 25, 0.76);
+    radial-gradient(circle at 70% 28%, color-mix(in srgb, var(--db-color-twilight-violet) 34%, transparent), transparent 32rem),
+    color-mix(in srgb, var(--db-color-midnight-horizon) 76%, transparent);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
@@ -1707,7 +1701,7 @@ a {
   display: grid;
   justify-items: center;
   gap: 0.9rem;
-  color: rgba(250, 249, 246, 0.74);
+  color: color-mix(in srgb, var(--db-color-background) 74%, transparent);
 }
 
 .ct-artifact-preview__panel img {
@@ -1719,7 +1713,7 @@ a {
   background: transparent;
   box-shadow:
     0 44px 100px rgba(0, 0, 0, 0.42),
-    0 0 80px rgba(124, 109, 140, 0.28);
+    0 0 80px color-mix(in srgb, var(--db-color-twilight-violet) 28%, transparent);
 }
 
 .ct-artifact-preview__panel span {
@@ -1739,8 +1733,8 @@ a {
   place-items: center;
   padding: 0;
   color: var(--ct-white);
-  background: rgba(43, 38, 49, 0.76);
-  border: 1px solid rgba(250, 249, 246, 0.28);
+  background: color-mix(in srgb, var(--db-color-midnight-horizon) 76%, transparent);
+  border: 1px solid color-mix(in srgb, var(--db-color-background) 28%, transparent);
   border-radius: 999px;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -1749,7 +1743,7 @@ a {
 
 .ct-artifact-preview__close:hover {
   transform: translateY(-2px);
-  background: rgba(124, 109, 140, 0.86);
+  background: color-mix(in srgb, var(--db-color-twilight-violet) 86%, transparent);
 }
 
 .ct-note-list {
@@ -1785,9 +1779,9 @@ a {
   padding: clamp(1.4rem, 3.5vw, 2.6rem);
   color: var(--ct-white);
   background:
-    radial-gradient(circle at 74% 12%, rgba(250, 249, 246, 0.16), transparent 17rem),
-    rgba(250, 249, 246, 0.08);
-  border: 1px solid rgba(250, 249, 246, 0.22);
+    radial-gradient(circle at 74% 12%, color-mix(in srgb, var(--db-color-background) 16%, transparent), transparent 17rem),
+    color-mix(in srgb, var(--db-color-background) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--db-color-background) 22%, transparent);
   overflow: hidden;
 }
 
@@ -1830,7 +1824,7 @@ a {
 
 .ct-profile-card span {
   grid-column: 1;
-  color: rgba(250, 249, 246, 0.54);
+  color: color-mix(in srgb, var(--db-color-background) 54%, transparent);
 }
 
 .ct-profile-card h3 {
@@ -1854,8 +1848,8 @@ a {
   align-items: center;
   gap: 0.7rem;
   padding: 0.72rem 0;
-  color: rgba(250, 249, 246, 0.76);
-  border-top: 1px solid rgba(250, 249, 246, 0.18);
+  color: color-mix(in srgb, var(--db-color-background) 76%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--db-color-background) 18%, transparent);
   transition: color 180ms ease, transform 180ms ease;
 }
 
@@ -1872,11 +1866,11 @@ a {
   flex-direction: column;
   justify-content: space-between;
   padding: clamp(6rem, 12vw, 9rem) var(--ct-pad) clamp(1.6rem, 4vw, 3rem);
-  color: var(--ct-ink);
+  color: var(--db-color-morning-light);
   background:
-    radial-gradient(circle at 82% 20%, rgba(201, 184, 216, 0.2), transparent 26rem),
-    radial-gradient(circle at 12% 82%, rgba(207, 203, 211, 0.34), transparent 24rem),
-    var(--ct-paper);
+    radial-gradient(circle at 82% 20%, color-mix(in srgb, var(--db-color-horizon-rose) 20%, transparent), transparent 26rem),
+    radial-gradient(circle at 12% 82%, color-mix(in srgb, var(--db-color-sunrise-coral) 16%, transparent), transparent 24rem),
+    var(--db-color-footer-background);
 }
 
 .ct-footer::before {
@@ -1886,13 +1880,13 @@ a {
   z-index: -1;
   pointer-events: none;
   background:
-    linear-gradient(rgba(147, 142, 151, 0.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(147, 142, 151, 0.09) 1px, transparent 1px);
+    linear-gradient(color-mix(in srgb, var(--db-color-morning-light) 12%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--db-color-morning-light) 9%, transparent) 1px, transparent 1px);
   background-size: 58px 58px, 58px 58px;
 }
 
 .ct-footer .ct-kicker--light {
-  color: var(--ct-ink-faint);
+  color: color-mix(in srgb, var(--db-color-morning-light) 78%, transparent);
 }
 
 .ct-footer__heading {
@@ -1905,7 +1899,7 @@ a {
   max-width: 980px;
   margin-left: auto;
   margin-right: auto;
-  color: var(--ct-ink);
+  color: var(--db-color-morning-light);
   font-size: clamp(3.35rem, 9vw, 10.5rem);
   line-height: 0.88;
 }
@@ -1913,7 +1907,7 @@ a {
 .ct-footer__lede {
   max-width: 680px;
   margin: clamp(1.2rem, 3vw, 2rem) auto 0;
-  color: var(--ct-ink-soft);
+  color: color-mix(in srgb, var(--db-color-morning-light) 82%, transparent);
   font-size: var(--ct-step-0);
   line-height: 1.45;
 }
@@ -1923,7 +1917,7 @@ a {
   margin: clamp(4rem, 8vw, 7rem) auto;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  border-top: 1px solid var(--ct-line);
+  border-top: 1px solid color-mix(in srgb, var(--db-color-morning-light) 24%, transparent);
 }
 
 .ct-footer-card {
@@ -1932,13 +1926,13 @@ a {
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 1rem;
-  border-bottom: 1px solid var(--ct-line);
-  color: rgba(43, 38, 49, 0.72);
+  border-bottom: 1px solid color-mix(in srgb, var(--db-color-morning-light) 24%, transparent);
+  color: color-mix(in srgb, var(--db-color-morning-light) 86%, transparent);
   transition: color 180ms ease, padding 180ms ease;
 }
 
 .ct-footer-card:hover {
-  color: var(--ct-purple);
+  color: var(--db-color-sunrise-coral);
   padding-left: 0.7rem;
 }
 
@@ -1966,15 +1960,15 @@ a {
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 1rem;
-  color: rgba(147, 142, 151, 0.82);
+  color: color-mix(in srgb, var(--db-color-morning-light) 72%, transparent);
   font-size: 0.84rem;
 }
 
 .liquid-glass,
 .liquid-glass-strong {
-  background: rgba(250, 249, 246, 0.78);
-  border: 1px solid rgba(147, 142, 151, 0.28);
-  box-shadow: 0 18px 42px rgba(43, 38, 49, 0.08);
+  background: color-mix(in srgb, var(--db-color-background) 78%, transparent);
+  border: 1px solid color-mix(in srgb, var(--db-color-text-muted) 28%, transparent);
+  box-shadow: 0 18px 42px color-mix(in srgb, var(--db-color-midnight-horizon) 8%, transparent);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
@@ -1990,8 +1984,8 @@ a {
 }
 
 .ct-nav--scrolled {
-  background: rgba(250, 249, 246, 0.78);
-  border-bottom: 1px solid rgba(147, 142, 151, 0.24);
+  background: color-mix(in srgb, var(--db-color-background) 78%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--db-color-text-muted) 24%, transparent);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
@@ -2031,7 +2025,7 @@ a {
   font-size: 28px;
   line-height: 1;
   display: block;
-  filter: drop-shadow(0 8px 16px rgba(43, 38, 49, 0.12));
+  filter: drop-shadow(0 8px 16px color-mix(in srgb, var(--db-color-midnight-horizon) 12%, transparent));
 }
 
 .ct-nav__links {
@@ -2048,8 +2042,8 @@ a {
 .ct-nav__contact,
 .ct-nav__menu {
   min-height: 44px;
-  border: 1px solid rgba(147, 142, 151, 0.36);
-  background: rgba(250, 249, 246, 0.72);
+  border: 1px solid color-mix(in srgb, var(--db-color-text-muted) 36%, transparent);
+  background: color-mix(in srgb, var(--db-color-background) 72%, transparent);
   transition: transform 180ms ease, background 180ms ease;
 }
 
@@ -2090,14 +2084,14 @@ a {
   font-size: 32px;
   line-height: 1;
   display: block;
-  filter: drop-shadow(0 0 18px rgba(201, 184, 216, 0.34));
+  filter: drop-shadow(0 0 18px color-mix(in srgb, var(--db-color-horizon-rose) 34%, transparent));
 }
 
 .nav-overlay {
   position: fixed;
   inset: 0;
   z-index: 80;
-  background: rgba(43, 38, 49, 0.38);
+  background: color-mix(in srgb, var(--db-color-midnight-horizon) 38%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -2108,9 +2102,9 @@ a {
   padding: clamp(1.35rem, 4vw, 3.5rem);
   color: var(--ct-white);
   background:
-    radial-gradient(circle at 82% 20%, rgba(201, 184, 216, 0.18), transparent 22rem),
-    linear-gradient(135deg, #2b2631, #393241);
-  box-shadow: 0 30px 100px rgba(43, 38, 49, 0.34);
+    radial-gradient(circle at 82% 20%, color-mix(in srgb, var(--db-color-horizon-rose) 18%, transparent), transparent 22rem),
+    linear-gradient(135deg, var(--db-color-midnight-horizon), color-mix(in srgb, var(--db-color-midnight-horizon) 78%, var(--db-color-twilight-violet)));
+  box-shadow: 0 30px 100px color-mix(in srgb, var(--db-color-midnight-horizon) 34%, transparent);
 }
 
 .nav-overlay__top {
@@ -2122,13 +2116,13 @@ a {
 .nav-overlay__close {
   width: 44px;
   height: 44px;
-  border: 1px solid rgba(250, 249, 246, 0.18);
+  border: 1px solid color-mix(in srgb, var(--db-color-background) 18%, transparent);
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: var(--ct-white);
-  background: rgba(250, 249, 246, 0.08);
+  background: color-mix(in srgb, var(--db-color-background) 8%, transparent);
 }
 
 .nav-overlay__links {
@@ -2147,7 +2141,7 @@ a {
   border: 0;
   padding: 0;
   background: transparent;
-  color: rgba(250, 249, 246, 0.94);
+  color: color-mix(in srgb, var(--db-color-background) 94%, transparent);
   font-family: "Story Script", sans-serif;
   letter-spacing: 0;
   text-align: left;
@@ -2166,7 +2160,7 @@ a {
 .nav-overlay__links span {
   font-size: clamp(0.75rem, 1vw, 0.95rem);
   letter-spacing: 0.18em;
-  color: rgba(250, 249, 246, 0.38);
+  color: color-mix(in srgb, var(--db-color-background) 38%, transparent);
 }
 
 .intro-screen {
@@ -2182,8 +2176,8 @@ a {
   padding: 2rem;
   color: var(--ct-white);
   background:
-    radial-gradient(circle at 50% 42%, rgba(201, 184, 216, 0.2), transparent 28rem),
-    linear-gradient(135deg, #2b2631, #393241);
+    radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--db-color-horizon-rose) 20%, transparent), transparent 28rem),
+    linear-gradient(135deg, var(--db-color-midnight-horizon), color-mix(in srgb, var(--db-color-midnight-horizon) 78%, var(--db-color-twilight-violet)));
 }
 
 .intro-screen::before,
@@ -2193,7 +2187,7 @@ a {
   width: 42rem;
   height: 42rem;
   border-radius: 999px;
-  border: 1px solid rgba(250, 249, 246, 0.08);
+  border: 1px solid color-mix(in srgb, var(--db-color-background) 8%, transparent);
   transform: rotate(18deg);
   pointer-events: none;
 }
@@ -2201,7 +2195,7 @@ a {
 .intro-screen::after {
   width: 26rem;
   height: 26rem;
-  border-color: rgba(250, 249, 246, 0.12);
+  border-color: color-mix(in srgb, var(--db-color-background) 12%, transparent);
   transform: rotate(-12deg);
 }
 
@@ -2220,7 +2214,7 @@ a {
   display: inline-block;
   filter:
     drop-shadow(0 18px 34px rgba(0, 0, 0, 0.22))
-    drop-shadow(0 0 30px rgba(201, 184, 216, 0.32));
+    drop-shadow(0 0 30px color-mix(in srgb, var(--db-color-horizon-rose) 32%, transparent));
 }
 
 .intro-eyebrow,
@@ -2228,7 +2222,7 @@ a {
   position: relative;
   z-index: 1;
   margin: 0;
-  color: rgba(250, 249, 246, 0.56);
+  color: color-mix(in srgb, var(--db-color-background) 56%, transparent);
   font-size: 0.78rem;
   letter-spacing: 0;
   text-transform: none;
@@ -2253,7 +2247,7 @@ a {
   z-index: 1;
   max-width: min(640px, 84vw);
   margin: 0.35rem 0 0;
-  color: rgba(250, 249, 246, 0.66);
+  color: color-mix(in srgb, var(--db-color-background) 66%, transparent);
   text-align: center;
   font-size: clamp(0.95rem, 1.55vw, 1.2rem);
   line-height: 1.45;
@@ -2274,7 +2268,7 @@ a {
   font-family: var(--font-body, "Montserrat", sans-serif);
   letter-spacing: 0;
   text-transform: none;
-  color: rgba(250, 249, 246, 0.72);
+  color: color-mix(in srgb, var(--db-color-background) 72%, transparent);
 }
 
 .intro-bar-track {
@@ -2282,7 +2276,7 @@ a {
   height: 3px;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(250, 249, 246, 0.12);
+  background: color-mix(in srgb, var(--db-color-background) 12%, transparent);
 }
 
 .intro-bar-fill {
@@ -2311,7 +2305,7 @@ a {
   border-radius: 999px;
   opacity: 0.2;
   background:
-    radial-gradient(circle at 44% 42%, rgba(250, 249, 246, 0.34), transparent 22%),
+    radial-gradient(circle at 44% 42%, color-mix(in srgb, var(--db-color-background) 34%, transparent), transparent 22%),
     radial-gradient(circle at 38% 38%, rgba(var(--wing-blue-rgb), 0.18), transparent 32%),
     radial-gradient(circle at 62% 54%, rgba(var(--wing-pink-rgb), 0.18), transparent 36%),
     radial-gradient(circle, transparent 60%, transparent 72%);
@@ -2327,8 +2321,8 @@ a {
   height: 100%;
   display: block;
   border-radius: 999px;
-  border: 1px solid rgba(124, 109, 140, 0.42);
-  background: rgba(250, 249, 246, 0.7);
+  border: 1px solid color-mix(in srgb, var(--db-color-twilight-violet) 42%, transparent);
+  background: color-mix(in srgb, var(--db-color-background) 70%, transparent);
   transition: opacity 260ms ease, transform 260ms ease, background 260ms ease;
 }
 
@@ -2346,8 +2340,8 @@ a {
   pointer-events: none;
   user-select: none;
   filter:
-    drop-shadow(0 8px 18px rgba(43, 38, 49, 0.18))
-    drop-shadow(0 0 16px rgba(124, 109, 140, 0.28));
+    drop-shadow(0 8px 18px color-mix(in srgb, var(--db-color-midnight-horizon) 18%, transparent))
+    drop-shadow(0 0 16px color-mix(in srgb, var(--db-color-twilight-violet) 28%, transparent));
   transform: rotate(-8deg) scale(0.96);
   transform-origin: 40% 65%;
   transition: filter 240ms ease, transform 240ms ease;
@@ -2361,13 +2355,13 @@ a {
     radial-gradient(circle at 42% 38%, rgba(var(--wing-blue-rgb), 0.28), transparent 34%),
     radial-gradient(circle at 62% 54%, rgba(var(--wing-pink-rgb), 0.22), transparent 38%),
     radial-gradient(circle at 46% 68%, rgba(var(--wing-yellow-rgb), 0.16), transparent 42%),
-    radial-gradient(circle, rgba(250, 249, 246, 0.22), transparent 68%);
+    radial-gradient(circle, color-mix(in srgb, var(--db-color-background) 22%, transparent), transparent 68%);
 }
 
 .custom-cursor--soft .custom-cursor__dot,
 .custom-cursor--wide .custom-cursor__dot {
   opacity: 0.98;
-  background: rgba(124, 109, 140, 0.16);
+  background: color-mix(in srgb, var(--db-color-twilight-violet) 16%, transparent);
   transform: scale(1.08);
 }
 
@@ -2382,8 +2376,8 @@ a {
 .custom-cursor--soft .custom-cursor__logo,
 .custom-cursor--wide .custom-cursor__logo {
   filter:
-    drop-shadow(0 10px 22px rgba(43, 38, 49, 0.2))
-    drop-shadow(0 0 20px rgba(201, 184, 216, 0.42));
+    drop-shadow(0 10px 22px color-mix(in srgb, var(--db-color-midnight-horizon) 20%, transparent))
+    drop-shadow(0 0 20px color-mix(in srgb, var(--db-color-horizon-rose) 42%, transparent));
   transform: rotate(-4deg) scale(1.08);
 }
 
@@ -2403,12 +2397,12 @@ a {
   margin-top: calc(var(--particle-size) / -2);
   border-radius: 999px;
   background:
-    radial-gradient(circle at 35% 30%, rgba(250, 249, 246, 0.92), transparent 28%),
-    radial-gradient(circle at 55% 55%, rgba(201, 184, 216, 0.9), transparent 48%),
-    rgba(124, 109, 140, 0.66);
+    radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--db-color-background) 92%, transparent), transparent 28%),
+    radial-gradient(circle at 55% 55%, color-mix(in srgb, var(--db-color-horizon-rose) 90%, transparent), transparent 48%),
+    color-mix(in srgb, var(--db-color-twilight-violet) 66%, transparent);
   box-shadow:
-    0 0 14px rgba(201, 184, 216, 0.54),
-    0 0 26px rgba(124, 109, 140, 0.28);
+    0 0 14px color-mix(in srgb, var(--db-color-horizon-rose) 54%, transparent),
+    0 0 26px color-mix(in srgb, var(--db-color-twilight-violet) 28%, transparent);
   animation: cursor-particle-drift var(--particle-duration) cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -2433,8 +2427,8 @@ a {
 
 .gradient-mesh {
   background:
-    radial-gradient(circle at 15% 18%, rgba(207, 203, 211, 0.46), transparent 25rem),
-    radial-gradient(circle at 86% 12%, rgba(201, 184, 216, 0.22), transparent 24rem),
+    radial-gradient(circle at 15% 18%, color-mix(in srgb, var(--db-color-morning-light) 46%, transparent), transparent 25rem),
+    radial-gradient(circle at 86% 12%, color-mix(in srgb, var(--db-color-horizon-rose) 22%, transparent), transparent 24rem),
     var(--ct-paper);
 }
 
@@ -2453,9 +2447,9 @@ a {
 }
 
 .glass-card {
-  background: rgba(250, 249, 246, 0.74);
-  border: 1px solid rgba(147, 142, 151, 0.26);
-  box-shadow: 0 18px 42px rgba(43, 38, 49, 0.08);
+  background: color-mix(in srgb, var(--db-color-background) 74%, transparent);
+  border: 1px solid color-mix(in srgb, var(--db-color-text-muted) 26%, transparent);
+  box-shadow: 0 18px 42px color-mix(in srgb, var(--db-color-midnight-horizon) 8%, transparent);
 }
 
 .iridescent-text {
@@ -2470,7 +2464,7 @@ a {
   gap: 0.8rem;
   overflow-x: auto;
   overscroll-behavior-x: contain;
-  scrollbar-color: rgba(147, 142, 151, 0.5) transparent;
+  scrollbar-color: color-mix(in srgb, var(--db-color-text-muted) 50%, transparent) transparent;
 }
 
 .algorithm-blank-mark {
@@ -2483,8 +2477,8 @@ a {
   font-size: 3.2rem;
   line-height: 1;
   filter:
-    drop-shadow(0 12px 20px rgba(43, 38, 49, 0.12))
-    drop-shadow(0 0 18px rgba(124, 109, 140, 0.18));
+    drop-shadow(0 12px 20px color-mix(in srgb, var(--db-color-midnight-horizon) 12%, transparent))
+    drop-shadow(0 0 18px color-mix(in srgb, var(--db-color-twilight-violet) 18%, transparent));
 }
 
 .algorithm-blank-mark--small {
@@ -2545,7 +2539,7 @@ a {
     font-size: 0.72rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: rgba(43, 38, 49, 0.58);
+    color: color-mix(in srgb, var(--db-color-midnight-horizon) 58%, transparent);
     transition: color 180ms ease;
   }
 
@@ -2601,8 +2595,8 @@ a {
 
   .ct-hero-visual::after {
     background:
-      linear-gradient(90deg, rgba(250, 249, 246, 0.98) 0%, rgba(250, 249, 246, 0.76) 32%, rgba(250, 249, 246, 0.24) 62%, rgba(250, 249, 246, 0.02) 100%),
-      radial-gradient(circle at 31% 47%, rgba(250, 249, 246, 0.92), transparent 22rem);
+      linear-gradient(90deg, color-mix(in srgb, var(--db-color-background) 98%, transparent) 0%, color-mix(in srgb, var(--db-color-background) 76%, transparent) 32%, color-mix(in srgb, var(--db-color-background) 24%, transparent) 62%, color-mix(in srgb, var(--db-color-background) 2%, transparent) 100%),
+      radial-gradient(circle at 31% 47%, color-mix(in srgb, var(--db-color-background) 92%, transparent), transparent 22rem);
   }
 
   .ct-hero-canvas {
@@ -2665,11 +2659,11 @@ a {
     padding: 0 1rem;
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
-    color: rgba(43, 38, 49, 0.58);
-    background: rgba(250, 249, 246, 0.76);
-    border: 1px solid rgba(147, 142, 151, 0.3);
+    color: color-mix(in srgb, var(--db-color-midnight-horizon) 58%, transparent);
+    background: color-mix(in srgb, var(--db-color-background) 76%, transparent);
+    border: 1px solid color-mix(in srgb, var(--db-color-text-muted) 30%, transparent);
     border-top: 0;
-    box-shadow: 0 14px 32px rgba(43, 38, 49, 0.08);
+    box-shadow: 0 14px 32px color-mix(in srgb, var(--db-color-midnight-horizon) 8%, transparent);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     font-size: 0.7rem;
@@ -2681,10 +2675,10 @@ a {
 
   .ct-section-shell--aqua .ct-section__tab,
   .ct-section-shell--ink .ct-section__tab {
-    color: rgba(250, 249, 246, 0.7);
-    background: rgba(250, 249, 246, 0.08);
-    border-color: rgba(250, 249, 246, 0.16);
-    box-shadow: 0 14px 32px rgba(43, 38, 49, 0.16);
+    color: color-mix(in srgb, var(--db-color-background) 70%, transparent);
+    background: color-mix(in srgb, var(--db-color-background) 8%, transparent);
+    border-color: color-mix(in srgb, var(--db-color-background) 16%, transparent);
+    box-shadow: 0 14px 32px color-mix(in srgb, var(--db-color-midnight-horizon) 16%, transparent);
   }
 
   .ct-journey-sticky .ct-section__tab {
@@ -2824,9 +2818,9 @@ a {
 
   .ct-journey-timeline::before {
     background:
-      linear-gradient(rgba(147, 142, 151, 0.12) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(147, 142, 151, 0.09) 1px, transparent 1px),
-      radial-gradient(circle at 50% 50%, rgba(201, 184, 216, 0.18), transparent 13rem);
+      linear-gradient(color-mix(in srgb, var(--db-color-text-muted) 12%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in srgb, var(--db-color-text-muted) 9%, transparent) 1px, transparent 1px),
+      radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--db-color-horizon-rose) 18%, transparent), transparent 13rem);
     background-size: 36px 36px, 36px 36px, auto;
     mask-image: linear-gradient(to right, transparent, #000 18%, #000 82%, transparent);
   }
@@ -2851,7 +2845,7 @@ a {
 
   .ct-journey-image::before {
     inset: 8%;
-    border-color: rgba(124, 109, 140, 0.16);
+    border-color: color-mix(in srgb, var(--db-color-twilight-violet) 16%, transparent);
   }
 
   .ct-journey-mosaic {

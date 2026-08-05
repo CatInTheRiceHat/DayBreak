@@ -12,8 +12,10 @@
   --db-surface: var(--db-color-surface);
   --db-text: var(--db-color-text-primary);
   --db-text-secondary: var(--db-color-text-secondary);
+  --db-highlight-text: var(--db-color-highlight-text);
   --db-border: var(--db-color-border);
   --db-focus: var(--db-color-focus-ring);
+  --db-action-hover: var(--db-color-action-primary-hover);
   --bg: var(--db-background);
   --bg-soft: var(--db-background-subtle);
   --text: var(--db-text);
@@ -101,7 +103,7 @@
 }
 
 .db-auth-brand__copy small {
-  color: var(--db-rose);
+  color: var(--db-highlight-text);
   font-size: 0.7rem;
   letter-spacing: 0.04em;
 }
@@ -170,8 +172,8 @@
 }
 
 .cx-shell[data-cx] .db-auth-card .cx-btn--primary:hover:not(:disabled) {
-  background: var(--db-rose);
-  color: var(--db-surface);
+  background: var(--db-action-hover);
+  color: var(--db-color-on-primary);
   transform: translateY(-1px);
 }
 
@@ -238,7 +240,7 @@
 .cx-shell[data-cx] .diag-progress { background: var(--db-background-subtle); }
 .cx-shell[data-cx] .diag-progress__bar { background: var(--db-coral); }
 .cx-shell[data-cx] .diag-result__eyebrow,
-.cx-shell[data-cx] .diag-mode__eyebrow { color: var(--db-rose); }
+.cx-shell[data-cx] .diag-mode__eyebrow { color: var(--db-highlight-text); }
 .cx-shell[data-cx] .diag-option,
 .cx-shell[data-cx] .interest-chip,
 .cx-shell[data-cx] .diag-unlock,

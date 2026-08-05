@@ -43,7 +43,7 @@ const LINKS = [
     label: 'Substack',
     sub: 'Read the blog',
     href: '#',
-    color: '#f97316',
+    color: 'var(--db-color-sunrise-coral)',
   },
 ];
 
@@ -114,7 +114,7 @@ export function Contact() {
                 width: 72,
                 height: 72,
                 objectPosition: 'center 42%',
-                border: '1px solid rgba(147,142,151,0.28)',
+                border: '1px solid var(--db-color-border)',
               }}
             />
             <div className="flex flex-col gap-1">
@@ -155,7 +155,10 @@ export function Contact() {
             >
               <div
                 className="w-10 h-10 rounded-full flex items-center justify-center"
-                style={{ background: `${color}18`, border: `1px solid ${color}35` }}
+                style={{
+                  background: `color-mix(in srgb, ${color} 18%, transparent)`,
+                  border: `1px solid color-mix(in srgb, ${color} 35%, transparent)`,
+                }}
               >
                 <Icon className="w-4 h-4" style={{ color }} />
               </div>
@@ -176,7 +179,7 @@ export function Contact() {
           animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 0.6, delay: 0.5 }}
           className="flex items-center justify-between pt-6"
-          style={{ borderTop: '1px solid rgba(0,0,0,0.07)' }}
+          style={{ borderTop: '1px solid var(--db-color-border)' }}
         >
           <p className="font-body font-light text-xs text-foreground/35">
             {BRAND} © 2026 — Elaine Che

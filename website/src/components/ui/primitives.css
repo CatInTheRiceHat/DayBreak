@@ -65,6 +65,7 @@
 .db-button[aria-disabled='true'],
 .db-icon-button:disabled {
   opacity: var(--db-disabled-opacity);
+  color: var(--db-color-disabled-text);
   cursor: not-allowed;
   transform: none;
 }
@@ -86,7 +87,7 @@
 .db-card {
   border: var(--db-border-width) solid var(--db-color-border);
   border-radius: var(--db-radius-lg);
-  background: var(--db-color-surface);
+  background: var(--db-color-input-background);
   color: var(--db-color-text-primary);
   box-shadow: var(--db-shadow-sm);
 }
@@ -115,7 +116,7 @@
 .db-control::placeholder { color: var(--db-color-text-muted); opacity: 1; }
 .db-control:hover:not(:disabled) { border-color: var(--db-color-action-secondary); }
 .db-control:focus-visible { outline: none; border-color: var(--db-color-focus-ring); box-shadow: 0 0 0 var(--db-focus-width) rgb(var(--db-focus-ring-rgb) / 25%); }
-.db-control:disabled { background: var(--db-color-background-subtle); opacity: var(--db-disabled-opacity); cursor: not-allowed; }
+.db-control:disabled { background: var(--db-color-disabled-background); color: var(--db-color-disabled-text); opacity: 1; cursor: not-allowed; }
 .db-field--error .db-control { border-color: var(--db-color-error); }
 .db-field__hint,
 .db-field__error { font-size: 0.8125rem; line-height: 1.45; }
@@ -199,7 +200,7 @@
 @keyframes db-dialog-in { from { opacity: 0; transform: translateY(0.5rem) scale(0.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
 .db-tooltip { position: relative; display: inline-flex; }
-.db-tooltip__content { position: absolute; z-index: 50; width: max-content; max-width: min(16rem, calc(100vw - 2rem)); padding: var(--db-space-2) var(--db-space-3); border-radius: var(--db-radius-sm); background: var(--db-color-midnight-horizon); color: var(--db-color-on-secondary); box-shadow: var(--db-shadow-md); font-size: 0.75rem; line-height: 1.4; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity var(--db-duration-fast) var(--db-ease-standard), transform var(--db-duration-fast) var(--db-ease-standard), visibility var(--db-duration-fast); }
+.db-tooltip__content { position: absolute; z-index: 50; width: max-content; max-width: min(16rem, calc(100vw - 2rem)); padding: var(--db-space-2) var(--db-space-3); border-radius: var(--db-radius-sm); background: var(--db-color-midnight-horizon); color: var(--db-color-morning-light); box-shadow: var(--db-shadow-md); font-size: 0.75rem; line-height: 1.4; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity var(--db-duration-fast) var(--db-ease-standard), transform var(--db-duration-fast) var(--db-ease-standard), visibility var(--db-duration-fast); }
 .db-tooltip__content--top { bottom: calc(100% + 0.5rem); left: 50%; transform: translate(-50%, 0.25rem); }
 .db-tooltip__content--bottom { top: calc(100% + 0.5rem); left: 50%; transform: translate(-50%, -0.25rem); }
 .db-tooltip__content--left { top: 50%; right: calc(100% + 0.5rem); transform: translate(0.25rem, -50%); }
@@ -218,7 +219,7 @@
 .db-tabs__list { display: flex; gap: var(--db-space-1); max-width: 100%; padding: var(--db-space-1); border-radius: var(--db-radius-md); background: var(--db-color-background-subtle); overflow-x: auto; }
 .db-tabs__trigger { min-height: var(--db-touch-target); flex: 0 0 auto; padding-inline: var(--db-space-4); border: 0; border-radius: var(--db-radius-sm); background: transparent; color: var(--db-color-text-secondary); font-weight: 600; cursor: pointer; }
 .db-tabs__trigger:hover:not(:disabled) { color: var(--db-color-text-primary); }
-.db-tabs__trigger[aria-selected='true'] { background: var(--db-color-surface); color: var(--db-color-text-primary); box-shadow: var(--db-shadow-sm); }
+.db-tabs__trigger[aria-selected='true'] { background: var(--db-color-selected-subtle); color: var(--db-color-highlight-text); box-shadow: inset 0 -3px 0 var(--db-color-selected); }
 .db-tabs__trigger:disabled { opacity: var(--db-disabled-opacity); cursor: not-allowed; }
 .db-tabs__content { padding-block-start: var(--db-space-5); }
 .db-tabs__content:focus-visible { outline: var(--db-focus-width) solid var(--db-color-focus-ring); outline-offset: var(--db-focus-offset); }

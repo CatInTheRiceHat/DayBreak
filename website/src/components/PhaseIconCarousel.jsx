@@ -45,7 +45,8 @@ export function PhaseIconCarousel({ className = '', interval = 1350 }) {
           src={phase.src}
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 m-auto h-full w-full object-contain drop-shadow-[0_24px_52px_rgba(124,109,140,0.22)]"
+          className="absolute inset-0 m-auto h-full w-full object-contain"
+          style={{ filter: 'drop-shadow(0 24px 52px color-mix(in srgb, var(--db-color-twilight-violet) 22%, transparent))' }}
           initial={{
             opacity: 0,
             x: reduceMotion ? 0 : 20,

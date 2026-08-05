@@ -106,7 +106,7 @@ export function About() {
                   className="w-12 h-12 rounded-full object-cover"
                   src="/images/me.png"
                   alt="Portrait of Elaine Che"
-                  style={{ objectPosition: 'center 42%', border: '1px solid rgba(167,139,250,0.3)' }}
+                  style={{ objectPosition: 'center 42%', border: '1px solid color-mix(in srgb, var(--db-color-twilight-violet) 30%, transparent)' }}
                 />
                 <div>
                   <p className="font-body font-semibold text-sm text-foreground">Elaine Che</p>
@@ -131,7 +131,7 @@ export function About() {
               </AnimatedSection>
 
               {/* Iridescent accent line */}
-              <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, #a78bfa, #67e8f9, #f0abfc)', opacity: 0.4 }} />
+              <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, var(--db-color-twilight-violet), var(--db-color-horizon-rose), var(--db-color-sunrise-coral))', opacity: 0.55 }} />
 
               <p className="font-body font-light text-xs text-foreground/40 italic">
                 "The algorithm is the argument."
