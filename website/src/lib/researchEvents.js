@@ -1,4 +1,9 @@
-const PARTICIPANT_STORAGE_KEY = 'chrysalis-research-participant-v1';
+import {
+  RESEARCH_PARTICIPANT_STORAGE_KEY,
+  ensureResearchParticipant,
+  getStoredResearchParticipant,
+} from './researchParticipant.js';
+
 const SESSION_STORAGE_KEY = 'chrysalis-research-session-v1';
 const QUEUE_STORAGE_PREFIX = 'chrysalis-research-events-v1:';
 const RAPID_REPEAT_WINDOW_MS = 750;
@@ -70,7 +75,7 @@ export function createResearchEventService({
 } = {}) {
   if (!fetchImpl) throw new Error('Fetch is unavailable.');
 
-  let participant = readJson(localStorage, PARTICIPANT_STORAGE_KEY);
+  let participant = getStoredResearchParticipant({ localStorage });
   let session = readJson(sessionStorage, SESSION_STORAGE_KEY);
   let initializePromise = null;
   let flushPromise = null;
@@ -101,11 +106,7 @@ export function createResearchEventService({
 
   async function ensureParticipant() {
     if (participant?.participant_id && participant?.access_token) return participant;
-    participant = await parseResponse(await fetchImpl(`${apiUrl}/api/research/participants`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-    }));
-    writeJson(localStorage, PARTICIPANT_STORAGE_KEY, participant);
+    participant = await ensureResearchParticipant({ apiUrl, fetchImpl, localStorage });
     return participant;
   }
 
@@ -306,7 +307,7 @@ export function getResearchEventService() {
 }
 
 export const RESEARCH_STORAGE_KEYS = {
-  participant: PARTICIPANT_STORAGE_KEY,
+  participant: RESEARCH_PARTICIPANT_STORAGE_KEY,
   session: SESSION_STORAGE_KEY,
   queuePrefix: QUEUE_STORAGE_PREFIX,
 };
