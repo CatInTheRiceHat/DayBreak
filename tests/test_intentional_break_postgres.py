@@ -562,23 +562,64 @@ def test_postgres_finish_early_preserves_meaningful_measurement(postgres_harness
             f"{BASE}/sessions/{session_id}/items?start_position=1&limit=5",
             headers=participant["headers"],
         ).json()["data"]["items"]
-        forged_non_impression = {
+        impression = meaningful_impression(page[0]["post_id"])
+        viewed = {
             "client_event_id": str(uuid.uuid4()),
+            "client_sequence_number": 2,
+            "event_type": "post_viewed",
+            "post_id": page[1]["post_id"],
+            "client_timestamp": NOW.isoformat(),
+            "metadata": {"interaction_source": "feed_card"},
+        }
+        impression_response = api_command(client, participant, session_id, "events", {
+            "events": [impression]
+        })
+        assert impression_response.status_code == 200, impression_response.text
+        assert impression_response.json()["data"]["journey"]["highest_reached_position"] == 1
+
+        viewed_response = api_command(client, participant, session_id, "events", {
+            "events": [viewed]
+        })
+        assert viewed_response.status_code == 200, viewed_response.text
+        assert viewed_response.json()["data"]["journey"]["highest_reached_position"] == 1
+
+        forged_event_id = str(uuid.uuid4())
+        forged_non_impression = {
+            "client_event_id": forged_event_id,
             "client_sequence_number": 999,
             "event_type": "post_viewed",
             "post_id": page[1]["post_id"],
             "client_timestamp": NOW.isoformat(),
             "metadata": {
                 "session_position": 5,
-                "feed_position": 5,
                 "highest_reached_position": 5,
             },
         }
-        events = api_command(client, participant, session_id, "events", {
-            "events": [meaningful_impression(page[0]["post_id"]), forged_non_impression]
+        rejected = api_command(client, participant, session_id, "events", {
+            "events": [forged_non_impression]
         })
-        assert events.status_code == 200, events.text
-        assert events.json()["data"]["journey"]["highest_reached_position"] == 1
+        assert rejected.status_code == 400, rejected.text
+        rejected_body = rejected.json()
+        assert rejected_body["error_code"] == "invalid_request"
+        assert rejected_body["retryable"] is False
+
+        conn = connect_postgres(postgres_harness.config)
+        try:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "SELECT journey_state, highest_reached_position "
+                    "FROM public.research_sessions WHERE id = %s",
+                    (session_id,),
+                )
+                assert cur.fetchone() == ("active", 1)
+                cur.execute(
+                    "SELECT count(*) FROM public.research_events "
+                    "WHERE session_id = %s AND client_event_id = %s",
+                    (session_id, forged_event_id),
+                )
+                assert cur.fetchone()[0] == 0
+        finally:
+            conn.close()
 
         finished = api_command(client, participant, session_id, "finish-early")
         assert finished.status_code == 200, finished.text
