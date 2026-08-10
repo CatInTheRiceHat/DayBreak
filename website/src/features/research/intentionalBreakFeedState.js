@@ -114,14 +114,16 @@ export function createJourneySynchronizer({
   now = Date.now,
 } = {}) {
   const channelName = 'daybreak-intentional-break-journey-v1';
-  const storageKey = `${channelName}:${sessionId}`;
+  const storagePrefix = `${channelName}:`;
+  const storageKey = sessionId ? `${storagePrefix}${sessionId}` : null;
   let channel = null;
   const receive = (payload) => {
     const message = payload?.data ?? payload;
-    if (message?.session_id === sessionId) onChange?.();
+    if (message?.session_id && (!sessionId || message.session_id === sessionId)) onChange?.();
   };
   const onStorage = (event) => {
-    if (event.key !== storageKey || !event.newValue) return;
+    if (!event.key?.startsWith(storagePrefix) || !event.newValue) return;
+    if (storageKey && event.key !== storageKey) return;
     try { receive(JSON.parse(event.newValue)); } catch { /* Ignore unrelated malformed storage. */ }
   };
   if (typeof BroadcastChannelImpl === 'function') {
@@ -132,6 +134,7 @@ export function createJourneySynchronizer({
   }
   return {
     signal() {
+      if (!sessionId) return;
       const message = { session_id: sessionId, changed_at: now() };
       if (channel) channel.postMessage(message);
       else storage?.setItem?.(storageKey, JSON.stringify(message));

@@ -5,6 +5,7 @@ import {
   IntentionalBreakApiError,
   createIdempotencyKey,
   createIntentionalBreakApiClient,
+  getCurrentJourneyForStoredParticipant,
 } from './intentionalBreakApi.js';
 
 const SESSION_ID = '22222222-2222-4222-8222-222222222222';
@@ -107,6 +108,26 @@ test('every API method uses the versioned path, expected method, and bearer cred
   });
 });
 
+test('stored-participant current lookup never invokes participant creation', async () => {
+  const calls = [];
+  const result = await getCurrentJourneyForStoredParticipant({
+    participant_id: '11111111-1111-4111-8111-111111111111',
+    access_token: ACCESS_TOKEN,
+  }, {
+    apiUrl: 'https://daybreak.test',
+    fetchImpl: async (url, options) => {
+      calls.push({ url, options });
+      return response(success({ journey: journey('cooldown') }));
+    },
+  });
+
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].url, 'https://daybreak.test/api/research/intentional-break/v1/current');
+  assert.equal(calls[0].options.method, 'GET');
+  assert.equal(calls[0].options.headers.Authorization, `Bearer ${ACCESS_TOKEN}`);
+  assert.equal(result.journey.journey_state, 'cooldown');
+});
+
 test('createPlan sends only caller plan fields plus the fixed notice acknowledgement', async () => {
   const { client, calls } = recordingClient();
   await client.createPlan({
@@ -184,7 +205,7 @@ test('appendEvents allows client diagnostics and strips server-authoritative fie
   });
 });
 
-test('command bodies normalize finish, checkout, and override inputs', async () => {
+test('command bodies keep finish authoritative and normalize checkout and override inputs', async () => {
   const { client, calls } = recordingClient();
   await client.finishEarly(SESSION_ID, { idempotencyKey: IDEMPOTENCY_KEY, currentPosition: 4 });
   await client.submitCheckout(SESSION_ID, {
@@ -200,7 +221,6 @@ test('command bodies normalize finish, checkout, and override inputs', async () 
 
   assert.deepEqual(parsedBody(calls[0]), {
     idempotency_key: IDEMPOTENCY_KEY,
-    current_position: 4,
   });
   assert.deepEqual(parsedBody(calls[1]), {
     idempotency_key: IDEMPOTENCY_KEY,

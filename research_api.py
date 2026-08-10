@@ -237,10 +237,6 @@ class IntentionalBreakIdempotencyRequest(_IntentionalBreakRequest):
     idempotency_key: UUID
 
 
-class IntentionalBreakFinishEarlyRequest(IntentionalBreakIdempotencyRequest):
-    current_position: StrictInt | None = None
-
-
 class IntentionalBreakClientEventRequest(_IntentionalBreakRequest):
     client_event_id: UUID
     client_sequence_number: StrictInt | None = Field(default=None, ge=0)
@@ -1175,7 +1171,7 @@ def create_research_router(
         payload: Any = Body(default=None),
         authorization: str | None = Header(default=None),
     ):
-        request = _intentional_break_model(IntentionalBreakFinishEarlyRequest, payload)
+        request = _intentional_break_model(IntentionalBreakIdempotencyRequest, payload)
         request_time = intentional_break_now()
         validated_session_id = _intentional_break_uuid(session_id)
         conn = get_connection()
@@ -1187,7 +1183,6 @@ def create_research_router(
                 participant_id=participant["participant_id"],
                 session_id=validated_session_id,
                 idempotency_key=str(request.idempotency_key),
-                current_position=request.current_position,
                 now=request_time,
             )
             return intentional_break_success(

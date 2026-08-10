@@ -2421,24 +2421,13 @@ def finish_intentional_break_early(
     participant_id: str,
     session_id: str,
     idempotency_key: str,
-    current_position: int | None = None,
-    current_global_position: int | None = None,
     backend: str | None = None,
     now: datetime | str | None = None,
 ) -> dict:
     backend = _intentional_backend(conn, backend)
     current_time = _intentional_now(now)
     key = _require_idempotency_key(idempotency_key)
-    if current_position is not None and current_global_position is not None:
-        if current_position != current_global_position:
-            raise IntentionalBreakStorageError("invalid_plan", "Current positions conflict")
-    if current_position is None:
-        current_position = current_global_position
-    if current_position is not None and (
-        isinstance(current_position, bool) or not isinstance(current_position, int)
-    ):
-        raise IntentionalBreakStorageError("invalid_plan", "Current position is invalid")
-    material = {"current_position": current_position}
+    material = {}
     cur = _begin_intentional_transaction(conn, backend)
     try:
         _participant_for_journey(cur, backend=backend, participant_id=participant_id)
@@ -2461,17 +2450,7 @@ def finish_intentional_break_early(
             raise IntentionalBreakStorageError(
                 "invalid_transition", "Only an active pre-boundary session may finish early"
             )
-        target_position = int(session["highest_reached_position"])
-        if current_position is not None:
-            ph = _placeholder(backend)
-            cur.execute(
-                f"SELECT 1 FROM research_session_items WHERE session_id = {ph} "
-                f"AND participant_id = {ph} AND session_position = {ph}",
-                (session_id, participant_id, current_position),
-            )
-            if current_position < 1 or current_position > int(session["planned_video_count"]) or cur.fetchone() is None:
-                raise IntentionalBreakStorageError("invalid_plan", "Current position is not reserved")
-            target_position = max(target_position, current_position)
+        highest_meaningful_position = int(session["highest_reached_position"])
         _allocate_and_insert_canonical_event(
             cur,
             backend=backend,
@@ -2480,15 +2459,18 @@ def finish_intentional_break_early(
             event_type="session_finished_early",
             authority="server",
             occurred_at=current_time,
-            metadata={"idempotency_key": key, "material": material},
+            metadata={
+                "idempotency_key": key,
+                "material": material,
+                "highest_meaningful_position": highest_meaningful_position,
+            },
         )
         ph = _placeholder(backend)
         cur.execute(
             f"UPDATE research_sessions SET journey_state = 'checkout', "
-            f"finish_reason = 'finished_early', highest_reached_position = {ph}, "
-            f"checkout_entered_at = {ph} WHERE id = {ph} AND journey_state = 'active'",
+            f"finish_reason = 'finished_early', checkout_entered_at = {ph} "
+            f"WHERE id = {ph} AND journey_state = 'active'",
             (
-                target_position,
                 _db_timestamp(backend, current_time),
                 session_id,
             ),
@@ -2498,7 +2480,6 @@ def finish_intentional_break_early(
         session.update({
             "journey_state": "checkout",
             "finish_reason": "finished_early",
-            "highest_reached_position": target_position,
             "checkout_entered_at": current_time,
         })
         result = _journey_snapshot(cur, backend=backend, session=session, now=current_time)

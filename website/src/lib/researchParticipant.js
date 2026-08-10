@@ -25,7 +25,7 @@ function normalizeParticipant(value) {
   return participant;
 }
 
-function hasCredential(participant) {
+export function hasResearchParticipantCredential(participant) {
   return Boolean(participant?.participant_id && participant?.access_token);
 }
 
@@ -67,7 +67,7 @@ export async function ensureResearchParticipant({
   localStorage = globalThis.localStorage,
 } = {}) {
   const stored = getStoredResearchParticipant({ localStorage });
-  if (hasCredential(stored)) return stored;
+  if (hasResearchParticipantCredential(stored)) return stored;
   if (!fetchImpl) throw new Error('Fetch is unavailable.');
 
   const created = normalizeParticipant(await parseParticipantResponse(await fetchImpl(
@@ -77,7 +77,7 @@ export async function ensureResearchParticipant({
       headers: { 'Content-Type': 'application/json' },
     },
   )));
-  if (!hasCredential(created)) {
+  if (!hasResearchParticipantCredential(created)) {
     throw new Error('Research participant response did not include a credential.');
   }
   localStorage?.setItem(RESEARCH_PARTICIPANT_STORAGE_KEY, JSON.stringify(created));

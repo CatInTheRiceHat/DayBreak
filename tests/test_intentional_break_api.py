@@ -145,16 +145,13 @@ def start_plan(api, person, journey, *, key=None):
     return result.json()["data"]["journey"]
 
 
-def enter_checkout(api, person, journey, *, key=None, position=1):
+def enter_checkout(api, person, journey, *, key=None):
     result = command(
         api,
         person,
         journey["session_id"],
         "finish-early",
-        body={
-            "idempotency_key": key or str(uuid.uuid4()),
-            "current_position": position,
-        },
+        body={"idempotency_key": key or str(uuid.uuid4())},
     )
     assert result.status_code == 200, result.text
     return result.json()["data"]["journey"]
@@ -207,9 +204,10 @@ def assert_error(response, *, status, code, retryable=False):
 
 def test_route_registration_and_legacy_coexistence(api):
     routes = {
-        (method, route.path)
-        for route in api["app"].routes
-        for method in (route.methods or set())
+        (method.upper(), path)
+        for path, operations in api["app"].openapi()["paths"].items()
+        for method in operations
+        if method != "parameters"
     }
     expected = {
         ("GET", f"{BASE}/current"),
@@ -618,31 +616,73 @@ def test_event_validation_conflicts_and_boundary_response(api):
 def test_finish_early_validation_and_idempotency(api):
     person = participant(api)
     active = start_plan(api, person, create_plan(api, person))
-    invalid = command(
+    items = api["client"].get(
+        f"{BASE}/sessions/{active['session_id']}/items?limit=5",
+        headers=person["headers"],
+    ).json()["data"]["items"]
+    assert post_events(api, person, active, [impression(items[1]["post_id"])]).status_code == 200
+    untrusted_position = command(
         api,
         person,
         active["session_id"],
         "finish-early",
-        body={"idempotency_key": str(uuid.uuid4()), "current_position": 6},
+        body={"idempotency_key": str(uuid.uuid4()), "current_position": 4},
     )
-    assert_error(invalid, status=400, code="invalid_plan")
+    assert_error(untrusted_position, status=400, code="invalid_request")
     key = str(uuid.uuid4())
     first = command(
         api,
         person,
         active["session_id"],
         "finish-early",
-        body={"idempotency_key": key, "current_position": 2},
+        body={"idempotency_key": key},
     )
     replay = command(
         api,
         person,
         active["session_id"],
         "finish-early",
-        body={"idempotency_key": key, "current_position": 2},
+        body={"idempotency_key": key},
     )
     assert first.json()["data"]["journey"]["journey_state"] == "checkout"
+    assert first.json()["data"]["journey"]["highest_reached_position"] == 2
     assert replay.json()["data"]["journey"]["checkout_entered_at"] == first.json()["data"]["journey"]["checkout_entered_at"]
+    conn = api["connect"]()
+    finish_metadata = json.loads(conn.execute(
+        "SELECT metadata FROM research_events WHERE session_id = ? "
+        "AND event_type = 'session_finished_early'",
+        (active["session_id"],),
+    ).fetchone()[0])
+    conn.close()
+    assert finish_metadata["highest_meaningful_position"] == 2
+    assert "current_position" not in json.dumps(finish_metadata)
+    conflict = command(
+        api,
+        person,
+        active["session_id"],
+        "finish-early",
+        body={"idempotency_key": str(uuid.uuid4())},
+    )
+    assert_error(conflict, status=409, code="invalid_transition")
+
+
+def test_finish_early_foreign_access_is_non_enumerating_and_identity_is_not_client_controlled(api):
+    owner = participant(api)
+    outsider = participant(api)
+    active = start_plan(api, owner, create_plan(api, owner))
+    foreign = command(api, outsider, active["session_id"], "finish-early")
+    assert_error(foreign, status=404, code="session_not_found")
+    supplied_identity = command(
+        api,
+        owner,
+        active["session_id"],
+        "finish-early",
+        body={
+            "idempotency_key": str(uuid.uuid4()),
+            "participant_id": outsider["participant_id"],
+        },
+    )
+    assert_error(supplied_identity, status=400, code="invalid_request")
 
 
 @pytest.mark.parametrize(

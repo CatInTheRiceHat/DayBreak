@@ -266,12 +266,7 @@ export function createIntentionalBreakApiClient({
       `/sessions/${encodeURIComponent(sessionId)}/finish-early`,
       {
         method: 'POST',
-        body: {
-          ...idempotencyBody(input.idempotency_key ?? input.idempotencyKey),
-          ...((input.current_position ?? input.currentPosition) === undefined
-            ? {}
-            : { current_position: input.current_position ?? input.currentPosition }),
-        },
+        body: idempotencyBody(input.idempotency_key ?? input.idempotencyKey),
       },
     ),
     submitCheckout: (sessionId, input) => request(
@@ -305,6 +300,17 @@ export function createIntentionalBreakApiClient({
       },
     ),
   });
+}
+
+export function getCurrentJourneyForStoredParticipant(participant, {
+  apiUrl = '',
+  fetchImpl = globalThis.fetch?.bind(globalThis),
+} = {}) {
+  return createIntentionalBreakApiClient({
+    apiUrl,
+    fetchImpl,
+    participantProvider: async () => participant,
+  }).getCurrentJourney();
 }
 
 let browserClient;

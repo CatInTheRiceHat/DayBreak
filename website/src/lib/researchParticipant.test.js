@@ -5,6 +5,7 @@ import {
   clearStoredResearchParticipant,
   ensureResearchParticipant,
   getStoredResearchParticipant,
+  hasResearchParticipantCredential,
 } from './researchParticipant.js';
 
 class MemoryStorage {
@@ -19,6 +20,13 @@ const participant = Object.freeze({
   access_token: 'anonymous-bearer-token',
   status: 'active',
   assigned_condition: 'regular',
+});
+
+test('credential detection requires both the anonymous id and bearer token', () => {
+  assert.equal(hasResearchParticipantCredential(participant), true);
+  assert.equal(hasResearchParticipantCredential({ participant_id: participant.participant_id }), false);
+  assert.equal(hasResearchParticipantCredential({ access_token: participant.access_token }), false);
+  assert.equal(hasResearchParticipantCredential(null), false);
 });
 
 function response(body, status = 201) {

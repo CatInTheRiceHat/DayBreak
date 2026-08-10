@@ -67,7 +67,14 @@ Apply PostgreSQL migrations in order before deploying the research route:
 ```bash
 psql "$DATABASE_URL" -f migrations/015_research_sessions_and_events.sql
 psql "$DATABASE_URL" -f migrations/016_research_feed_policies.sql
+psql "$DATABASE_URL" -f migrations/017_intentional_break_loop.sql
 ```
+
+Migration execution is manual; this repository does not automatically apply
+database migrations during deployment. Before a pilot release, follow the
+backup, catalog/RLS verification, dummy-lifecycle, and release-record procedure
+in [`docs/pilot/production-environment.md`](docs/pilot/production-environment.md).
+Do not apply migration 017 more than once.
 
 Local SQLite creates the same tables and upgrades Phase 1 research sessions on
 startup. `feed_seed` is server-only. Issued item provenance is stored in
@@ -85,6 +92,25 @@ unset in production. Run the engineering distribution check with:
 
 The script uses the repository's demo-video fixtures and validates selection
 behavior only; it does not analyze participants or support well-being claims.
+
+### Opt-in PostgreSQL integration verification
+
+The real PostgreSQL migration and Intentional Break integration suite is
+destructive only to research tables in a dedicated disposable test database. It
+never falls back to `DATABASE_URL`. With no explicit configuration, it skips:
+
+```bash
+.venv/bin/python -m pytest -q tests/test_intentional_break_postgres.py
+```
+
+To run it, provide a database whose name contains `test`, `testing`, or `ci`, and
+set both `TEST_POSTGRES_DATABASE_URL` and
+`ALLOW_POSTGRES_INTEGRATION_TESTS=1`. A verified disposable provider database
+whose name cannot carry a test marker additionally requires
+`ALLOW_UNMARKED_POSTGRES_TEST_DATABASE=1`. Targets matching `DATABASE_URL`,
+`PRODUCTION_DATABASE_URL`, or `PILOT_DATABASE_URL` are always refused. The suite
+prints only a sanitized host, port, and database name, applies the real 015-017
+migration files, runs its checks, and removes the test research tables.
 
 ### Daily YouTube feed ingestion
 

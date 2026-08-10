@@ -142,3 +142,31 @@ test('BroadcastChannel synchronization requests authoritative refresh for the sa
   second.destroy();
   other.destroy();
 });
+
+test('route guards can listen for lifecycle changes before they know a session id', () => {
+  class FakeChannel {
+    static instances = [];
+    constructor() { this.listeners = new Set(); FakeChannel.instances.push(this); }
+    addEventListener(_type, listener) { this.listeners.add(listener); }
+    removeEventListener(_type, listener) { this.listeners.delete(listener); }
+    postMessage(message) {
+      FakeChannel.instances.forEach((channel) => {
+        if (channel !== this) channel.listeners.forEach((listener) => listener({ data: message }));
+      });
+    }
+    close() {}
+  }
+  let refreshes = 0;
+  const routeGuard = createJourneySynchronizer({
+    BroadcastChannelImpl: FakeChannel,
+    onChange: () => { refreshes += 1; },
+  });
+  const study = createJourneySynchronizer({
+    sessionId: 'session-created-in-another-tab',
+    BroadcastChannelImpl: FakeChannel,
+  });
+  study.signal();
+  assert.equal(refreshes, 1);
+  routeGuard.destroy();
+  study.destroy();
+});

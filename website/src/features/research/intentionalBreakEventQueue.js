@@ -6,6 +6,31 @@ export function retryDelayMs(retryCount) {
   return Math.min(30_000, 1_000 * (2 ** Math.max(0, Math.min(retryCount - 1, 5))));
 }
 
+export function bestEffortIntentionalBreakEventFlush(flush, timeoutMs = 750) {
+  if (typeof flush !== 'function') return Promise.resolve();
+  return new Promise((resolve) => {
+    let settled = false;
+    let timer = null;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      if (timer) clearTimeout(timer);
+      resolve();
+    };
+    timer = setTimeout(finish, timeoutMs);
+    Promise.resolve().then(flush).catch(() => {}).finally(finish);
+  });
+}
+
+export async function finishEarlyAfterBestEffortFlush({
+  flush,
+  onFinishEarly,
+  timeoutMs = 750,
+}) {
+  await bestEffortIntentionalBreakEventFlush(flush, timeoutMs);
+  return onFinishEarly();
+}
+
 function queueKey(sessionId) {
   return `${INTENTIONAL_BREAK_EVENT_QUEUE_PREFIX}${sessionId}`;
 }

@@ -11,7 +11,10 @@ import {
   shouldLoadNextPage,
   validateReservedItemsPage,
 } from './intentionalBreakFeedState.js';
-import { readIntentionalBreakQueueSnapshot } from './intentionalBreakEventQueue.js';
+import {
+  finishEarlyAfterBestEffortFlush,
+  readIntentionalBreakQueueSnapshot,
+} from './intentionalBreakEventQueue.js';
 import {
   useIntentionalBreakEvents,
   useIntentionalBreakItemVisibility,
@@ -159,7 +162,7 @@ export function IntentionalBreakFeed({
     if (authoritativeJourney?.journey_state !== 'active') synchronizerRef.current?.signal();
     onServerJourney(authoritativeJourney);
   }, [onServerJourney]);
-  const { enqueue, queueStatus } = useIntentionalBreakEvents({
+  const { enqueue, flush, queueStatus } = useIntentionalBreakEvents({
     sessionId,
     onJourney: handleEventJourney,
   });
@@ -238,7 +241,10 @@ export function IntentionalBreakFeed({
   }, [onReconcileJourney, plannedTotal]);
 
   async function confirmFinishEarly() {
-    const authoritativeJourney = await onFinishEarly(currentPosition);
+    const authoritativeJourney = await finishEarlyAfterBestEffortFlush({
+      flush,
+      onFinishEarly,
+    });
     if (authoritativeJourney?.journey_state !== 'active') synchronizerRef.current?.signal();
   }
 

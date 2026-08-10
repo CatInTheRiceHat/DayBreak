@@ -1,5 +1,9 @@
 # Documentation
 
+Pilot operator configuration, PostgreSQL verification boundaries, migration 017
+steps, and release identity are documented in
+[`pilot/production-environment.md`](pilot/production-environment.md).
+
 Project documents are grouped by purpose so new work has an obvious home:
 
 - `architecture/` — technical explanations and system design

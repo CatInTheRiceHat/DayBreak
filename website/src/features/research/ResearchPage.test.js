@@ -63,6 +63,7 @@ test('plan command payload carries draft values and one retained key', async () 
   assert.match(source, /selectedCooldownSeconds: state\.draft\.selectedCooldownSeconds/);
   assert.match(source, /type: 'PLAN_CREATED'/);
   assert.match(source, /journey: response\.journey/);
+  assert.match(source, /signalJourneyChange\(response\.journey\.session_id\)/);
 });
 
 test('start and change-plan commands wait for server journeys and retain separate keys', async () => {
@@ -80,7 +81,7 @@ test('finish early retains one command key and waits for the authoritative respo
   const source = await readFile(PAGE_URL, 'utf8');
   assert.match(source, /state\.commands\.finishEarly\.idempotencyKey/);
   assert.match(source, /intentionalBreakApi\.finishEarly\(state\.journey\.session_id/);
-  assert.match(source, /currentPosition/);
+  assert.doesNotMatch(source, /finishSessionEarly\(currentPosition\)|currentPosition,\s*idempotencyKey/);
   assert.match(source, /type: 'FINISH_EARLY_SUCCEEDED'/);
   assert.doesNotMatch(source, /journey_state\s*=\s*['"]checkout/);
 });

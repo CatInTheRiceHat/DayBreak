@@ -236,6 +236,7 @@ export function ResearchPage() {
         journey: response.journey,
         serverTimestamp: response.serverTimestamp,
       });
+      signalJourneyChange(response.journey.session_id);
     } catch (error) {
       dispatch({ type: 'PLAN_SUBMIT_FAILED', error });
     } finally {
@@ -259,6 +260,7 @@ export function ResearchPage() {
         journey: response.journey,
         serverTimestamp: response.serverTimestamp,
       });
+      signalJourneyChange(response.journey.session_id);
     } catch (error) {
       dispatch({ type: 'SESSION_START_FAILED', error });
     } finally {
@@ -283,6 +285,7 @@ export function ResearchPage() {
         journey: response.journey,
         serverTimestamp: response.serverTimestamp,
       });
+      signalJourneyChange(response.journey.session_id);
       if (response.journey?.journey_state === 'cancelled') {
         dispatch({ type: 'EDIT_CANCELLED_PLAN', draft: previousDraft });
       }
@@ -319,7 +322,7 @@ export function ResearchPage() {
     dispatch({ type: 'SERVER_JOURNEY_RECEIVED', journey });
   }, []);
 
-  async function finishSessionEarly(currentPosition) {
+  async function finishSessionEarly() {
     if (finishEarlyRequestInFlight.current || state.commands.finishEarly.pending) return null;
     const idempotencyKey = state.commands.finishEarly.idempotencyKey
       ?? intentionalBreakApi.createIdempotencyKey();
@@ -327,7 +330,6 @@ export function ResearchPage() {
     dispatch({ type: 'FINISH_EARLY_STARTED', idempotencyKey });
     try {
       const response = await intentionalBreakApi.finishEarly(state.journey.session_id, {
-        currentPosition,
         idempotencyKey,
       });
       dispatch({

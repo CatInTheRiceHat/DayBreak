@@ -1,6 +1,13 @@
 import { useEffect } from 'react';
 import { BRAND } from '../brand.js';
-import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+  useLocation,
+} from 'react-router-dom';
 import Lenis from 'lenis';
 import { Navbar } from '../features/marketing/Navbar';
 import { GlobalErrorBoundary } from './GlobalErrorBoundary';
@@ -15,6 +22,7 @@ import { ProfilePage } from '../features/profile/ProfilePage';
 import { EditProfileForm } from '../features/profile/EditProfileForm';
 import { SavedPage } from '../features/saved/SavedPage';
 import { ChallengesPage } from '../features/challenges/ChallengesPage';
+import { IntentionalBreakRouteGuard } from '../features/research/IntentionalBreakRouteGuard.jsx';
 import { ResearchPage } from '../features/research/ResearchPage';
 import '../styles/marketing.css';
 import '../styles/auth.css';
@@ -45,7 +53,7 @@ function isAppPath(pathname) {
   );
 }
 
-function AppShell() {
+function ProductShell() {
   const { pathname } = useLocation();
   const isAlgorithmExperience = isAppPath(pathname);
 
@@ -79,7 +87,26 @@ function AppShell() {
       <FirstRunGate />
       <div className="min-h-screen overflow-x-hidden">
         {!isAlgorithmExperience && <Navbar />}
-        <Routes>
+        <Outlet />
+      </div>
+    </>
+  );
+}
+
+function StudyShell() {
+  return (
+    <div className="min-h-screen overflow-x-hidden">
+      <ResearchPage />
+    </div>
+  );
+}
+
+function AppShell() {
+  return (
+    <Routes>
+      <Route path="/study" element={<StudyShell />} />
+      <Route element={<IntentionalBreakRouteGuard />}>
+        <Route element={<ProductShell />}>
           <Route path="/" element={<ReelsPage />} />
           <Route path="/algorithm" element={<Navigate to="/" replace />} />
           <Route path="/reels" element={<Navigate to="/" replace />} />
@@ -94,13 +121,12 @@ function AppShell() {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/diagnostic" element={<DiagnosticPage />} />
-          <Route path="/study" element={<ResearchPage />} />
           <Route path="/profile" element={<ProfilePage mode="me" />} />
           <Route path="/profile/edit" element={<EditProfileForm />} />
           <Route path="/u/:username" element={<Navigate to="/" replace />} />
-        </Routes>
-      </div>
-    </>
+        </Route>
+      </Route>
+    </Routes>
   );
 }
 

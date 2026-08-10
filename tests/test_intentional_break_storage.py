@@ -123,7 +123,6 @@ def enter_checkout(db, participant, plan, *, now=NOW):
         participant_id=participant["participant_id"],
         session_id=plan["session_id"],
         idempotency_key="finish-1",
-        current_position=1,
         now=now,
     )
 
@@ -560,6 +559,53 @@ def test_boundary_requires_final_impression_and_orders_events(db, participant):
     ).fetchone()[0] == 1
 
 
+@pytest.mark.parametrize(
+    ("meaningful_positions", "expected_highest"),
+    [
+        ([], 0),
+        ([2], 2),
+        ([1, 2, 3, 4], 4),
+    ],
+)
+def test_finish_early_preserves_only_server_accepted_meaningful_progress(
+    db, participant, meaningful_positions, expected_highest
+):
+    plan = create_plan(db, participant)
+    start_plan(db, participant, plan)
+    for diagnostic, position in enumerate(meaningful_positions, start=1):
+        append(
+            db,
+            participant,
+            plan,
+            [impression(f"post-{position}", diagnostic=diagnostic)],
+        )
+    finish = finish_intentional_break_early(
+        db,
+        participant_id=participant["participant_id"],
+        session_id=plan["session_id"],
+        idempotency_key="finish-1",
+        now=NOW,
+    )
+    assert finish["highest_reached_position"] == expected_highest
+    assert finish["finish_reason"] == "finished_early"
+    stored = db.execute(
+        "SELECT journey_state, finish_reason, highest_reached_position, "
+        "checkout_entered_at FROM research_sessions WHERE id = ?",
+        (plan["session_id"],),
+    ).fetchone()
+    assert stored[:3] == ("checkout", "finished_early", expected_highest)
+    assert stored[3] is not None
+    event_rows = db.execute(
+        "SELECT event_type, metadata FROM research_events WHERE session_id = ? "
+        "ORDER BY server_sequence_number",
+        (plan["session_id"],),
+    ).fetchall()
+    finish_events = [row for row in event_rows if row[0] == "session_finished_early"]
+    assert len(finish_events) == 1
+    assert json.loads(finish_events[0][1])["highest_meaningful_position"] == expected_highest
+    assert sum(row[0] == "post_impression" for row in event_rows) == len(meaningful_positions)
+
+
 def test_highest_position_never_decreases_and_finish_outcomes_are_exclusive(db, participant):
     plan = create_plan(db, participant)
     start_plan(db, participant, plan)
@@ -573,7 +619,6 @@ def test_highest_position_never_decreases_and_finish_outcomes_are_exclusive(db, 
         participant_id=participant["participant_id"],
         session_id=plan["session_id"],
         idempotency_key="finish-1",
-        current_position=3,
         now=NOW,
     )
     assert finish["highest_reached_position"] == 4
@@ -586,7 +631,7 @@ def test_highest_position_never_decreases_and_finish_outcomes_are_exclusive(db, 
     ).fetchone()[0] == 0
 
 
-def test_finish_early_validates_position_state_and_idempotency(db, participant):
+def test_finish_early_validates_state_and_idempotency(db, participant):
     plan = create_plan(db, participant)
     assert_code(
         "invalid_transition",
@@ -598,29 +643,55 @@ def test_finish_early_validates_position_state_and_idempotency(db, participant):
         now=NOW,
     )
     start_plan(db, participant, plan)
-    assert_code(
-        "invalid_plan",
-        finish_intentional_break_early,
-        db,
-        participant_id=participant["participant_id"],
-        session_id=plan["session_id"],
-        idempotency_key="bad-position",
-        current_position=6,
-        now=NOW,
-    )
     first = enter_checkout(db, participant, plan)
     replay = enter_checkout(db, participant, plan)
     assert first["checkout_entered_at"] == replay["checkout_entered_at"]
     assert_code(
-        "idempotency_conflict",
+        "invalid_transition",
         finish_intentional_break_early,
         db,
         participant_id=participant["participant_id"],
         session_id=plan["session_id"],
-        idempotency_key="finish-1",
-        current_position=2,
+        idempotency_key="different-finish-key",
         now=NOW,
     )
+    assert db.execute(
+        "SELECT count(*) FROM research_events WHERE session_id = ? "
+        "AND event_type = 'session_finished_early'",
+        (plan["session_id"],),
+    ).fetchone()[0] == 1
+
+
+def test_finish_early_event_and_transition_roll_back_atomically(db, participant):
+    plan = create_plan(db, participant)
+    start_plan(db, participant, plan)
+    db.execute(
+        "CREATE TRIGGER reject_finish_early_transition "
+        "BEFORE UPDATE OF journey_state ON research_sessions "
+        "WHEN NEW.finish_reason = 'finished_early' "
+        "BEGIN SELECT RAISE(ABORT, 'forced finish failure'); END"
+    )
+    db.commit()
+
+    assert_code(
+        "invalid_transition",
+        finish_intentional_break_early,
+        db,
+        participant_id=participant["participant_id"],
+        session_id=plan["session_id"],
+        idempotency_key="atomic-finish",
+        now=NOW,
+    )
+    assert db.execute(
+        "SELECT journey_state, finish_reason, highest_reached_position "
+        "FROM research_sessions WHERE id = ?",
+        (plan["session_id"],),
+    ).fetchone() == ("active", None, 0)
+    assert db.execute(
+        "SELECT count(*) FROM research_events WHERE session_id = ? "
+        "AND event_type = 'session_finished_early'",
+        (plan["session_id"],),
+    ).fetchone()[0] == 0
 
 
 @pytest.mark.parametrize(
