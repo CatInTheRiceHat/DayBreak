@@ -6,10 +6,10 @@ For every video row it computes the metadata LabelSet + explanation reasons and 
   chrysalis_scores, ranking_reason, safety_reason, concern_reason,
   label_confidence, scored_at, scoring_version
 
-Default target is the local SQLite data/local/chrysalis.db. Pass --postgres to target the
+Default target is the local SQLite chrysalis.db. Pass --postgres to target the
 Postgres database in $DATABASE_URL instead (used in production).
 
-  python scripts/score_videos.py              # SQLite (data/local/chrysalis.db)
+  python scripts/score_videos.py              # SQLite (chrysalis.db)
   python scripts/score_videos.py --postgres   # Postgres ($DATABASE_URL)
 
 Reasons are mode-specific; the stored `ranking_reason` is computed for a neutral

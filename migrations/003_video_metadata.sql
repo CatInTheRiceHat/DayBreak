@@ -3,7 +3,7 @@
 -- Adds the official/available YouTube metadata Chrysalis now stores for the cheap
 -- Layer-1 content scanner: creator tags, normalized duration, and a thumbnail URL.
 -- Run once in the Supabase SQL Editor on databases that already have a `videos`
--- table. New databases get these columns directly from data/schema/supabase-schema.sql, so this
+-- table. New databases get these columns directly from supabase_schema.sql, so this
 -- migration is a no-op there thanks to IF NOT EXISTS.
 --
 -- SQLite (local chrysalis.db) upgrades automatically via _ensure_label_columns()

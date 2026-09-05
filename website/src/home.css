@@ -1,0 +1,499 @@
+/* ===========================================================================
+   Chrysalis Home — social home screen styles.
+
+   Layered on top of reels.css: it reuses the same [data-algorithm] token scope
+   (--bg, --card, --accent, --tone-*, --border, --text…) and the AppSidebar /
+   AppBottomNav chrome. Class names are Home-specific (home-*, wing*, acard,
+   reset-card, suggested, result-*) so nothing leaks into the marketing site.
+   =========================================================================== */
+
+/* The shell scrolls (the feed snap-scrolls; Home is a normal page). */
+.home-shell {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.home-main {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 14px clamp(14px, 4vw, 28px) calc(96px + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 768px) {
+  /* Sit beside the fixed desktop sidebar; bottom nav is hidden up here. */
+  .home-main {
+    padding-left: calc(var(--app-sidebar-w) + clamp(16px, 3vw, 40px));
+    padding-right: clamp(16px, 3vw, 40px);
+    padding-bottom: 48px;
+    max-width: calc(1180px + var(--app-sidebar-w));
+  }
+}
+
+/* ── Mobile top bar (brand + Search + Inbox). Hidden on desktop. ──────────── */
+.home-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px clamp(14px, 4vw, 20px);
+  background: color-mix(in srgb, var(--card) 78%, transparent);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+}
+.home-topbar__brand {
+  font-family: var(--font-reels-heading);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.home-topbar__brandmark { font-size: 22px; line-height: 1; }
+.home-topbar__actions { display: flex; align-items: center; gap: 6px; }
+.home-iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--button-bg);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.home-iconbtn:hover { background: color-mix(in srgb, var(--accent-soft) 22%, var(--button-bg)); }
+
+@media (min-width: 768px) {
+  .home-topbar { display: none; }
+}
+
+/* ── Two-column content grid (center + right rail) ───────────────────────── */
+.home-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.home-center { min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+.home-rail { display: flex; flex-direction: column; gap: 16px; order: -1; }
+
+@media (min-width: 1100px) {
+  .home-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    align-items: start;
+    gap: 28px;
+  }
+  .home-rail {
+    order: 0;
+    position: sticky;
+    top: 18px;
+  }
+}
+
+/* Single-column pages (Search / Inbox). */
+.home-narrow {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+.home-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--button-bg);
+  color: var(--text);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.86rem;
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease, opacity 0.2s ease;
+}
+.home-btn:hover { background: color-mix(in srgb, var(--accent-soft) 20%, var(--button-bg)); }
+.home-btn:active { transform: translateY(1px); }
+.home-btn--primary {
+  background: var(--accent);
+  border-color: transparent;
+  color: var(--on-accent);
+}
+.home-btn--primary:hover { background: color-mix(in srgb, var(--accent) 86%, #000); }
+.home-btn--soft { background: color-mix(in srgb, var(--accent-soft) 16%, transparent); }
+.home-btn--chip { padding: 7px 13px; font-size: 0.82rem; }
+.home-btn.is-done { opacity: 0.6; cursor: default; }
+.home-btn.is-static { cursor: default; }
+.home-btn:disabled { cursor: default; }
+
+/* ── Daily Wings row ─────────────────────────────────────────────────────── */
+.wings {
+  background: color-mix(in srgb, var(--card) 70%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 14px 14px 10px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.wings__head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+.wings__title { font-family: var(--font-reels-heading); margin: 0; font-size: 1rem; font-weight: 800; letter-spacing: -0.01em; }
+.wings__hint { font-size: 0.72rem; color: var(--text-muted); }
+.wings__row {
+  list-style: none;
+  margin: 0;
+  padding: 2px 0 6px;
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.wings__row::-webkit-scrollbar { display: none; }
+
+.wing {
+  width: 74px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--text);
+}
+.wing__ring {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  padding: 3px;
+  background: conic-gradient(from 140deg, var(--accent), var(--tone-positive), var(--accent-soft), var(--accent));
+}
+.wing__ring--self { background: var(--border); }
+.wing__avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--card);
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--card);
+}
+.wing__emoji { font-size: 1.3rem; line-height: 1; }
+.wing__add {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  border: 2px solid var(--card);
+}
+.wing__name {
+  font-size: 0.74rem;
+  font-weight: 700;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wing__status {
+  font-size: 0.66rem;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.2;
+  max-width: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Daily Wing sheet (story-style modal) ────────────────────────────────── */
+.wing-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: end center;
+}
+@media (min-width: 720px) { .wing-sheet { place-items: center; } }
+.wing-sheet__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 16, 28, 0.55);
+  backdrop-filter: blur(2px);
+}
+.wing-sheet__panel {
+  position: relative;
+  width: min(440px, 100%);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 22px 22px 0 0;
+  padding: 22px;
+  box-shadow: var(--reel-shadow);
+}
+@media (min-width: 720px) { .wing-sheet__panel { border-radius: 22px; } }
+.wing-sheet__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--button-bg);
+  color: var(--text);
+  cursor: pointer;
+}
+.wing-sheet__person { display: flex; align-items: center; gap: 12px; }
+.wing-sheet__avatar { background: var(--bg-soft); display: grid; place-items: center; }
+.wing-sheet__id { display: flex; flex-direction: column; }
+.wing-sheet__name { font-family: var(--font-reels-heading); font-weight: 800; font-size: 1.05rem; }
+.wing-sheet__status { color: var(--accent); font-weight: 600; font-size: 0.9rem; }
+.wing-sheet__image {
+  margin-top: 16px;
+  height: 180px;
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--accent-soft) 40%, transparent), transparent 60%),
+    var(--bg-soft);
+  display: grid;
+  place-items: center;
+  font-size: 2.6rem;
+}
+.wing-sheet__note { margin: 16px 0 0; line-height: 1.5; color: var(--text); }
+.wing-sheet__self { margin: 16px 0 0; color: var(--text-muted); font-size: 0.9rem; }
+.wing-sheet__reactions { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+.wing-react {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--button-bg);
+  color: var(--text);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.82rem;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.wing-react:hover { background: color-mix(in srgb, var(--accent-soft) 22%, var(--button-bg)); }
+.wing-react.is-sent {
+  background: color-mix(in srgb, var(--tone-healthy) 30%, var(--card));
+  border-color: transparent;
+  cursor: default;
+}
+
+/* ── Today's reset card ──────────────────────────────────────────────────── */
+.reset-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background:
+    linear-gradient(120deg, color-mix(in srgb, var(--tone-reset) 22%, transparent), transparent 70%),
+    var(--card);
+}
+.reset-card__emoji { font-size: 1.8rem; }
+.reset-card__body { flex: 1 1 auto; min-width: 0; }
+.reset-card__title { font-family: var(--font-reels-heading); margin: 0 0 2px; font-size: 0.95rem; font-weight: 800; }
+.reset-card__copy { margin: 0; font-size: 0.86rem; color: var(--text-muted); line-height: 1.4; }
+.reset-card__time {
+  flex: 0 0 auto;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent-soft) 18%, transparent);
+  border-radius: 999px;
+  padding: 5px 10px;
+}
+
+/* ── Activity cards ──────────────────────────────────────────────────────── */
+.home-cards { display: flex; flex-direction: column; gap: 12px; }
+.acard {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--card);
+  padding: 14px 16px;
+  border-left: 3px solid var(--tone, var(--accent));
+}
+.acard[data-accent="healthy"] { --tone: var(--tone-healthy); }
+.acard[data-accent="creative"] { --tone: var(--tone-creative); }
+.acard[data-accent="reset"] { --tone: var(--tone-reset); }
+.acard__head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.acard__who { display: flex; flex-direction: column; line-height: 1.2; }
+.acard__name { font-weight: 700; font-size: 0.9rem; }
+.acard__activity { font-size: 0.74rem; color: var(--text-muted); }
+.acard__body { margin: 0; font-size: 0.9rem; line-height: 1.5; color: var(--text); }
+
+/* ── Open Flutter CTA ────────────────────────────────────────────────────── */
+.open-flutter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--accent) 12%, var(--card));
+  color: var(--text);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.open-flutter span { flex: 1 1 auto; text-align: left; }
+.open-flutter:hover { background: color-mix(in srgb, var(--accent) 20%, var(--card)); }
+.open-flutter:active { transform: translateY(1px); }
+
+/* ── Right rail: my profile ──────────────────────────────────────────────── */
+.home-me, .home-signin, .suggested {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--card) 80%, transparent);
+  padding: 16px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.home-me__id { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
+.home-me__avatar { flex: 0 0 auto; width: 54px; height: 54px; }
+.home-me__names { display: flex; flex-direction: column; min-width: 0; }
+.home-me__name { font-family: var(--font-reels-heading); font-weight: 800; font-size: 1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.home-me__handle { font-size: 0.82rem; color: var(--text-muted); }
+.home-me__chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+.home-me__links { display: flex; gap: 8px; }
+.home-me__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+}
+.home-me__link:hover { text-decoration: underline; }
+
+/* Signed-out card */
+.home-signin { text-align: center; }
+.home-signin__mark { font-size: 1.8rem; }
+.home-signin__title { font-family: var(--font-reels-heading); margin: 8px 0 4px; font-size: 1.02rem; font-weight: 800; line-height: 1.3; }
+.home-signin__copy { margin: 0 0 14px; font-size: 0.86rem; color: var(--text-muted); line-height: 1.45; }
+.home-signin__actions { display: flex; gap: 8px; justify-content: center; }
+
+/* ── Right rail: suggested ───────────────────────────────────────────────── */
+.suggested__head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
+.suggested__title { font-family: var(--font-reels-heading); margin: 0; font-size: 0.96rem; font-weight: 800; }
+.suggested__hint {
+  font-size: 0.64rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+.suggested__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.suggested__item { display: flex; align-items: center; gap: 10px; }
+.suggested__who { display: flex; align-items: center; gap: 10px; flex: 1 1 auto; min-width: 0; text-decoration: none; color: var(--text); }
+.suggested__meta { display: flex; flex-direction: column; min-width: 0; }
+.suggested__name { font-weight: 700; font-size: 0.88rem; }
+.suggested__reason { font-size: 0.74rem; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* On mobile the suggested panel is hidden (it's a desktop right-column pattern). */
+@media (max-width: 1099px) {
+  .suggested { display: none; }
+}
+
+/* ── Search + Inbox shared bits ──────────────────────────────────────────── */
+.page-title { font-family: var(--font-reels-heading); margin: 6px 0 2px; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+.section-title { font-family: var(--font-reels-heading); margin: 6px 0; font-size: 0.82rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text-muted);
+}
+.search-field input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: none;
+  background: none;
+  outline: none;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+.chips-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+.result-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.result-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  text-decoration: none;
+  color: var(--text);
+  transition: background 0.2s ease;
+}
+.result-row:hover { background: color-mix(in srgb, var(--accent-soft) 16%, transparent); }
+.result-row.is-static { cursor: default; }
+.result-row.is-static:hover { background: none; }
+.result-meta { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; }
+.result-name { font-weight: 700; font-size: 0.9rem; }
+.result-sub { font-size: 0.78rem; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.result-when { font-size: 0.72rem; color: var(--text-muted); flex: 0 0 auto; }
+.empty-note { margin: 4px 0; color: var(--text-muted); font-size: 0.88rem; }
+.demo-note { margin-top: 10px; font-size: 0.74rem; color: var(--text-muted); text-align: center; }
+
+/* Inbox empty state */
+.inbox-empty {
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--card) 80%, transparent);
+  padding: 30px 22px;
+}
+.inbox-empty__mark { font-size: 2.2rem; }
+.inbox-empty__title { margin: 10px 0 6px; font-size: 1.1rem; font-weight: 800; }
+.inbox-empty__copy { margin: 0 auto; max-width: 32ch; color: var(--text-muted); line-height: 1.5; }
+.inbox-empty__safe {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 14px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent-soft) 16%, transparent);
+  border-radius: 999px;
+  padding: 5px 12px;
+}

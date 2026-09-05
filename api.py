@@ -140,7 +140,7 @@ app.add_middleware(
 )
 
 ROOT = Path(__file__).parent
-DEFAULT_DATASET = ROOT / "data" / "datasets" / "processed_dataset.csv"
+DEFAULT_DATASET = ROOT / "datasets" / "processed_dataset.csv"
 
 from pydantic import BaseModel, Field
 

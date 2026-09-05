@@ -11,9 +11,9 @@ every video through the English-only, blocked-language, blocked-term, and
 integrity gates; ``active`` only gates *eligibility*.
 
 Examples:
-  .venv/bin/python scripts/import_ai_channel_curation.py --backend postgres --input data/curation/ai-channels.json
-  .venv/bin/python scripts/import_ai_channel_curation.py --backend sqlite --input data/curation/ai-channels.json --dry-run
-  .venv/bin/python scripts/import_ai_channel_curation.py --backend postgres --input data/curation/ai-channels.json --force-reactivate --limit 5
+  .venv/bin/python scripts/import_ai_channel_curation.py --backend postgres --input ai_channels.json
+  .venv/bin/python scripts/import_ai_channel_curation.py --backend sqlite  --input ai_channels.json --dry-run
+  .venv/bin/python scripts/import_ai_channel_curation.py --backend postgres --input ai_channels.json --force-reactivate --limit 5
 
 Input JSON: an array of objects, e.g.
   [{"platform":"youtube","channel_id":"UCxxxx","channel_title":"...",

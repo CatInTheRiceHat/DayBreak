@@ -26,7 +26,7 @@ cp .env.example .env
 # Optional:
 #   YOUTUBE_FEED_QUERIES=category=query,category=query
 # Optional: pin local SQLite storage. Relative paths resolve from project root.
-DATABASE_PATH=./data/local/chrysalis.db
+DATABASE_PATH=./chrysalis.db
 
 # Run the API server
 python api.py
@@ -38,7 +38,7 @@ python api.py
 Run the API and Vite frontend together:
 
 ```bash
-DATABASE_PATH=./data/local/chrysalis.db python api.py
+DATABASE_PATH=./chrysalis.db python api.py
 cd website
 npm run dev
 ```
@@ -67,14 +67,7 @@ Apply PostgreSQL migrations in order before deploying the research route:
 ```bash
 psql "$DATABASE_URL" -f migrations/015_research_sessions_and_events.sql
 psql "$DATABASE_URL" -f migrations/016_research_feed_policies.sql
-psql "$DATABASE_URL" -f migrations/017_intentional_break_loop.sql
 ```
-
-Migration execution is manual; this repository does not automatically apply
-database migrations during deployment. Before a pilot release, follow the
-backup, catalog/RLS verification, dummy-lifecycle, and release-record procedure
-in [`docs/pilot/production-environment.md`](docs/pilot/production-environment.md).
-Do not apply migration 017 more than once.
 
 Local SQLite creates the same tables and upgrades Phase 1 research sessions on
 startup. `feed_seed` is server-only. Issued item provenance is stored in
@@ -93,25 +86,6 @@ unset in production. Run the engineering distribution check with:
 The script uses the repository's demo-video fixtures and validates selection
 behavior only; it does not analyze participants or support well-being claims.
 
-### Opt-in PostgreSQL integration verification
-
-The real PostgreSQL migration and Intentional Break integration suite is
-destructive only to research tables in a dedicated disposable test database. It
-never falls back to `DATABASE_URL`. With no explicit configuration, it skips:
-
-```bash
-.venv/bin/python -m pytest -q tests/test_intentional_break_postgres.py
-```
-
-To run it, provide a database whose name contains `test`, `testing`, or `ci`, and
-set both `TEST_POSTGRES_DATABASE_URL` and
-`ALLOW_POSTGRES_INTEGRATION_TESTS=1`. A verified disposable provider database
-whose name cannot carry a test marker additionally requires
-`ALLOW_UNMARKED_POSTGRES_TEST_DATABASE=1`. Targets matching `DATABASE_URL`,
-`PRODUCTION_DATABASE_URL`, or `PILOT_DATABASE_URL` are always refused. The suite
-prints only a sanitized host, port, and database name, applies the real 015-017
-migration files, runs its checks, and removes the test research tables.
-
 ### Daily YouTube feed ingestion
 
 The Algorithm feed is populated by a backend-only YouTube Data API ingestion job.
@@ -122,7 +96,7 @@ Required backend env vars:
 ```bash
 YOUTUBE_API_KEY=...
 FEED_INGEST_SECRET=...
-DATABASE_PATH=./data/local/chrysalis.db
+DATABASE_PATH=./chrysalis.db
 ```
 
 Optional query override. Plain queries are still accepted and stored with
@@ -135,7 +109,7 @@ YOUTUBE_FEED_QUERIES=news/current events=current events explained,gaming=gaming 
 Manual local ingestion:
 
 ```bash
-DATABASE_PATH=./data/local/chrysalis.db python scripts/ingest_youtube_feed.py --max-results 10 --days-back 7
+DATABASE_PATH=./chrysalis.db python scripts/ingest_youtube_feed.py --max-results 10 --days-back 7
 ```
 
 Or run through the API:
@@ -171,29 +145,18 @@ endpoint once per day and can also be run manually with `workflow_dispatch`.
 ## Project Structure
 
 ```
-DayBreak/
-├── api.py                 # Local FastAPI entry point
-├── api/                   # Hosted/Vercel API entry point
-├── core/                  # Ranking, labeling, storage, and policy logic
-├── integrations/          # YouTube and external-service adapters
-├── automation/            # Background-job boundary and configuration
-├── scripts/               # Manual data, ingestion, and analysis commands
-├── tests/                 # Python test suite
-├── website/               # React/Vite frontend
-│   └── src/
-│       ├── app/           # Router and app-wide boundaries
-│       ├── features/      # Code grouped by product feature
-│       ├── lib/           # Shared services and adapters
-│       ├── shared/        # Reusable UI
-│       └── styles/        # Global styles
-├── data/                  # Local DBs, datasets, curation, and schema snapshots
-├── migrations/            # Ordered PostgreSQL/Supabase migrations
-├── assets/                # Archived graphics and visual QA captures
-└── docs/                  # Plans, specs, research, runbooks, and reports
+Chrysalis/
+├── core/algorithm.py          # Core ranking algorithm with Gini diversity, engagement decay
+├── data.py               # Data processing utilities
+├── metrics.py            # Evaluation metrics (diversity@k, streak detection, etc.)
+├── graphs.py             # Visualization scripts for experiment results
+├── api.py                # FastAPI web server with YouTube integration
+├── experiments.py        # Run evaluation experiments
+├── youtube_service.py    # YouTube Data API wrapper with caching
+├── datasets/             # Processed datasets
+├── results/              # Experiment outputs (CSVs, figures)
+└── website/              # Frontend UI (served by api.py)
 ```
-
-See `docs/README.md`, `assets/README.md`, `data/README.md`, and
-`website/src/README.md` for where new files should go.
 
 ## Algorithm Overview
 
@@ -217,10 +180,10 @@ The ranking formula balances four key factors:
 
 ```bash
 # Run 10 evaluation sessions
-python scripts/experiments.py --n_sessions 10
+python experiments.py --n_sessions 10
 
 # Generate result visualizations
-python scripts/graphs.py --summary results/data/experiment_summary.csv
+python graphs.py --summary results/data/experiment_summary.csv
 ```
 
 ## API Endpoints
@@ -246,9 +209,8 @@ Night mode adds extra risk penalty and caps feed length at 15.
 
 ## Documentation
 
-- `docs/architecture/algorithm.md` - Mathematical formulas and UI mapping guide
-- `docs/research/social-media-algorithm-project-enhancement.md` - Research paper with full theoretical background
-- `docs/README.md` - Documentation filing guide
+- `README_ALGORITHM.md` - Mathematical formulas and UI mapping guide
+- `Social Media Algorithm Project Enhancement.md` - Research paper with full theoretical background
 
 ## License
 

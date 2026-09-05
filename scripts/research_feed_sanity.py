@@ -27,7 +27,7 @@ from core.ranking.research_policies import (  # noqa: E402
 )
 
 
-SEED_FILE = ROOT / "data" / "datasets" / "seed_videos.json"
+SEED_FILE = ROOT / "datasets" / "seed_videos.json"
 
 
 def load_validation_inventory(*, copies: int = 10) -> list[dict]:

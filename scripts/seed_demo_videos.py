@@ -35,7 +35,7 @@ sys.path.insert(0, str(ROOT))
 from core.database import resolve_database_path  # noqa: E402
 from integrations.youtube_ingest import ensure_sqlite_feed_videos_table  # noqa: E402
 
-SEED_FILE = ROOT / "data" / "datasets" / "seed_videos.json"
+SEED_FILE = ROOT / "datasets" / "seed_videos.json"
 SEED_SOURCE_QUERY = "chrysalis_seed"
 WATCH_URL = "https://www.youtube.com/watch?v={vid}"
 

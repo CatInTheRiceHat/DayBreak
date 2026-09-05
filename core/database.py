@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_DATABASE_PATH = PROJECT_ROOT / "data" / "local" / "chrysalis.db"
+DEFAULT_DATABASE_PATH = PROJECT_ROOT / "chrysalis.db"
 
 
 def resolve_database_path(value: str | os.PathLike | None = None) -> Path:

@@ -1,5 +1,5 @@
 """
-Schema setup: ensures the public-signal tables exist in data/local/chrysalis.db.
+Schema setup: ensures the public-signal tables exist in chrysalis.db.
 Safe to run multiple times — uses IF NOT EXISTS.
 
 Usage:

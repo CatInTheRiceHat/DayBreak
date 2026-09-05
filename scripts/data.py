@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import hashlib
 
-DATA_DIR = Path("data/datasets")
+DATA_DIR = Path("datasets")
 PROCESSED_CSV = DATA_DIR / "processed_dataset.csv"
 ITEMS_PARQUET = Path("VK-LSVD/metadata/items_metadata.parquet")
 

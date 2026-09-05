@@ -1,0 +1,306 @@
+/* Saved page — kept videos grid + in-app modal player.
+   Scoped under the [data-algorithm] token system (set by HomeShell), so it reads
+   on-palette in light/dark, reusing the same custom properties as
+   home.css / community.css. */
+
+.saved-page {
+  padding-bottom: 32px;
+}
+
+.challenges-page {
+  padding-bottom: 32px;
+}
+
+/* Liked / Saved / Reflections tab switcher */
+.lib-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 18px;
+  flex-wrap: wrap;
+}
+
+.lib-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--button-bg);
+  color: var(--text);
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.lib-tab:hover {
+  background: color-mix(in srgb, var(--accent-soft) 20%, var(--button-bg));
+}
+
+.lib-tab.is-active {
+  background: var(--accent);
+  border-color: transparent;
+  color: var(--on-accent);
+}
+
+.lib-tab__count {
+  min-width: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  line-height: 18px;
+  text-align: center;
+  background: color-mix(in srgb, currentColor 16%, transparent);
+}
+
+/* Reflection label badge on a collection tile */
+.saved-tile__reflection {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(20, 16, 28, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+.saved-head {
+  margin: 8px 0 20px;
+}
+
+.saved-head__title {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.saved-head__sub {
+  margin: 4px 0 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+/* Empty state */
+.saved-empty {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
+  padding: 48px 20px;
+  border: 1px dashed var(--border);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--card) 60%, transparent);
+}
+
+.saved-empty__icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent-soft) 22%, var(--button-bg));
+  color: var(--accent);
+}
+
+.saved-empty__title {
+  margin: 4px 0 0;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.saved-empty__note {
+  margin: 0;
+  max-width: 30ch;
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* Grid */
+.saved-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+}
+
+.saved-tile {
+  position: relative;
+}
+
+.saved-tile__open {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.saved-tile__thumb {
+  position: relative;
+  display: block;
+  aspect-ratio: 9 / 16;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+}
+
+.saved-tile__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.saved-tile__thumb-fallback {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg,
+    color-mix(in srgb, var(--accent) 30%, var(--card)),
+    color-mix(in srgb, var(--accent-soft) 30%, var(--card)));
+}
+
+.saved-tile__play {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(20, 16, 28, 0.45);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.saved-tile__open:hover .saved-tile__play,
+.saved-tile__open:focus-visible .saved-tile__play {
+  opacity: 1;
+}
+
+.saved-tile__title {
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.saved-tile__source {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.saved-tile__remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #fff;
+  background: rgba(20, 16, 28, 0.55);
+  backdrop-filter: blur(2px);
+}
+
+.saved-tile__remove:hover {
+  background: rgba(20, 16, 28, 0.72);
+}
+
+/* Modal player */
+.saved-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(12, 10, 18, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+.saved-modal__panel {
+  position: relative;
+  width: min(420px, 100%);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+}
+
+.saved-modal__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #fff;
+  background: rgba(20, 16, 28, 0.6);
+}
+
+.saved-modal__close:hover { background: rgba(20, 16, 28, 0.8); }
+
+.saved-modal__stage {
+  aspect-ratio: 9 / 16;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  display: grid;
+  place-items: center;
+}
+
+.saved-modal__embed {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.saved-modal__missing {
+  margin: 0;
+  padding: 24px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.88rem;
+}
+
+.saved-modal__title {
+  margin: 12px 4px 0;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.saved-modal__source {
+  margin: 2px 4px 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
